@@ -1,7 +1,6 @@
 package main
 
-import "./cmd"
-
+import "github.com/asiermarques/adrgen/cmd"
 
 func main() {
 	cmd.Execute()
