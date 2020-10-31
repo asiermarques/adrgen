@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/asiermarques/adrgen/adr"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -21,11 +22,11 @@ to quickly create a Cobra application.`,
 		fmt.Println("gen called")
 		path, err := os.Getwd()
 		if err!=nil {
-			fmt.Errorf("An error ocurred listing the current directory %s", err)
+			fmt.Errorf("an error ocurred listing the current directory %s", err)
 		}
 
 		var lastIdInDir = adr.GetLastIdFromDir(adr.FindADRFilesInDir(path))
-		fmt.Println("Last id " + lastIdInDir)
+		fmt.Println(fmt.Printf("Last id %d", lastIdInDir))
 	},
 }
 
