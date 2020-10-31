@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/filesystem"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -25,7 +24,7 @@ to quickly create a Cobra application.`,
 			fmt.Errorf("An error ocurred listing the current directory %s", err)
 		}
 
-		var lastIdInDir = filesystem.GetLastIdFromDir(filesystem.FindADRFilesInDir(path))
+		var lastIdInDir = adr.GetLastIdFromDir(adr.FindADRFilesInDir(path))
 		fmt.Println("Last id " + lastIdInDir)
 	},
 }
