@@ -11,7 +11,7 @@ func CreateADRFile(title string, directory string, templateFile string) error {
 		return fmt.Errorf("create file: error listing directory files in %s %s ", directory, filesSearchError)
 	}
 	ADRId      := adr.GetLastIdFromDir(files)
-	fileName   := adr.CreateFilename(ADRId, title)
+	fileName   := adr.CreateFilename(ADRId + 1, title)
 
 	var content string
 	if templateFile != "" {
