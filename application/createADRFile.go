@@ -1,8 +1,8 @@
 package application
 
 import (
-	"../adr"
 	"fmt"
+	"github.com/asiermarques/adrgen/adr"
 )
 
 func CreateADRFile(title string, directory string, templateFile string) error {
@@ -13,14 +13,17 @@ func CreateADRFile(title string, directory string, templateFile string) error {
 	ADRId      := adr.GetLastIdFromDir(files)
 	fileName   := adr.CreateFilename(ADRId, title)
 
-	content := adr.DefaultTemplateContent(title)
+	var content string
 	if templateFile != "" {
-		_content, templateContentError := adr.GetTemplateFileContent(templateFile)
+		templateContent, templateContentError := adr.GetTemplateFileContent(templateFile)
 		if templateContentError != nil {
 			return fmt.Errorf("create file: error reading template file %s %s ", templateFile, templateContentError)
 		}
-		content = _content
+		content = templateContent
+	}else{
+		content = adr.DefaultTemplateContent(title)
 	}
+
 
 	return adr.WriteFile(fileName, content)
 }

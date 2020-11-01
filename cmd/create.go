@@ -8,27 +8,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create a new ADR File in the current directory",
-	Long: `Create a new ADR File in the current directory`,
-	Args: cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		directory, err := os.Getwd()
-		if err!=nil {
-			fmt.Printf("an error ocurred listing the current directory %s\n", err)
-			return
-		}
-		creationError := application.CreateADRFile(args[1], directory, os.Getenv("ADRGEN_TEMPLATE"))
-		if creationError!=nil {
-			fmt.Println(err)
-		}
-	},
+func NewCreateCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "create",
+		Short: "Create a new ADR File in the current directory",
+		Long: `Create a new ADR File in the current directory`,
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			directory, err := os.Getwd()
+			if err!=nil {
+				fmt.Printf("an error ocurred listing the current directory %s\n", err)
+				return
+			}
+			creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"))
+			if creationError!=nil {
+				fmt.Println(err)
+			}
+		},
+	}
 }
 
 func init() {
-	rootCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(NewCreateCmd())
 
 	// Here you will define your flags and configuration settings.
 
