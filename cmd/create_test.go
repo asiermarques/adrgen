@@ -14,9 +14,11 @@ func Test_ExecuteCommand(t *testing.T) {
 	expectedFile := directory + "/1-adr-title.md"
 
 	if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
-		t.Fatal("failed creating adr")
+		t.Fatal("failed creating adr " + expectedFile)
 	}
 
+
+	cmd = NewCreateCmd()
 	cmd.SetArgs([]string{"ADR title2"})
 	cmd.Execute()
 	expectedFile2 := directory + "/2-adr-title2.md"

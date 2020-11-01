@@ -67,17 +67,17 @@ func GetTemplateFileContent(templateFile string) (string, error) {
 	return string(buffer), nil
 }
 
-func WriteFile(fileName string, data string) error  {
+func WriteFile(fileName string, data string) (string, error) {
 	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
 
 	_, err = file.Write([]byte(data))
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return fileName, nil
 }

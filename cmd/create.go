@@ -1,8 +1,8 @@
 package cmd
 
 import (
+	"../application"
 	"fmt"
-	"github.com/asiermarques/adrgen/application"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -20,7 +20,7 @@ func NewCreateCmd() *cobra.Command {
 				fmt.Printf("an error ocurred listing the current directory %s\n", err)
 				return
 			}
-			creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"))
+			_, creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"))
 			if creationError!=nil {
 				fmt.Println(err)
 			}
