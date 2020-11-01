@@ -1,8 +1,8 @@
 package application
 
 import (
-	"../adr"
 	"fmt"
+	"github.com/asiermarques/adrgen/adr"
 )
 
 func CreateADRFile(title string, directory string, templateFile string) (string, error) {

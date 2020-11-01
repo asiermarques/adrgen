@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"../application"
 	"fmt"
+	"github.com/asiermarques/adrgen/application"
 	"os"
 
 	"github.com/spf13/cobra"
