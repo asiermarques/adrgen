@@ -1,8 +1,6 @@
 package application
 
-import (
-	"../adr"
-)
+import "github.com/asiermarques/adrgen/adr"
 
 var createFilename func(id int, t string) string =
 	adr.CreateFilename
