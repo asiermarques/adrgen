@@ -1,11 +1,17 @@
 package adr
 
 import (
+	"fmt"
+	"github.com/gosimple/slug"
 	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
 )
+
+func CreateFilename(id int, title string) string  {
+	return fmt.Sprintf("%d-%s.md", id, slug.Make(title))
+}
 
 func FindADRFilesInDir(dirname string) ([]string, error) {
 	var result []string

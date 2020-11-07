@@ -24,18 +24,8 @@ func CreateADRFile(title string, directory string, templateFile string, meta []s
 	fileName   := createFilename(NextId, title)
 
 	var content string
-	if templateFile != "" {
-		templateContent, templateContentError := readTemplateFileContent(templateFile)
-		if templateContentError != nil {
-			return "",fmt.Errorf("create file: error reading template file %s %s ", templateFile, templateContentError)
-		}
-		content = templateContent
-	}else{
-		content = defaultTemplateContent(title)
-	}
-
 	if meta != nil && len(meta) > 0 {
-		content = createMetaContent(meta) + "\n" + content
+		content = createMetaContent(meta) + "\n" + defaultTemplateContent(title)
 	}
 
 	return writeFile(fileName, content)
