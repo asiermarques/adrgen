@@ -1,7 +1,7 @@
 package application
 
 import (
-	"github.com/asiermarques/adrgen/adr"
+	"../adr"
 )
 
 var createFilename func(id int, t string) string =

@@ -12,9 +12,9 @@ func InitProject(targetDirectory string, templateFilename string, metaParams []s
 		return fmt.Errorf("error creating template file %s ", filepath.Join(targetDirectory, templateFilename))
 	}
 
-	err = createConfigFile(targetDirectory, templateFilename, metaParams);
+	err = createConfigFile(targetDirectory, templateFilename, metaParams)
 	if err != nil {
-		return fmt.Errorf("error creating config file %s ", filepath.Join(targetDirectory, configFilename))
+		return fmt.Errorf("error creating config file %s %s", filepath.Join(targetDirectory, configFilename), err)
 	}
 
 	return nil

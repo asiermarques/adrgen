@@ -1,26 +1,34 @@
 package cmd
 
 import (
+	"github.com/asiermarques/adrgen/adr"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
 
 func Test_ExecuteInitCommand(t *testing.T) {
 	directory, _ := os.Getwd()
-	expectedFile := directory + "/1-adr-title.md"
-	testFiles := []string{expectedFile}
+	testDirectory := filepath.Join(directory, "tests")
+	expectedTemplateFile := filepath.Join(testDirectory, "adr", "adr_template.md")
+	expectedConfigFile := filepath.Join(directory, adr.CONFIG_FILENAME + ".yaml")
+	testFiles := []string{testDirectory, expectedTemplateFile, expectedConfigFile}
 
 	cleanInitTestFiles(testFiles)
 	defer cleanInitTestFiles(testFiles)
 
 	cmd := NewInitCmd()
-	cmd.SetArgs([]string{"."})
+	cmd.SetArgs([]string{"tests/adr"})
 	cmd.Execute()
 
 
-	if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
-		t.Fatal("failed creating config file " + expectedFile)
+	if _, err := os.Stat(expectedTemplateFile); os.IsNotExist(err) {
+		t.Fatal("failed creating template file " + expectedTemplateFile)
+	}
+
+	if _, err := os.Stat(expectedConfigFile); os.IsNotExist(err) {
+		t.Fatal("failed creating config file " + expectedConfigFile)
 	}
 }
 

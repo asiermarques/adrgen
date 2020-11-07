@@ -14,5 +14,5 @@ func CreateConfigFile(targetDirectory string, templateFilename string, metaParam
 	viper.Set("directory", targetDirectory)
 	viper.Set("template_file", filepath.Join(targetDirectory, templateFilename))
 	viper.Set("defaultMeta", metaParams)
-	return viper.WriteConfig()
+	return viper.WriteConfigAs(CONFIG_FILENAME + "." + CONFIG_FORMAT)
 }
