@@ -26,7 +26,7 @@ func CreateADRFile(title string, directory string, templateFile string, meta []s
 	}
 
 	if meta !=nil {
-		content = content + CreateMetaContent(meta)
+		content = content + adr.CreateMetaContent(meta)
 	}
 
 	return adr.WriteFile(fileName, content)
