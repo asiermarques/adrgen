@@ -1,18 +1,6 @@
 package application
 
-import (
-	"fmt"
-	"github.com/asiermarques/adrgen/adr"
-)
-
-var createFilename = adr.CreateFilename
-var defaultTemplateContent = adr.DefaultTemplateContent
-var createMetaContent = adr.CreateMetaContent
-
-var getLastIdFromDir = adr.GetLastIdFromDir
-var findFilesInDir = adr.FindADRFilesInDir
-var readTemplateFileContent = adr.GetTemplateFileContent
-var writeFile = adr.WriteFile
+import "fmt"
 
 func CreateADRFile(title string, directory string, templateFile string, meta []string) (string, error) {
 	files, filesSearchError := findFilesInDir(directory)
