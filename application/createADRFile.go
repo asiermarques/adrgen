@@ -5,14 +5,21 @@ import (
 	"github.com/asiermarques/adrgen/adr"
 )
 
+var findFilesInDir = adr.FindADRFilesInDir
+var getLastIdFromDir = adr.GetLastIdFromDir
+var createFilename = adr.CreateFilename
+var writeFile = adr.WriteFile
+var defaultTemplateContent = adr.DefaultTemplateContent
+var createMetaContent = adr.CreateMetaContent
+
 func CreateADRFile(title string, directory string, templateFile string, meta []string) (string, error) {
-	files, filesSearchError := adr.FindADRFilesInDir(directory)
+	files, filesSearchError := findFilesInDir(directory)
 	if filesSearchError != nil {
 		return "", fmt.Errorf("create file: error listing directory files in %s %s ", directory, filesSearchError)
 	}
-	ADRId      := adr.GetLastIdFromDir(files)
+	ADRId      := getLastIdFromDir(files)
 	NextId     := ADRId + 1
-	fileName   := adr.CreateFilename(NextId, title)
+	fileName   := createFilename(NextId, title)
 
 	var content string
 	if templateFile != "" {
@@ -22,12 +29,12 @@ func CreateADRFile(title string, directory string, templateFile string, meta []s
 		}
 		content = templateContent
 	}else{
-		content = adr.DefaultTemplateContent(title)
+		content = defaultTemplateContent(title)
 	}
 
 	if meta !=nil {
-		content = content + adr.CreateMetaContent(meta)
+		content = content + createMetaContent(meta)
 	}
 
-	return adr.WriteFile(fileName, content)
+	return writeFile(fileName, content)
 }
