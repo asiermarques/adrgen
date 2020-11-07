@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/asiermarques/adrgen/application"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -26,7 +27,9 @@ func NewCreateCmd() *cobra.Command {
 				fmt.Printf("an error ocurred processing the meta parameter %s\n", metaError)
 				return
 			}
-
+			for i, value := range meta {
+				meta[i] = strings.TrimSpace(value)
+			}
 			_, creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"), meta)
 			if creationError!=nil {
 				fmt.Println(err)

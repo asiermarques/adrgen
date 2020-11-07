@@ -12,11 +12,18 @@ var getDefaultTemplateFileContent = adr.DefaultTemplateContent
 
 func Test_ExecuteCommand(t *testing.T) {
 	directory, _ := os.Getwd()
+	expectedFile := directory + "/1-adr-title.md"
+	expectedFile2 := directory + "/2-adr-title2.md"
+	expectedFile3WithMeta := directory + "/3-adr-title-with-meta.md"
+	testFiles := []string{expectedFile, expectedFile2, expectedFile3WithMeta}
+
+	cleanTestFiles(testFiles)
+	defer cleanTestFiles(testFiles)
 
 	cmd := NewCreateCmd()
 	cmd.SetArgs([]string{"ADR title"})
 	cmd.Execute()
-	expectedFile := directory + "/1-adr-title.md"
+
 
 	if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
 		t.Fatal("failed creating adr " + expectedFile)
@@ -26,7 +33,6 @@ func Test_ExecuteCommand(t *testing.T) {
 	cmd = NewCreateCmd()
 	cmd.SetArgs([]string{"ADR title2"})
 	cmd.Execute()
-	expectedFile2 := directory + "/2-adr-title2.md"
 
 	if _, err := os.Stat(expectedFile2); os.IsNotExist(err) {
 		t.Fatal("failed creating adr")
@@ -34,8 +40,9 @@ func Test_ExecuteCommand(t *testing.T) {
 
 	cmd = NewCreateCmd()
 	cmd.SetArgs([]string{"ADR title With Meta"})
+	cmd.LocalFlags().Set("meta", "param1, param2,param3")
 	cmd.Execute()
-	expectedFile3WithMeta := directory + "/3-adr-title-with-meta.md"
+
 
 	if _, err := os.Stat(expectedFile3WithMeta); os.IsNotExist(err) {
 		t.Fatal("failed creating adr")
@@ -45,13 +52,19 @@ func Test_ExecuteCommand(t *testing.T) {
 	expectdContent :=  `---
 param1: ""
 param2: ""
+param3: ""
 ---
 ` + getDefaultTemplateFileContent("ADR title With Meta")
 	if content != expectdContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
 	}
 
-	os.RemoveAll(expectedFile)
-	os.RemoveAll(expectedFile2)
-	os.RemoveAll(expectedFile3WithMeta)
+
+
+}
+
+func cleanTestFiles(files []string) {
+	for _, file := range files {
+		os.RemoveAll(file)
+	}
 }
