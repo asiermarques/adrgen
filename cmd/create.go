@@ -9,7 +9,8 @@ import (
 )
 
 func NewCreateCmd() *cobra.Command {
-	return &cobra.Command{
+	var meta []string
+	command := &cobra.Command{
 		Use:   "create",
 		Short: "Create a new ADR File in the current directory",
 		Long: `Create a new ADR File in the current directory`,
@@ -20,12 +21,14 @@ func NewCreateCmd() *cobra.Command {
 				fmt.Printf("an error ocurred listing the current directory %s\n", err)
 				return
 			}
-			_, creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"))
+			_, creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"), cmd.Flag("meta"))
 			if creationError!=nil {
 				fmt.Println(err)
 			}
 		},
 	}
+	command.LocalFlags().StringSliceP("meta", "m", nil, "")
+	return command
 }
 
 func init() {
