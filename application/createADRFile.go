@@ -7,7 +7,7 @@ func CreateADRFile(title string, directory string, templateFile string, meta []s
 	if filesSearchError != nil {
 		return "", fmt.Errorf("create file: error listing directory files in %s %s ", directory, filesSearchError)
 	}
-	ADRId      := getLastIdFromDir(files)
+	ADRId      := getLastIdFromFilenames(files)
 	NextId     := ADRId + 1
 	fileName   := createFilename(NextId, title)
 

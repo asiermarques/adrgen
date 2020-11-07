@@ -7,10 +7,10 @@ import (
 	"testing"
 )
 
-var getFileContent = adr.GetTemplateFileContent
+var getFileContent = adr.GetFileContent
 var getDefaultTemplateFileContent = adr.DefaultTemplateContent
 
-func Test_ExecuteCommand(t *testing.T) {
+func Test_ExecuteCreateCommand(t *testing.T) {
 	directory, _ := os.Getwd()
 	expectedFile := directory + "/1-adr-title.md"
 	expectedFile2 := directory + "/2-adr-title2.md"
