@@ -50,17 +50,14 @@ func Test_ExecuteCommand(t *testing.T) {
 
 	content, _ := getFileContent(expectedFile3WithMeta)
 	expectdContent :=  `---
-param1: ""
-param2: ""
-param3: ""
+param1: ""  
+param2: ""  
+param3: ""  
 ---
 ` + getDefaultTemplateFileContent("ADR title With Meta")
 	if content != expectdContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
 	}
-
-
-
 }
 
 func cleanTestFiles(files []string) {

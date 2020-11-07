@@ -26,7 +26,10 @@ What becomes easier or more difficult to do because of this change?`
 }
 
 func CreateMetaContent(parameters [] string) string {
-	valueSeparator := ": \"\"  \n"
-	return fmt.Sprintf("---\n%s---", strings.Join(parameters, valueSeparator) + valueSeparator)
+	if len(parameters)>0 {
+		valueSeparator := ": \"\"  \n"
+		return fmt.Sprintf("---\n%s---", strings.Join(parameters, valueSeparator) + valueSeparator)
+	}
+	return ""
 }
 
