@@ -5,12 +5,14 @@ import (
 	"github.com/asiermarques/adrgen/adr"
 )
 
-var findFilesInDir = adr.FindADRFilesInDir
-var getLastIdFromDir = adr.GetLastIdFromDir
 var createFilename = adr.CreateFilename
-var writeFile = adr.WriteFile
 var defaultTemplateContent = adr.DefaultTemplateContent
 var createMetaContent = adr.CreateMetaContent
+
+var getLastIdFromDir = adr.GetLastIdFromDir
+var findFilesInDir = adr.FindADRFilesInDir
+var readTemplateFileContent = adr.GetTemplateFileContent
+var writeFile = adr.WriteFile
 
 func CreateADRFile(title string, directory string, templateFile string, meta []string) (string, error) {
 	files, filesSearchError := findFilesInDir(directory)
@@ -23,7 +25,7 @@ func CreateADRFile(title string, directory string, templateFile string, meta []s
 
 	var content string
 	if templateFile != "" {
-		templateContent, templateContentError := adr.GetTemplateFileContent(templateFile)
+		templateContent, templateContentError := readTemplateFileContent(templateFile)
 		if templateContentError != nil {
 			return "",fmt.Errorf("create file: error reading template file %s %s ", templateFile, templateContentError)
 		}
@@ -32,8 +34,8 @@ func CreateADRFile(title string, directory string, templateFile string, meta []s
 		content = defaultTemplateContent(title)
 	}
 
-	if meta !=nil {
-		content = content + createMetaContent(meta)
+	if meta != nil && len(meta) > 0 {
+		content = createMetaContent(meta) + "\n" + content
 	}
 
 	return writeFile(fileName, content)

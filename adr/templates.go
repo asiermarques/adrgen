@@ -6,7 +6,7 @@ import (
 )
 
 func DefaultTemplateContent(title string) string {
-	return "#" + title + `
+	return "# " + title + `
 
 ## Status
 

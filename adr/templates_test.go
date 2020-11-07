@@ -14,4 +14,11 @@ param2: ""
     if expectedString != result {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))
 	}
+
+	expectedString = `---
+---`
+	result = CreateMetaContent([]string{})
+	if expectedString != result {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))
+	}
 }
