@@ -34,7 +34,7 @@ func ValidateADRFilename(name string) bool  {
 	return pattern.MatchString(name)
 }
 
-func GetLastIdFromDir(filenames []string) int {
+func GetLastIdFromFilenames(filenames []string) int {
 	number := 0
 	if len(filenames) > 0 {
 		re := regexp.MustCompile("[0-9]+")
@@ -53,8 +53,8 @@ func GetLastIdFromDir(filenames []string) int {
 	return number
 }
 
-func GetTemplateFileContent(templateFile string) (string, error) {
-	file, err := os.Open(templateFile)
+func GetFileContent(filepath string) (string, error) {
+	file, err := os.Open(filepath)
 	if err != nil {
 		return "", err
 	}

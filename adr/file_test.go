@@ -47,12 +47,12 @@ var fileListStub = []string{
 }
 
 func TestGetLastId(t *testing.T) {
-	var id = GetLastIdFromDir(emptyFileListStub)
+	var id = GetLastIdFromFilenames(emptyFileListStub)
 	if id != 0 {
 		t.Fatal("failed: expected 0, returned " + strconv.FormatInt(int64(id), 10))
 	}
 
-	id = GetLastIdFromDir(fileListStub)
+	id = GetLastIdFromFilenames(fileListStub)
 	if id != 2 {
 		t.Fatal("failed: expected 2, returned " + strconv.FormatInt(int64(id), 10))
 	}
