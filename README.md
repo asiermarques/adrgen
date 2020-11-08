@@ -39,11 +39,28 @@ It will include the following configuration:
 |--------------------|------------|-------------------------------------------------------------------------------|
 | directory          | string     | the directory where the ADR files will be managed by adrgen                   |
 | default_meta       | array      | the keys for meta that will include in all ADR files                          |
-| supported_statuses | array      | the status that we will support for the ADRs                                  |
+| supported_statuses | array      | the statuses that will be supported for the ADRs                              |
 | default_status     | string     | the status that the ADR status will be set by default in the creation process |
 | template_file      | string     | the template file that will be used to generate the ADR files                 |
 
 
+Example:
+
+````
+default_meta: []
+default_status: proposed
+directory: docs/adrs
+supported_statuses:
+- proposed
+- accepted
+- rejected
+- superseeded
+- amended
+- deprecated
+template_file: docs/adrs/adr_template.md
+````
+
+  
 
 ### Create a new ADR
 
