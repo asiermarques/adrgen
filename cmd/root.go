@@ -45,6 +45,7 @@ func GetConfig(directory string) (adr.Config, error) {
 		config.TargetDirectory = rootDirectory
 	}else{
 		config.TargetDirectory = filepath.Join(rootDirectory, config.TargetDirectory)
+		config.TemplateFilename = filepath.Join(rootDirectory, config.TemplateFilename)
 	}
 	return config, err
 }
