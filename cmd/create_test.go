@@ -3,59 +3,53 @@ package cmd
 import (
 	"fmt"
 	"github.com/asiermarques/adrgen/adr"
+	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
 var getFileContent = adr.GetFileContent
 var getDefaultTemplateFileContent = adr.DefaultTemplateContent
 
-func Test_ExecuteCreateCommand(t *testing.T) {
-	directory, _ := os.Getwd()
-	expectedFile := directory + "/1-adr-title.md"
-	expectedFile2 := directory + "/2-adr-title2.md"
-	expectedFile3WithMeta := directory + "/3-adr-title-with-meta.md"
-	testFiles := []string{expectedFile, expectedFile2, expectedFile3WithMeta}
-
-	cleanTestFiles(testFiles)
-	defer cleanTestFiles(testFiles)
-
-	cmd := NewCreateCmd()
-	cmd.SetArgs([]string{"ADR title"})
+func assertCreateFile(key int, expectedFile string, cmd *cobra.Command, t *testing.T, meta []string) {
+	cmd.SetArgs([]string{"ADR title " + string(key)})
+	if meta != nil && len(meta)>0 {
+		cmd.LocalFlags().Set("meta", strings.Join(meta, ","))
+	}
 	cmd.Execute()
-
 
 	if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
 		t.Fatal("failed creating adr " + expectedFile)
 	}
+}
 
-
-	cmd = NewCreateCmd()
-	cmd.SetArgs([]string{"ADR title2"})
-	cmd.Execute()
-
-	if _, err := os.Stat(expectedFile2); os.IsNotExist(err) {
-		t.Fatal("failed creating adr")
+func Test_ExecuteCreateCommand(t *testing.T) {
+	directory, _ := os.Getwd()
+	testFiles := []string{
+		filepath.Join(directory, "1-adr-title-0.md"),
+		filepath.Join(directory, "1-adr-title-1.md"),
+		filepath.Join(directory, "1-adr-title-2.md"),
 	}
 
-	cmd = NewCreateCmd()
-	cmd.SetArgs([]string{"ADR title With Meta"})
-	cmd.LocalFlags().Set("meta", "param1, param2,param3")
-	cmd.Execute()
+	cleanTestFiles(testFiles)
+	defer cleanTestFiles(testFiles)
 
-
-	if _, err := os.Stat(expectedFile3WithMeta); os.IsNotExist(err) {
-		t.Fatal("failed creating adr")
+	for key, file := range testFiles {
+		assertCreateFile(key, file, NewCreateCmd(), t, nil)
 	}
 
-	content, _ := getFileContent(expectedFile3WithMeta)
+	fileWithMeta := filepath.Join(directory, "1-adr-title-3.md")
+	assertCreateFile(3, fileWithMeta, NewCreateCmd(), t, []string{"param1"," param2","param3"})
+
+	content, _ := getFileContent(fileWithMeta)
 	expectdContent :=  `---
 param1: ""  
 param2: ""  
 param3: ""  
 ---
-` + getDefaultTemplateFileContent("ADR title With Meta")
+` + getDefaultTemplateFileContent("ADR title 3")
 	if content != expectdContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
 	}
@@ -65,58 +59,36 @@ func Test_ExecuteCreateCommandWithConfig(t *testing.T) {
 	directory, _ := os.Getwd()
 	configuredDirectory := "tests/adr"
 	configuredDirectoryAbs := filepath.Join(directory, configuredDirectory)
-	expectedFile := configuredDirectoryAbs + "/1-adr-title-c.md"
-	expectedFile2 := configuredDirectoryAbs + "/2-adr-title2-c.md"
-	expectedFile3WithMeta := configuredDirectoryAbs + "/3-adr-title-with-meta-c.md"
 	testFiles := []string{
-		expectedFile,
-		expectedFile2,
-		expectedFile3WithMeta,
+		filepath.Join(directory, "1-adr-title-0.md"),
+		filepath.Join(directory, "1-adr-title-1.md"),
+		filepath.Join(directory, "1-adr-title-2.md"),
+	}
+	testFilesAndDirs := append(testFiles,[]string{
 		filepath.Join(configuredDirectoryAbs, "adr_template.md"),
 		filepath.Join(directory, "tests"),
 		filepath.Join(directory, "adrgen.config.yml"),
-	}
+	}...)
 
-	cleanTestFiles(testFiles)
-	defer cleanTestFiles(testFiles)
+	cleanTestFiles(testFilesAndDirs)
+	defer cleanTestFiles(testFilesAndDirs)
 
 	createConfigAndDirs(configuredDirectoryAbs, configuredDirectory)
 
-	cmd := NewCreateCmd()
-	cmd.SetArgs([]string{"ADR title C"})
-	cmd.Execute()
-
-
-	if _, err := os.Stat(expectedFile); os.IsNotExist(err) {
-		t.Fatal("failed creating adr " + expectedFile)
+	for key, file := range testFiles {
+		assertCreateFile(key, file, NewCreateCmd(), t, nil)
 	}
 
+	fileWithMeta := filepath.Join(directory, "1-adr-title-3.md")
+	assertCreateFile(3, fileWithMeta, NewCreateCmd(), t, []string{"param1"," param2","param3"})
 
-	cmd = NewCreateCmd()
-	cmd.SetArgs([]string{"ADR title2 C"})
-	cmd.Execute()
-
-	if _, err := os.Stat(expectedFile2); os.IsNotExist(err) {
-		t.Fatal("failed creating adr C")
-	}
-
-	cmd = NewCreateCmd()
-	cmd.SetArgs([]string{"ADR title With Meta C"})
-	cmd.LocalFlags().Set("meta", "param1, param2,param3")
-	cmd.Execute()
-
-
-	if _, err := os.Stat(expectedFile3WithMeta); os.IsNotExist(err) {
-		t.Fatal("failed creating adr")
-	}
-
-	content, _ := getFileContent(expectedFile3WithMeta)
+	content, _ := getFileContent(fileWithMeta)
 	expectdContent :=  `---
 param1: ""  
 param2: ""  
 param3: ""  
 ---
-` + getDefaultTemplateFileContent("ADR title With Meta C")
+` + getDefaultTemplateFileContent("ADR title 3")
 	if content != expectdContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
 	}

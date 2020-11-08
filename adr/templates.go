@@ -5,12 +5,12 @@ import (
 	"strings"
 )
 
-func DefaultTemplateContent(title string) string {
-	return "# " + title + `
+func DefaultTemplateContent(title string, status string) string {
+	return fmt.Sprintf(`# %s
 
 ## Status
 
-What is the status, such as proposed, accepted, rejected, deprecated, superseded, etc.?
+Status: %s
 
 ## Context
 
@@ -22,7 +22,7 @@ What is the change that we're proposing and/or doing?
 
 ## Consequences
 
-What becomes easier or more difficult to do because of this change?`
+What becomes easier or more difficult to do because of this change?`, title, status)
 }
 
 func CreateMetaContent(parameters [] string) string {

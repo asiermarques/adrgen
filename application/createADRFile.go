@@ -15,7 +15,7 @@ func CreateADRFile(title string, config adr.Config) (string, error) {
 	NextId := ADRId + 1
 	fileName := createFilename(NextId, title)
 
-	content := defaultTemplateContent(title)
+	content := defaultTemplateContent(title, config.DefaultStatus)
 	if config.MetaParams != nil && len(config.MetaParams) > 0 {
 		content = createMetaContent(config.MetaParams) + "\n" + content
 	}

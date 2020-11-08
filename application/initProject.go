@@ -7,7 +7,7 @@ import (
 
 func InitProject(targetDirectory string, templateFilename string, metaParams []string) error  {
 
-	_, err := writeFile(filepath.Join(targetDirectory, templateFilename), defaultTemplateContent("{title}"))
+	_, err := writeFile(filepath.Join(targetDirectory, templateFilename), defaultTemplateContent("{title}", "{status"))
 	if err!=nil {
 		return fmt.Errorf("error creating template file %s ", filepath.Join(targetDirectory, templateFilename))
 	}
