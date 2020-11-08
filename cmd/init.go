@@ -5,7 +5,6 @@ import (
 	"github.com/asiermarques/adrgen/application"
 	"github.com/spf13/cobra"
 	"os"
-	"path/filepath"
 	"strings"
 )
 
@@ -18,15 +17,8 @@ func NewInitCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 
 			targetDirectory := args[0]
-			currentDirectory, err := os.Getwd()
-			if err!=nil {
-				fmt.Printf("an error ocurred listing the current directory %s\n", err)
-				return
-			}
-
-			targetDirectoryAbs := filepath.Join(currentDirectory, targetDirectory)
 			if _, err := os.Stat(targetDirectory); os.IsNotExist(err) {
-				if err := os.MkdirAll(targetDirectoryAbs, os.ModePerm); err != nil {
+				if err := os.MkdirAll(targetDirectory, os.ModePerm); err != nil {
 					fmt.Printf("an error ocurred creating the target directory %s\n", err)
 					return
 				}

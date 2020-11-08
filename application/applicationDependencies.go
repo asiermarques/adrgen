@@ -17,6 +17,13 @@ var writeFile func(f string, d string) (string, error) =
 	adr.WriteFile
 
 var createConfigFile func(dir string, templateFilename string, meta []string) error =
-	adr.CreateConfigFile
+	func(directory string, templateFilename string, meta []string) error {
+		config := adr.DefaultConfig()
+		config.TargetDirectory = directory
+		config.TemplateFilename = templateFilename
+		config.MetaParams = meta
+		return adr.CreateConfigFile(config)
+	}
+
 var configFilename string =
 	adr.CONFIG_FILENAME

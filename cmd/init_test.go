@@ -12,7 +12,7 @@ func Test_ExecuteInitCommand(t *testing.T) {
 	directory, _ := os.Getwd()
 	testDirectory := filepath.Join(directory, "tests")
 	expectedTemplateFile := filepath.Join(testDirectory, "adr", "adr_template.md")
-	expectedConfigFile := filepath.Join(directory, adr.CONFIG_FILENAME + ".yaml")
+	expectedConfigFile := filepath.Join(directory, adr.CONFIG_FILENAME + ".yml")
 	testFiles := []string{testDirectory, expectedTemplateFile, expectedConfigFile}
 
 	cleanInitTestFiles(testFiles)

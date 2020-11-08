@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/asiermarques/adrgen/application"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -16,11 +15,14 @@ func NewCreateCmd() *cobra.Command {
 		Long: `Create a new ADR File in the current directory, you can add meta parameters for decisions tracing`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			directory, err := os.Getwd()
-			if err!=nil {
-				fmt.Printf("an error ocurred listing the current directory %s\n", err)
-				return
+
+			config, err := GetConfig("")
+			if err != nil {
+				fmt.Printf("config file not found, working in the %s directory\n", config.TargetDirectory)
+			} else {
+				fmt.Printf("config file found, working in the %s directory\n", config.TargetDirectory)
 			}
+
 
 			meta, metaError := cmd.LocalFlags().GetStringSlice("meta")
 			if metaError != nil {
@@ -30,11 +32,14 @@ func NewCreateCmd() *cobra.Command {
 			for i, value := range meta {
 				meta[i] = strings.TrimSpace(value)
 			}
+			config.MetaParams = append(config.MetaParams, meta...)
 
-			_, creationError := application.CreateADRFile(args[0], directory, os.Getenv("ADRGEN_TEMPLATE"), meta)
+			filename, creationError := application.CreateADRFile(args[0], config)
 			if creationError!=nil {
-				fmt.Println(err)
+				fmt.Println(creationError)
+				return
 			}
+			fmt.Println(fmt.Sprintf("%s created\n", filename))
 		},
 	}
 	command.LocalFlags().StringSliceP("meta", "m", nil, "")

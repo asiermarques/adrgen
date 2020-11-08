@@ -2,8 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/asiermarques/adrgen/adr"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 )
 
 //var cfgFile string
@@ -30,6 +32,21 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func GetConfig(directory string) (adr.Config, error) {
+	rootDirectory, err := os.Getwd()
+	if err!=nil {
+		return adr.Config{}, err
+	}
+	directory = filepath.Join(rootDirectory, directory)
+	config, err := adr.GetConfig(directory)
+	if err != nil {
+		config.TargetDirectory = rootDirectory
+	}else{
+		config.TargetDirectory = filepath.Join(rootDirectory, config.TargetDirectory)
+	}
+	return config, err
 }
 
 func init() {
