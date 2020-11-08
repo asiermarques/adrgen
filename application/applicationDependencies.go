@@ -4,7 +4,7 @@ import "github.com/asiermarques/adrgen/adr"
 
 var createFilename func(id int, t string) string =
 	adr.CreateFilename
-var defaultTemplateContent func(t string) string =
+var defaultTemplateContent func(t string, s string) string =
 	adr.DefaultTemplateContent
 var createMetaContent func(m []string) string =
 	adr.CreateMetaContent
