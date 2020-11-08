@@ -35,7 +35,7 @@ The adrgen.config.yml will be used by other commands.
 
 It will include the following configuration:
 
-| key                | value type | description                                                                   |
+| key                | type       | description                                                                   |
 |--------------------|------------|-------------------------------------------------------------------------------|
 | directory          | string     | the directory where the ADR files will be managed by adrgen                   |
 | default_meta       | array      | the keys for meta that will include in all ADR files                          |

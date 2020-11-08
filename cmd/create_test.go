@@ -105,7 +105,7 @@ param3: ""
 func createConfigAndDirs(directoryToCreate string, directoryName string) {
 
 	os.MkdirAll(directoryToCreate, os.ModePerm)
-	adr.WriteFile(filepath.Join(directoryToCreate, "adr_template.md"), adr.DefaultTemplateContent("{title}", "{status"))
+	adr.WriteFile(filepath.Join(directoryToCreate, "adr_template.md"), adr.DefaultTemplateContent("{title}", "{status}"))
 	adr.WriteFile("adrgen.config.yml", fmt.Sprintf(`default_meta: []
 default_status: proposed
 directory: %s
