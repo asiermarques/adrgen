@@ -57,3 +57,10 @@ func TestGetLastId(t *testing.T) {
 		t.Fatal("failed: expected 2, returned " + strconv.FormatInt(int64(id), 10))
 	}
 }
+
+func TestFindADRFileById(t *testing.T) {
+	file, err := FindADRFileById(1, fileListStub)
+	if err != nil || file != "001-test.md" {
+		t.Fatal(fmt.Sprintf("failed: expected 001-test.md, returned %s :%s", file, err))
+	}
+}

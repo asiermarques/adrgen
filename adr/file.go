@@ -29,6 +29,26 @@ func FindADRFilesInDir(dirname string) ([]string, error) {
 	return result, nil
 }
 
+func FindADRFileById(adrId int, files []string) (string, error)  {
+	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.md`)
+	for _, file := range files {
+		matches := re.FindStringSubmatch(file)
+
+		if len(matches) > 1 {
+			idMatch, err := strconv.Atoi(matches[1])
+
+			if err != nil {
+				return "", err
+			}
+
+			if idMatch == adrId {
+				return file, nil
+			}
+		}
+	}
+	return "", fmt.Errorf("file not found for ADR Id %d", adrId)
+}
+
 func ValidateADRFilename(name string) bool  {
 	pattern := regexp.MustCompile(`(?mi)^\d+-.+\.md`)
 	return pattern.MatchString(name)
