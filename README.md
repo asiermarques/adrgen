@@ -96,3 +96,12 @@ technologies: ""
 
 They could be useful for an automated process that uses the ADR files to generate a living documentation website.
 
+### To-Do
+
+- [ ] Change the ADR file status  
+- [ ] Configure the ID format (for example, 0001-my-adr.md instead of 1-my-adr.md)  
+- [ ] Supersede one ADR with another one  
+- [ ] Amend one ADR with another one  
+- [ ] Generating a trace with the ADR history  
+- [ ] Bulk change state  
+- [ ] Generating reports
