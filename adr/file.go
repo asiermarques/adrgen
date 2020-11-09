@@ -97,7 +97,7 @@ func GetFileContent(filepath string) (string, error) {
 }
 
 func WriteFile(fileName string, data string) (string, error) {
-	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return "", err
 	}
