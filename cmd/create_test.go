@@ -129,7 +129,7 @@ supported_statuses:
 - proposed
 - accepted
 - rejected
-- superseeded
+- superseded
 - amended
 - deprecated
 template_file: %s/adr_template.md
