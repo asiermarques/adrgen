@@ -6,7 +6,6 @@ import (
 )
 
 func TestChangeStatusInADRContent(t *testing.T) {
-
 	contentStub := `
 # Title
 Date: 09-11-2020
@@ -65,7 +64,6 @@ Status: rejected
 	if err != nil || expected != content {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, content, err))
 	}
-
 }
 
 func TestValidateStatus(t *testing.T) {
