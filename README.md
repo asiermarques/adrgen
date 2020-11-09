@@ -17,11 +17,13 @@ go build -o adrgen
 
 ### Initializing the project and configuration
 
+We will use the **init** command specifying where the ADR files will be written. 
+
 ```
 adrgen init "docs/adrs"
 ```
 
-This creates a structure like this
+This command creates the following structure:
 
 ```
 your_dir
@@ -31,9 +33,15 @@ your_dir
         └── adr_template.md
 ```
 
-The adrgen.config.yml will be used by other commands.
+As the result, we can see
+* A config file is created
+* A directory structure is created if it doesn't exist
+* A markdown template is created in the desired directory
 
-It will include the following configuration:
+
+The adrgen.config.yml config file will be used by other commands in order to know how to operate with the ADR files.
+
+It will include the following configuration keys:
 
 | key                | type       | description                                                                   |
 |--------------------|------------|-------------------------------------------------------------------------------|
