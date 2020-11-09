@@ -14,7 +14,7 @@ func CreateADRFile(date string, title string, config adr.Config) (string, error)
 	}
 	ADRId := getLastIdFromFilenames(files)
 	NextId := ADRId + 1
-	fileName := createFilename(NextId, title)
+	fileName := createFilename(NextId, title, config.IdDigitNumber)
 
 	var content string
 	if config.TemplateFilename == "" {

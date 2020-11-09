@@ -15,6 +15,7 @@ type Config struct {
 	MetaParams []string
 	Statuses []string
 	DefaultStatus string
+	IdDigitNumber int
 }
 
 func CreateConfigFile(config Config) error {
@@ -25,6 +26,7 @@ func CreateConfigFile(config Config) error {
 	viper.Set("default_meta", config.MetaParams)
 	viper.Set("supported_statuses", config.Statuses)
 	viper.Set("default_status", config.DefaultStatus)
+	viper.Set("id_digit_number", config.IdDigitNumber)
 	return viper.WriteConfigAs(CONFIG_FILENAME + ".yml")
 }
 
@@ -42,6 +44,7 @@ func GetConfig(directory string) (Config, error) {
 		MetaParams: viper.GetStringSlice("default_meta"),
 		Statuses: viper.GetStringSlice("supported_statuses"),
 		DefaultStatus: viper.GetString("default_status"),
+		IdDigitNumber: viper.GetInt("id_digit_number"),
 	}, nil
 }
 
@@ -52,5 +55,6 @@ func DefaultConfig() Config  {
 		Statuses: []string{"proposed", "accepted", "rejected", "superseeded", "amended", "deprecated"},
 		DefaultStatus: "proposed",
 		MetaParams: []string{},
+		IdDigitNumber: 4,
 	}
 }

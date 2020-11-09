@@ -29,11 +29,11 @@ func assertCreateFile(key int, expectedFile string, cmd *cobra.Command, t *testi
 func Test_ExecuteCreateCommand(t *testing.T) {
 	directory, _ := os.Getwd()
 	testFiles := []string{
-		filepath.Join(directory, "1-adr-title-0.md"),
-		filepath.Join(directory, "2-adr-title-1.md"),
-		filepath.Join(directory, "3-adr-title-2.md"),
+		filepath.Join(directory, "0001-adr-title-0.md"),
+		filepath.Join(directory, "0002-adr-title-1.md"),
+		filepath.Join(directory, "0003-adr-title-2.md"),
 	}
-	fileWithMeta := filepath.Join(directory, "4-adr-title-3.md")
+	fileWithMeta := filepath.Join(directory, "0004-adr-title-3.md")
 	testFilesAndDirs := append(testFiles, []string{
 		fileWithMeta,
 	}...)
@@ -124,6 +124,7 @@ supported_statuses:
 - amended
 - deprecated
 template_file: %s/adr_template.md
+id_digit_number: 0
 
 `, directoryName, directoryName))
 

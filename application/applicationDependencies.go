@@ -2,7 +2,7 @@ package application
 
 import "github.com/asiermarques/adrgen/adr"
 
-var createFilename func(id int, t string) string =
+var createFilename func(id int, t string, d int) string =
 	adr.CreateFilename
 var defaultTemplateContent func(d string, t string, s string) string =
 	adr.DefaultTemplateContent

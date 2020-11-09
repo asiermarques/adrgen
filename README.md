@@ -50,7 +50,7 @@ It will include the following configuration keys:
 | supported_statuses | array      | the statuses that will be supported for the ADRs                              |
 | default_status     | string     | the status that the ADR status will be set by default in the creation process |
 | template_file      | string     | the template file that will be used to generate the ADR files                 |
-
+| id_digit_number    | int        | the number of digits for the ADR identifier, for example: "0001-"             |
 
 Example:
 
@@ -66,6 +66,7 @@ supported_statuses:
 - amended
 - deprecated
 template_file: docs/adrs/adr_template.md
+id_digit_number: 4
 ````
 
   

@@ -9,8 +9,11 @@ import (
 	"strconv"
 )
 
-func CreateFilename(id int, title string) string  {
-	return fmt.Sprintf("%d-%s.md", id, slug.Make(title))
+func CreateFilename(id int, title string, idDigits int) string  {
+	if idDigits<1 {
+		return fmt.Sprintf("%d-%s.md", id, slug.Make(title))
+	}
+	return fmt.Sprintf("%0"+strconv.Itoa(idDigits)+"d-%s.md", id, slug.Make(title))
 }
 
 func FindADRFilesInDir(dirname string) ([]string, error) {
