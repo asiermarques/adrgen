@@ -57,7 +57,7 @@ func DefaultConfig() Config {
 			"proposed",
 			"accepted",
 			"rejected",
-			"superseeded",
+			"superseded",
 			"amended",
 			"deprecated",
 		},
