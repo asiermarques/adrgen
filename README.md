@@ -96,9 +96,17 @@ technologies: ""
 
 They could be useful for an automated process that uses the ADR files to generate a living documentation website.
 
+### Update the status of an ADR File
+
+We can change the status for an ADR file specifying its ID and the new status with the **status** command
+
+```
+adrgen status 9 "accepted"
+```
+
+
 ### To-Do
 
-- [ ] Change the ADR files statuses  
 - [ ] Configure the ID format (for example, 0001-my-adr.md instead of 1-my-adr.md)  
 - [ ] Supersede one ADR with another one  
 - [ ] Amend one ADR with another one  

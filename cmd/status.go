@@ -35,7 +35,7 @@ func NewStatusChangeCmd() *cobra.Command {
 				fmt.Println(updateError)
 				return
 			}
-			fmt.Println(fmt.Sprintf("%s updated with status %s\n", filename, args[0]))
+			fmt.Println(fmt.Sprintf("%s updated with status %s\n", filename, args[1]))
 		},
 	}
 	command.Example = "adrgen status 9 accepted"
