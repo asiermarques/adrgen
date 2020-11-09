@@ -7,6 +7,7 @@ import (
 
 func DefaultTemplateContent(date string, title string, status string) string {
 	return fmt.Sprintf(`# %s
+
 Date: %s
 
 ## Status
