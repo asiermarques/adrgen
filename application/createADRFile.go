@@ -8,17 +8,17 @@ import (
 )
 
 func CreateADRFile(date string, title string, config adr.Config) (string, error) {
-	files, filesSearchError := findFilesInDir(config.TargetDirectory)
+	files, filesSearchError := adr.FindADRFilesInDir(config.TargetDirectory)
 	if filesSearchError != nil {
 		return "", fmt.Errorf("create file: error listing directory files in %s %s ", config.TargetDirectory, filesSearchError)
 	}
-	ADRId := getLastIdFromFilenames(files)
+	ADRId := adr.GetLastIdFromFilenames(files)
 	NextId := ADRId + 1
-	fileName := createFilename(NextId, title, config.IdDigitNumber)
+	fileName := adr.CreateFilename(NextId, title, config.IdDigitNumber)
 
 	var content string
 	if config.TemplateFilename == "" {
-		content = defaultTemplateContent(date, title, config.DefaultStatus)
+		content = adr.DefaultTemplateContent(date, title, config.DefaultStatus)
 	} else {
 		_content, err := createContentBodyFromTemplate(date, title, config.DefaultStatus, config.TemplateFilename)
 		if err != nil {
@@ -28,10 +28,10 @@ func CreateADRFile(date string, title string, config adr.Config) (string, error)
 	}
 
 	if config.MetaParams != nil && len(config.MetaParams) > 0 {
-		content = createMetaContent(config.MetaParams) + "\n" + content
+		content = adr.CreateMetaContent(config.MetaParams) + "\n" + content
 	}
 
-	return writeFile(filepath.Join(config.TargetDirectory, fileName), content)
+	return adr.WriteFile(filepath.Join(config.TargetDirectory, fileName), content)
 }
 
 func createContentBodyFromTemplate(date string, title string, status string, templateFile string) (string, error) {

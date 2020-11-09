@@ -8,7 +8,6 @@ import (
 )
 
 func ChangeADRStatus(adrId int, status string, config adr.Config) (string, error) {
-
 	if config.Statuses != nil && len(config.Statuses) > 0 {
 		if !adr.ValidateStatus(status, config.Statuses) {
 			return "",fmt.Errorf("status %s not allowed, please use one of these %s", status, strings.Join(config.Statuses, ", "))
