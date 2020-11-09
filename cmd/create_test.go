@@ -128,9 +128,3 @@ template_file: %s/adr_template.md
 `, directoryName, directoryName))
 
 }
-
-func cleanTestFiles(files []string) {
-	for _, file := range files {
-		os.RemoveAll(file)
-	}
-}

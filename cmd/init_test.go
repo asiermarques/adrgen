@@ -15,8 +15,8 @@ func Test_ExecuteInitCommand(t *testing.T) {
 	expectedConfigFile := filepath.Join(directory, adr.CONFIG_FILENAME + ".yml")
 	testFiles := []string{testDirectory, expectedTemplateFile, expectedConfigFile}
 
-	cleanInitTestFiles(testFiles)
-	defer cleanInitTestFiles(testFiles)
+	cleanTestFiles(testFiles)
+	defer cleanTestFiles(testFiles)
 
 	cmd := NewInitCmd()
 	cmd.SetArgs([]string{"tests/adr"})
@@ -29,11 +29,5 @@ func Test_ExecuteInitCommand(t *testing.T) {
 
 	if _, err := os.Stat(expectedConfigFile); os.IsNotExist(err) {
 		t.Fatal("failed creating config file " + expectedConfigFile)
-	}
-}
-
-func cleanInitTestFiles(files []string) {
-	for _, file := range files {
-		os.RemoveAll(file)
 	}
 }

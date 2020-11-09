@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func StatusChangeCmd() *cobra.Command {
+func NewStatusChangeCmd() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "status [new status] [ADR ID]",
 		Short: "Update the status in a ADR File",
 		Long: `Update the status in a ADR File`,
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			config, err := GetConfig("")
@@ -24,13 +24,13 @@ func StatusChangeCmd() *cobra.Command {
 			}
 
 
-			id, err := strconv.Atoi(args[1])
+			id, err := strconv.Atoi(args[0])
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
 
-			filename, updateError := application.ChangeADRStatus(id, args[0], config)
+			filename, updateError := application.ChangeADRStatus(id, args[1], config)
 			if updateError!=nil {
 				fmt.Println(updateError)
 				return
@@ -43,5 +43,5 @@ func StatusChangeCmd() *cobra.Command {
 }
 
 func init() {
-	rootCmd.AddCommand(StatusChangeCmd())
+	rootCmd.AddCommand(NewStatusChangeCmd())
 }
