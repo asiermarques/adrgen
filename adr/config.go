@@ -35,8 +35,8 @@ func GetConfig(directory string) (Config, error) {
 	viper.SetConfigName(CONFIG_FILENAME)
 	viper.SetConfigType(CONFIG_FORMAT)
 	viper.AddConfigPath(directory)
-	err := viper.ReadInConfig() // Find and read the config file
-	if err != nil {             // Handle errors reading the config file
+	err := viper.ReadInConfig()
+	if err != nil {
 		return DefaultConfig(), fmt.Errorf("Fatal error config file: %s \n", err)
 	}
 	return Config{
