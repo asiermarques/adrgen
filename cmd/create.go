@@ -11,7 +11,7 @@ import (
 
 func NewCreateCmd() *cobra.Command {
 	command := &cobra.Command{
-		Use:   "create",
+		Use:   "create [the ADR title]",
 		Short: "Create a new ADR File in the current directory",
 		Long: `Create a new ADR File in the current directory, you can add meta parameters for decisions tracing`,
 		Args: cobra.ExactArgs(1),
@@ -46,6 +46,7 @@ func NewCreateCmd() *cobra.Command {
 		},
 	}
 	command.LocalFlags().StringSliceP("meta", "m", nil, "")
+	command.Example = "adrgen create \"Using ADR to record and maintain decisions records\""
 	return command
 }
 

@@ -10,7 +10,7 @@ import (
 
 func NewInitCmd() *cobra.Command {
 	command := &cobra.Command{
-		Use:   "init",
+		Use:   "init [directory]",
 		Short: "Initialize the ADRs working directory",
 		Long: `Initialize the ADRs working directory`,
 		Args: cobra.ExactArgs(1),
@@ -41,6 +41,7 @@ func NewInitCmd() *cobra.Command {
 		},
 	}
 	command.LocalFlags().StringSliceP("meta", "m", nil, "")
+	command.Example = "adrgen init \"docs/adrs\""
 	return command
 }
 
