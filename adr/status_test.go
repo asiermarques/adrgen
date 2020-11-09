@@ -67,3 +67,14 @@ Status: rejected
 	}
 
 }
+
+func TestValidateStatus(t *testing.T) {
+
+	allowedStatuses := []string{"status", "status2"}
+	if ValidateStatus("ñe", allowedStatuses) != false {
+		t.Fatal(fmt.Sprintf("failed validating an incorrect status"))
+	}
+	if ValidateStatus("status", allowedStatuses) != true {
+		t.Fatal(fmt.Sprintf("failed not validating a correct status"))
+	}
+}

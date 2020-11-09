@@ -4,9 +4,17 @@ import (
 	"fmt"
 	"github.com/asiermarques/adrgen/adr"
 	"path/filepath"
+	"strings"
 )
 
 func ChangeADRStatus(adrId int, status string, config adr.Config) (string, error) {
+
+	if config.Statuses != nil && len(config.Statuses) > 0 {
+		if !adr.ValidateStatus(status) {
+			return "",fmt.Errorf("status %s not allowed, please use one of these %s", status, strings.Join(config.Statuses, ", "))
+		}
+	}
+
 	files, err := adr.FindADRFilesInDir(config.TargetDirectory)
 	if err != nil {
 		return "",fmt.Errorf("no ADR files found in dir %s", config.TargetDirectory)

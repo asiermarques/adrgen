@@ -14,3 +14,12 @@ func ChangeStatusInADRContent(status string, content string) (string, error) {
 
 	return re.ReplaceAllString(content, "Status: " + status), nil
 }
+
+func ValidateStatus(targetStatus string, allowed []string) bool {
+	for _, status := range allowed {
+		if status == targetStatus {
+			return true
+		}
+	}
+	return false
+}
