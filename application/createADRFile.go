@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func CreateADRFile(title string, config adr.Config) (string, error) {
+func CreateADRFile(date string, title string, config adr.Config) (string, error) {
 	files, filesSearchError := findFilesInDir(config.TargetDirectory)
 	if filesSearchError != nil {
 		return "", fmt.Errorf("create file: error listing directory files in %s %s ", config.TargetDirectory, filesSearchError)
@@ -18,9 +18,9 @@ func CreateADRFile(title string, config adr.Config) (string, error) {
 
 	var content string
 	if config.TemplateFilename == "" {
-		content = defaultTemplateContent(title, config.DefaultStatus)
+		content = defaultTemplateContent(date, title, config.DefaultStatus)
 	} else {
-		_content, err := createContentBodyFromTemplate(title, config.DefaultStatus, config.TemplateFilename)
+		_content, err := createContentBodyFromTemplate(date, title, config.DefaultStatus, config.TemplateFilename)
 		if err != nil {
 			return "", fmt.Errorf("error creating ADR from template %s file: %s ", config.TemplateFilename, err)
 		}
@@ -34,12 +34,13 @@ func CreateADRFile(title string, config adr.Config) (string, error) {
 	return writeFile(filepath.Join(config.TargetDirectory, fileName), content)
 }
 
-func createContentBodyFromTemplate(title string, status string, templateFile string) (string, error) {
+func createContentBodyFromTemplate(date string, title string, status string, templateFile string) (string, error) {
 	var content, err = adr.GetFileContent(templateFile)
 	if err != nil {
 		return "", err
 	}
 	content = strings.Replace(content, "{title}", title, -1)
 	content = strings.Replace(content, "{status}", status, -1)
+	content = strings.Replace(content, "{date}", date, -1)
 	return content, nil
 }

@@ -5,8 +5,9 @@ import (
 	"strings"
 )
 
-func DefaultTemplateContent(title string, status string) string {
+func DefaultTemplateContent(date string, title string, status string) string {
 	return fmt.Sprintf(`# %s
+Date: %s
 
 ## Status
 
@@ -22,7 +23,7 @@ What is the change that we're proposing and/or doing?
 
 ## Consequences
 
-What becomes easier or more difficult to do because of this change?`, title, status)
+What becomes easier or more difficult to do because of this change?`, date, title, status)
 }
 
 func CreateMetaContent(parameters [] string) string {

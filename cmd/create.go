@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/asiermarques/adrgen/application"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -23,7 +24,6 @@ func NewCreateCmd() *cobra.Command {
 				fmt.Printf("config file found, working in the %s directory\n", config.TargetDirectory)
 			}
 
-
 			meta, metaError := cmd.LocalFlags().GetStringSlice("meta")
 			if metaError != nil {
 				fmt.Printf("an error ocurred processing the meta parameter %s\n", metaError)
@@ -34,7 +34,10 @@ func NewCreateCmd() *cobra.Command {
 			}
 			config.MetaParams = append(config.MetaParams, meta...)
 
-			filename, creationError := application.CreateADRFile(args[0], config)
+			currentTime := time.Now()
+			date := currentTime.Format("02-01-2006")
+
+			filename, creationError := application.CreateADRFile(date, args[0], config)
 			if creationError!=nil {
 				fmt.Println(creationError)
 				return

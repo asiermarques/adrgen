@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 var getFileContent = adr.GetFileContent
@@ -49,13 +50,16 @@ func Test_ExecuteCreateCommand(t *testing.T) {
 
 	assertCreateFile(3, fileWithMeta, NewCreateCmd(), t, []string{"param1"," param2","param3"})
 
+	currentTime := time.Now()
+	date := currentTime.Format("02-01-2006")
+
 	content, _ := getFileContent(fileWithMeta)
 	expectdContent :=  `---
 param1: ""  
 param2: ""  
 param3: ""  
 ---
-` + getDefaultTemplateFileContent("ADR title 3", "proposed")
+` + getDefaultTemplateFileContent(date,"ADR title 3", "proposed")
 	if content != expectdContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
 	}
@@ -90,13 +94,16 @@ func Test_ExecuteCreateCommandWithConfig(t *testing.T) {
 
 	assertCreateFile(3, fileWithMeta, NewCreateCmd(), t, []string{"param1"," param2","param3"})
 
+	currentTime := time.Now()
+	date := currentTime.Format("02-01-2006")
+
 	content, _ := getFileContent(fileWithMeta)
 	expectdContent :=  `---
 param1: ""  
 param2: ""  
 param3: ""  
 ---
-` + getDefaultTemplateFileContent("ADR title 3", "proposed")
+` + getDefaultTemplateFileContent(date,"ADR title 3", "proposed")
 	if content != expectdContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
 	}
@@ -105,7 +112,7 @@ param3: ""
 func createConfigAndDirs(directoryToCreate string, directoryName string) {
 
 	os.MkdirAll(directoryToCreate, os.ModePerm)
-	adr.WriteFile(filepath.Join(directoryToCreate, "adr_template.md"), adr.DefaultTemplateContent("{title}", "{status}"))
+	adr.WriteFile(filepath.Join(directoryToCreate, "adr_template.md"), adr.DefaultTemplateContent("{date}","{title}", "{status}"))
 	adr.WriteFile("adrgen.config.yml", fmt.Sprintf(`default_meta: []
 default_status: proposed
 directory: %s
