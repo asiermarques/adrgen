@@ -98,10 +98,10 @@ They could be useful for an automated process that uses the ADR files to generat
 
 ### To-Do
 
-- [ ] Change the ADR file status  
+- [ ] Change the ADR files statuses  
 - [ ] Configure the ID format (for example, 0001-my-adr.md instead of 1-my-adr.md)  
 - [ ] Supersede one ADR with another one  
 - [ ] Amend one ADR with another one  
 - [ ] Generating a trace with the ADR history  
-- [ ] Bulk change state  
+- [ ] Change statuses in bulk
 - [ ] Generating reports
