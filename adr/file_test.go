@@ -7,7 +7,6 @@ import (
 )
 
 func TestCreateFilename(t *testing.T) {
-
 	testFilename := func(expectedString string, id int, digitNumber int) {
 		result := CreateFilename(id, "New ADR", digitNumber)
 		if result != expectedString {
@@ -23,7 +22,6 @@ func TestCreateFilename(t *testing.T) {
 }
 
 func TestValidateCorrectFilenames(t *testing.T) {
-
 	for _, value := range []string{
 		"something.md",
 		"some_thing",
@@ -44,14 +42,13 @@ func TestValidateCorrectFilenames(t *testing.T) {
 			t.Fatal("failed with right param: " + value)
 		}
 	}
-
 }
 
 var emptyFileListStub []string
 var fileListStub = []string{
-"000-test.md",
-"001-test.md",
-"002-test.md",
+	"000-test.md",
+	"001-test.md",
+	"002-test.md",
 }
 
 func TestGetLastId(t *testing.T) {

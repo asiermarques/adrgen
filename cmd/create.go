@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/application"
 	"strings"
 	"time"
+
+	"github.com/asiermarques/adrgen/application"
 
 	"github.com/spf13/cobra"
 )
@@ -13,13 +14,16 @@ func NewCreateCmd() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "create [the ADR title]",
 		Short: "Create a new ADR File in the current directory",
-		Long: `Create a new ADR File in the current directory, you can add meta parameters for decisions tracing`,
-		Args: cobra.ExactArgs(1),
+		Long:  `Create a new ADR File in the current directory, you can add meta parameters for decisions tracing`,
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			config, err := GetConfig("")
 			if err != nil {
-				fmt.Printf("config file not found, working in the %s directory\n", config.TargetDirectory)
+				fmt.Printf(
+					"config file not found, working in the %s directory\n",
+					config.TargetDirectory,
+				)
 			} else {
 				fmt.Printf("config file found, working in the %s directory\n", config.TargetDirectory)
 			}
@@ -38,7 +42,7 @@ func NewCreateCmd() *cobra.Command {
 			date := currentTime.Format("02-01-2006")
 
 			filename, creationError := application.CreateADRFile(date, args[0], config)
-			if creationError!=nil {
+			if creationError != nil {
 				fmt.Println(creationError)
 				return
 			}

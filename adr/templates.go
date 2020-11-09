@@ -27,11 +27,10 @@ What is the change that we're proposing and/or doing?
 What becomes easier or more difficult to do because of this change?`, title, date, status)
 }
 
-func CreateMetaContent(parameters [] string) string {
-	if len(parameters)>0 {
+func CreateMetaContent(parameters []string) string {
+	if len(parameters) > 0 {
 		valueSeparator := ": \"\"  \n"
-		return fmt.Sprintf("---\n%s---", strings.Join(parameters, valueSeparator) + valueSeparator)
+		return fmt.Sprintf("---\n%s---", strings.Join(parameters, valueSeparator)+valueSeparator)
 	}
 	return ""
 }
-

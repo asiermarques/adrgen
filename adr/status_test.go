@@ -34,7 +34,7 @@ What is the issue that we're seeing that is motivating this decision or change?
 `
 
 	content, err := ChangeStatusInADRContent("accepted", contentStub)
-	if err != nil || expected != content{
+	if err != nil || expected != content {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, content, err))
 	}
 
@@ -62,7 +62,7 @@ Status: rejected
 `
 
 	content, err = ChangeStatusInADRContent("rejected", contentStub)
-	if err != nil || expected != content{
+	if err != nil || expected != content {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, content, err))
 	}
 

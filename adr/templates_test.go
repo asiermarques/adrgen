@@ -11,7 +11,7 @@ param1: ""
 param2: ""  
 ---`
 	result := CreateMetaContent([]string{"param1", "param2"})
-    if expectedString != result {
+	if expectedString != result {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))
 	}
 

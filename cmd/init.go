@@ -2,18 +2,19 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/application"
-	"github.com/spf13/cobra"
 	"os"
 	"strings"
+
+	"github.com/asiermarques/adrgen/application"
+	"github.com/spf13/cobra"
 )
 
 func NewInitCmd() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "init [directory]",
 		Short: "Initialize the ADRs working directory",
-		Long: `Initialize the ADRs working directory`,
-		Args: cobra.ExactArgs(1),
+		Long:  `Initialize the ADRs working directory`,
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			targetDirectory := args[0]
@@ -34,10 +35,13 @@ func NewInitCmd() *cobra.Command {
 			}
 
 			if err := application.InitProject(targetDirectory, "adr_template.md", meta); err != nil {
-				fmt.Printf("an error ocurred initializing the project in the target directory %s, %s", targetDirectory, err)
+				fmt.Printf(
+					"an error ocurred initializing the project in the target directory %s, %s",
+					targetDirectory,
+					err,
+				)
 				return
 			}
-
 		},
 	}
 	command.LocalFlags().StringSliceP("meta", "m", nil, "")

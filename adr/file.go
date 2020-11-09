@@ -2,15 +2,16 @@ package adr
 
 import (
 	"fmt"
-	"github.com/gosimple/slug"
 	"io/ioutil"
 	"os"
 	"regexp"
 	"strconv"
+
+	"github.com/gosimple/slug"
 )
 
-func CreateFilename(id int, title string, idDigits int) string  {
-	if idDigits<1 {
+func CreateFilename(id int, title string, idDigits int) string {
+	if idDigits < 1 {
 		return fmt.Sprintf("%d-%s.md", id, slug.Make(title))
 	}
 	return fmt.Sprintf("%0"+strconv.Itoa(idDigits)+"d-%s.md", id, slug.Make(title))
@@ -32,7 +33,7 @@ func FindADRFilesInDir(dirname string) ([]string, error) {
 	return result, nil
 }
 
-func FindADRFileById(adrId int, files []string) (string, error)  {
+func FindADRFileById(adrId int, files []string) (string, error) {
 	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.md`)
 	for _, file := range files {
 		matches := re.FindStringSubmatch(file)
@@ -52,7 +53,7 @@ func FindADRFileById(adrId int, files []string) (string, error)  {
 	return "", fmt.Errorf("file not found for ADR Id %d", adrId)
 }
 
-func ValidateADRFilename(name string) bool  {
+func ValidateADRFilename(name string) bool {
 	pattern := regexp.MustCompile(`(?mi)^\d+-.+\.md`)
 	return pattern.MatchString(name)
 }

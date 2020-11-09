@@ -12,7 +12,7 @@ func ChangeStatusInADRContent(status string, content string) (string, error) {
 		return "", fmt.Errorf("file content have not a status field")
 	}
 
-	return re.ReplaceAllString(content, "Status: " + status), nil
+	return re.ReplaceAllString(content, "Status: "+status), nil
 }
 
 func ValidateStatus(targetStatus string, allowed []string) bool {

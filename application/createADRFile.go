@@ -2,15 +2,20 @@ package application
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/adr"
 	"path/filepath"
 	"strings"
+
+	"github.com/asiermarques/adrgen/adr"
 )
 
 func CreateADRFile(date string, title string, config adr.Config) (string, error) {
 	files, filesSearchError := adr.FindADRFilesInDir(config.TargetDirectory)
 	if filesSearchError != nil {
-		return "", fmt.Errorf("create file: error listing directory files in %s %s ", config.TargetDirectory, filesSearchError)
+		return "", fmt.Errorf(
+			"create file: error listing directory files in %s %s ",
+			config.TargetDirectory,
+			filesSearchError,
+		)
 	}
 	ADRId := adr.GetLastIdFromFilenames(files)
 	NextId := ADRId + 1
@@ -34,7 +39,12 @@ func CreateADRFile(date string, title string, config adr.Config) (string, error)
 	return adr.WriteFile(filepath.Join(config.TargetDirectory, fileName), content)
 }
 
-func createContentBodyFromTemplate(date string, title string, status string, templateFile string) (string, error) {
+func createContentBodyFromTemplate(
+	date string,
+	title string,
+	status string,
+	templateFile string,
+) (string, error) {
 	var content, err = adr.GetFileContent(templateFile)
 	if err != nil {
 		return "", err

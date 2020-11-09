@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/adr"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
-)
 
+	"github.com/asiermarques/adrgen/adr"
+)
 
 func Test_ExecuteStatusCommand(t *testing.T) {
 	directory, _ := os.Getwd()
@@ -18,7 +18,7 @@ func Test_ExecuteStatusCommand(t *testing.T) {
 	cleanTestFiles(testFiles)
 	defer cleanTestFiles(testFiles)
 
-	adr.WriteFile(targetFile, adr.DefaultTemplateContent("11-09-2020","Test", "proposed"))
+	adr.WriteFile(targetFile, adr.DefaultTemplateContent("11-09-2020", "Test", "proposed"))
 
 	cmd := NewStatusChangeCmd()
 	cmd.SetArgs([]string{"1", "accepted"})
@@ -32,7 +32,4 @@ func Test_ExecuteStatusCommand(t *testing.T) {
 	if err != nil {
 		t.Fatal(fmt.Sprintf("failed, an error occurred: %s", err))
 	}
-
 }
-
-

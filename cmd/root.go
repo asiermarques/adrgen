@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/adr"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
+
+	"github.com/asiermarques/adrgen/adr"
+	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
@@ -15,12 +16,14 @@ var rootCmd = &cobra.Command{
      ___     ___     ___     ___                   
     /   \   |   \   | _ \   / __|    ___    _ _    
     | - |   | |) |  |   /  | (_ |   / -_)  | ' \   
-    |_|_|   |___/   |_|_\   \___|   \___|  |_||_|  
+    |_|_|   |___/   |_|_\   \___|   \___|  |_||_|
+
   O       o O       o O       o O       o O       o
   | O   o | | O   o | | O   o | | O   o | | O   o |  
   | | O | | | | O | | | | O | | | | O | | | | O | |
   | o   O | | o   O | | o   O | | o   O | | o   O | 
   o       O o       O o       O o       O o       O 
+
 `,
 }
 
@@ -33,18 +36,16 @@ func Execute() {
 
 func GetConfig(directory string) (adr.Config, error) {
 	rootDirectory, err := os.Getwd()
-	if err!=nil {
+	if err != nil {
 		return adr.Config{}, err
 	}
 	directory = filepath.Join(rootDirectory, directory)
 	config, err := adr.GetConfig(directory)
 	if err != nil {
 		config.TargetDirectory = rootDirectory
-	}else{
+	} else {
 		config.TargetDirectory = filepath.Join(rootDirectory, config.TargetDirectory)
 		config.TemplateFilename = filepath.Join(rootDirectory, config.TemplateFilename)
 	}
 	return config, err
 }
-
-
