@@ -108,7 +108,6 @@ adrgen status 9 "accepted"
 
 ### To-Do
 
-- [ ] Configure the ID format (for example, 0001-my-adr.md instead of 1-my-adr.md)  
 - [ ] Supersede one ADR with another one  
 - [ ] Amend one ADR with another one  
 - [ ] Generating a trace with the ADR history  
