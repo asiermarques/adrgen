@@ -32,7 +32,7 @@ func NewCreateCmd() *cobra.Command {
 
 			meta, metaError := cmd.LocalFlags().GetStringSlice("meta")
 			if metaError != nil {
-				fmt.Printf("an error ocurred processing the meta parameter %s\n", metaError)
+				fmt.Printf("an error occurred processing the meta parameter %s\n", metaError)
 				return
 			}
 			for i, value := range meta {

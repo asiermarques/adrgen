@@ -22,14 +22,14 @@ func NewInitCmd() *cobra.Command {
 			targetDirectory := args[0]
 			if _, err := os.Stat(targetDirectory); os.IsNotExist(err) {
 				if err := os.MkdirAll(targetDirectory, os.ModePerm); err != nil {
-					fmt.Printf("an error ocurred creating the target directory %s\n", err)
+					fmt.Printf("an error occurred creating the target directory %s\n", err)
 					return
 				}
 			}
 
 			meta, metaError := cmd.LocalFlags().GetStringSlice("meta")
 			if metaError != nil {
-				fmt.Printf("an error ocurred processing the meta parameter %s\n", metaError)
+				fmt.Printf("an error occurred processing the meta parameter %s\n", metaError)
 				return
 			}
 			for i, value := range meta {
@@ -38,7 +38,7 @@ func NewInitCmd() *cobra.Command {
 
 			if err := application.InitProject(targetDirectory, "adr_template.md", meta); err != nil {
 				fmt.Printf(
-					"an error ocurred initializing the project in the target directory %s, %s",
+					"an error occurred initializing the project in the target directory %s, %s",
 					targetDirectory,
 					err,
 				)
