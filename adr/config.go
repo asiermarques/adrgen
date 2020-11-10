@@ -7,9 +7,16 @@ import (
 	"github.com/spf13/viper"
 )
 
+// CONFIG_FILENAME the name for the config file
+//
 const CONFIG_FILENAME = "adrgen.config"
+
+// CONFIG_FORMAT the configuration format
+//
 const CONFIG_FORMAT = "yaml"
 
+// Config the Configuration type with all the supported values
+//
 type Config struct {
 	TargetDirectory  string
 	TemplateFilename string
