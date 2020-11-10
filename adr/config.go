@@ -19,6 +19,8 @@ type Config struct {
 	IdDigitNumber    int
 }
 
+// CreateConfigFile creates a config file in the current directory
+//
 func CreateConfigFile(config Config) error {
 	viper.SetConfigName(CONFIG_FILENAME)
 	viper.SetConfigType(CONFIG_FORMAT)
@@ -31,6 +33,8 @@ func CreateConfigFile(config Config) error {
 	return viper.WriteConfigAs(CONFIG_FILENAME + ".yml")
 }
 
+// GetConfig reads the configuration and return the Config object or an error
+//
 func GetConfig(directory string) (Config, error) {
 	viper.SetConfigName(CONFIG_FILENAME)
 	viper.SetConfigType(CONFIG_FORMAT)
@@ -49,6 +53,8 @@ func GetConfig(directory string) (Config, error) {
 	}, nil
 }
 
+// DefaultConfig return a Config object with the default parameters
+//
 func DefaultConfig() Config {
 	return Config{
 		TemplateFilename: "",

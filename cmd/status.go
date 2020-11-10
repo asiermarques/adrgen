@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// NewStatusChangeCmd creates the 'status' CLI Command related to the ADR file status change use case
+//
 func NewStatusChangeCmd() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "status [new status] [ADR ID]",

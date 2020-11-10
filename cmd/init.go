@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// NewInitCmd creates the 'init' CLI Command related to the project initialization
+//
 func NewInitCmd() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "init [directory]",

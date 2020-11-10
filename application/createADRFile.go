@@ -8,6 +8,8 @@ import (
 	"github.com/asiermarques/adrgen/adr"
 )
 
+// CreateADRFile is the application service for creating a new ADR file
+//
 func CreateADRFile(date string, title string, config adr.Config) (string, error) {
 	files, filesSearchError := adr.FindADRFilesInDir(config.TargetDirectory)
 	if filesSearchError != nil {

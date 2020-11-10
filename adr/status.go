@@ -5,6 +5,8 @@ import (
 	"regexp"
 )
 
+// ChangeStatusInADRContent change the status in the ADR file content
+//
 func ChangeStatusInADRContent(status string, content string) (string, error) {
 	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
 	if !re.MatchString(content) {
@@ -14,6 +16,8 @@ func ChangeStatusInADRContent(status string, content string) (string, error) {
 	return re.ReplaceAllString(content, "Status: "+status), nil
 }
 
+// ValidateStatus validates if a status is in a list of allowed statuses
+//
 func ValidateStatus(targetStatus string, allowed []string) bool {
 	for _, status := range allowed {
 		if status == targetStatus {

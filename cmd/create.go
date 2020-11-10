@@ -10,6 +10,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// NewCreateCmd creates the 'create' CLI Command related to the ADR file creation
+//
 func NewCreateCmd() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "create [the ADR title]",

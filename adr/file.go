@@ -10,6 +10,8 @@ import (
 	"github.com/gosimple/slug"
 )
 
+// CreateFilename creates the ADR File filename
+//
 func CreateFilename(id int, title string, idDigits int) string {
 	if idDigits < 1 {
 		return fmt.Sprintf("%d-%s.md", id, slug.Make(title))
@@ -17,6 +19,8 @@ func CreateFilename(id int, title string, idDigits int) string {
 	return fmt.Sprintf("%0"+strconv.Itoa(idDigits)+"d-%s.md", id, slug.Make(title))
 }
 
+// FindADRFilesInDir looks for ADR files in a give directory
+//
 func FindADRFilesInDir(dirname string) ([]string, error) {
 	var result []string
 
@@ -33,6 +37,8 @@ func FindADRFilesInDir(dirname string) ([]string, error) {
 	return result, nil
 }
 
+// FindADRFileById looks for a ADR file by its id in a file list
+//
 func FindADRFileById(adrId int, files []string) (string, error) {
 	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.md`)
 	for _, file := range files {
@@ -53,11 +59,15 @@ func FindADRFileById(adrId int, files []string) (string, error) {
 	return "", fmt.Errorf("file not found for ADR Id %d", adrId)
 }
 
+// ValidateADRFilename validates an ADR filename
+//
 func ValidateADRFilename(name string) bool {
 	pattern := regexp.MustCompile(`(?mi)^\d+-.+\.md`)
 	return pattern.MatchString(name)
 }
 
+// GetLastIdFromFilenames find the last ID from a file list
+//
 func GetLastIdFromFilenames(filenames []string) int {
 	number := 0
 	if len(filenames) > 0 {
@@ -77,6 +87,8 @@ func GetLastIdFromFilenames(filenames []string) int {
 	return number
 }
 
+// GetFileContent get the content of a file
+//
 func GetFileContent(filepath string) (string, error) {
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -97,6 +109,8 @@ func GetFileContent(filepath string) (string, error) {
 	return string(buffer), nil
 }
 
+// WriteFile writes a file and overwrites its content if it exists
+//
 func WriteFile(fileName string, data string) (string, error) {
 	file, err := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {

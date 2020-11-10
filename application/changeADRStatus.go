@@ -8,6 +8,9 @@ import (
 	"github.com/asiermarques/adrgen/adr"
 )
 
+// ChangeADRStatus is the application service for changing the status in an ADR File
+// It validates the status if there is a list of allowed statuses configured by user
+//
 func ChangeADRStatus(adrId int, status string, config adr.Config) (string, error) {
 	if config.Statuses != nil && len(config.Statuses) > 0 {
 		if !adr.ValidateStatus(status, config.Statuses) {

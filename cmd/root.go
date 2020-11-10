@@ -27,6 +27,7 @@ var rootCmd = &cobra.Command{
 `,
 }
 
+// Execute executes the root Command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -34,6 +35,8 @@ func Execute() {
 	}
 }
 
+// GetConfig is used by the CLI Commands that need the project's configuration values
+//
 func GetConfig(directory string) (adr.Config, error) {
 	rootDirectory, err := os.Getwd()
 	if err != nil {

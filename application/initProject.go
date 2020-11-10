@@ -7,6 +7,8 @@ import (
 	"github.com/asiermarques/adrgen/adr"
 )
 
+// InitProject is the application service for initialize the workdir and configuration
+//
 func InitProject(targetDirectory string, templateFilename string, metaParams []string) error {
 	_, err := adr.WriteFile(
 		filepath.Join(targetDirectory, templateFilename),
