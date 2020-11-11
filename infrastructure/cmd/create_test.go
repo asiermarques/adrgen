@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/asiermarques/adrgen/domain"
+	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"
 )
 

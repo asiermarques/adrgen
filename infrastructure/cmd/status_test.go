@@ -23,8 +23,8 @@ func Test_ExecuteStatusCommand(t *testing.T) {
 
 	infrastructure.WriteFile(targetFile, templateService.ParseDefaultTemplateContent(domain.TemplateData{
 		Status: "proposed",
-		Date: "20-10-2020",
-		Title: "Test",
+		Date:   "20-10-2020",
+		Title:  "Test",
 	}))
 
 	cmd := NewStatusChangeCmd()

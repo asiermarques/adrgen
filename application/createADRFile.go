@@ -14,14 +14,14 @@ func CreateADRFile(
 	repository domain.ADRRepository,
 	writer domain.ADRWriter,
 	templateService domain.TemplateService,
-	) (string, error) {
+) (string, error) {
 	lastId := repository.GetLastId()
 	ADRId := lastId + 1
 	templateContentData := domain.TemplateData{
-		Title: title,
+		Title:  title,
 		Status: config.DefaultStatus,
-		Date: date,
-		Meta: meta,
+		Date:   date,
+		Meta:   meta,
 	}
 
 	var content string

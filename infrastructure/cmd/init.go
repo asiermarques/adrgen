@@ -43,8 +43,6 @@ func NewInitCmd() *cobra.Command {
 			config.TemplateFilename = filepath.Join(targetDirectory, "adr_template.md")
 			config.MetaParams = meta
 
-
-
 			if err := application.InitProject(
 				config,
 				configManager,

@@ -13,7 +13,7 @@ type ADRFilename interface {
 }
 
 type privateADRFilename struct {
-	ID int
+	ID    int
 	value string
 }
 
@@ -30,7 +30,7 @@ func CreateADRFilename(id int, title string, idDigits int) ADRFilename {
 	}
 }
 
-func CreateADRFilenameFromFilenameString(filename string) (ADRFilename,error) {
+func CreateADRFilenameFromFilenameString(filename string) (ADRFilename, error) {
 	if !ValidateADRFilename(filename) {
 		return &privateADRFilename{}, fmt.Errorf("filename not valid %s", filename)
 	}
@@ -84,15 +84,15 @@ func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (
 	}
 
 	return ADR{
-		ID: adr.ID,
+		ID:       adr.ID,
 		Filename: adr.Filename,
-		Status: newStatus,
-		Content: re.ReplaceAllString(adr.Content, "Status: " + newStatus),
+		Status:   newStatus,
+		Content:  re.ReplaceAllString(adr.Content, "Status: "+newStatus),
 	}, nil
 }
 
 func (manager privateADRStatusManager) ValidateStatus(targetStatus string) bool {
-	if len(manager.configuration.Statuses)<1 {
+	if len(manager.configuration.Statuses) < 1 {
 		return true
 	}
 

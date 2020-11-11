@@ -1,8 +1,8 @@
 package infrastructure
 
 import (
-	"github.com/asiermarques/adrgen/domain"
 	"fmt"
+	"github.com/asiermarques/adrgen/domain"
 	"github.com/spf13/viper"
 	"path/filepath"
 )

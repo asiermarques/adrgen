@@ -72,7 +72,7 @@ What is the issue that we're seeing that is motivating this decision or change?
 
 	statusManager := CreateADRStatusManager(Config{})
 
-	adr, err := statusManager.ChangeStatus( ADR{Content: contentStub},"accepted")
+	adr, err := statusManager.ChangeStatus(ADR{Content: contentStub}, "accepted")
 	if err != nil || expected != adr.Content {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content, err))
 	}
@@ -100,7 +100,7 @@ Status: rejected
 
 `
 
-	adr, err = statusManager.ChangeStatus( ADR{Content: contentStub},"rejected")
+	adr, err = statusManager.ChangeStatus(ADR{Content: contentStub}, "rejected")
 	if err != nil || expected != adr.Content {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content, err))
 	}

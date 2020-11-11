@@ -1,8 +1,8 @@
 package infrastructure
 
 import (
-	"github.com/asiermarques/adrgen/domain"
 	"fmt"
+	"github.com/asiermarques/adrgen/domain"
 	"io/ioutil"
 	"path/filepath"
 	"regexp"
@@ -41,9 +41,9 @@ func (repo privateADRDirectoryRepository) FindAll() ([]domain.ADR, error) {
 			filename, _ := domain.CreateADRFilenameFromFilenameString(file.Name())
 
 			result = append(result, domain.ADR{
-				ID: id,
+				ID:       id,
 				Filename: filename,
-				Content: content,
+				Content:  content,
 			})
 		}
 	}
@@ -81,7 +81,7 @@ func (repo privateADRDirectoryRepository) GetLastId() int {
 	return number
 }
 
-func CreateADRRepository(directory string) domain.ADRRepository  {
+func CreateADRRepository(directory string) domain.ADRRepository {
 	return privateADRDirectoryRepository{directory}
 }
 

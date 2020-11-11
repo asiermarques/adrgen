@@ -13,8 +13,7 @@ func ChangeADRStatus(
 	repository domain.ADRRepository,
 	statusManager domain.ADRStatusManager,
 	writer domain.ADRWriter,
-	) (string, error) {
-
+) (string, error) {
 	ADR, err := repository.FindById(adrId)
 	if err != nil {
 		return "", err

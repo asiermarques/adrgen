@@ -6,10 +6,10 @@ import (
 )
 
 type TemplateData struct {
-	Title string
+	Title  string
 	Status string
-	Date string
-	Meta []string
+	Date   string
+	Meta   []string
 }
 
 const DEFAULT_TEMPLATE_CONTENT = `# {title}
@@ -50,7 +50,7 @@ type privateTemplateService struct {
 	customTemplateContentReader CustomTemplateContentReader
 }
 
-func parseTemplateContent(data TemplateData, content string) string  {
+func parseTemplateContent(data TemplateData, content string) string {
 	content = strings.Replace(content, "{title}", data.Title, -1)
 	content = strings.Replace(content, "{status}", data.Status, -1)
 	content = strings.Replace(content, "{date}", data.Date, -1)
@@ -72,7 +72,7 @@ func (s privateTemplateService) ParseCustomTemplateContent(data TemplateData) (s
 
 func (s privateTemplateService) ParseDefaultTemplateContent(data TemplateData) string {
 	content := ""
-	if len(data.Meta)>0 {
+	if len(data.Meta) > 0 {
 		content = s.CreateMetaContent(data.Meta)
 	}
 	content = content + "\n" + DEFAULT_TEMPLATE_CONTENT
