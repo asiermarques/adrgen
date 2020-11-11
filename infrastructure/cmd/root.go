@@ -52,3 +52,5 @@ func GetConfig(directory string) (domain.Config, error) {
 	}
 	return config, nil
 }
+
+var MetaFlag []string
