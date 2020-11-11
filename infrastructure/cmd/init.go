@@ -56,7 +56,7 @@ func NewInitCmd() *cobra.Command {
 			}
 		},
 	}
-	command.LocalFlags().StringSliceP("meta", "m", nil, "")
+	command.LocalFlags().StringSliceP("meta", "m", []string{}, "")
 	command.Example = "adrgen init \"docs/adrs\""
 	return command
 }

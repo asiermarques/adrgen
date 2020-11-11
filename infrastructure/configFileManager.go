@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/asiermarques/adrgen/domain"
 	"github.com/spf13/viper"
-	"path/filepath"
 )
 
 type privateConfigFileManager struct {
@@ -19,7 +18,7 @@ func (manager privateConfigFileManager) Persist(config domain.Config) error {
 	viper.SetConfigName(domain.CONFIG_FILENAME)
 	viper.SetConfigType(domain.CONFIG_FORMAT)
 	viper.Set("directory", config.TargetDirectory)
-	viper.Set("template_file", filepath.Join(config.TargetDirectory, config.TemplateFilename))
+	viper.Set("template_file", config.TemplateFilename)
 	viper.Set("default_meta", config.MetaParams)
 	viper.Set("supported_statuses", config.Statuses)
 	viper.Set("default_status", config.DefaultStatus)

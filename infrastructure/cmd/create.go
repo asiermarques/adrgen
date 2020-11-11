@@ -60,7 +60,7 @@ func NewCreateCmd() *cobra.Command {
 			fmt.Println(fmt.Sprintf("%s created\n", filename))
 		},
 	}
-	command.LocalFlags().StringSliceP("meta", "m", nil, "")
+	command.LocalFlags().StringSliceP("meta", "m", []string{}, "")
 	command.Example = "adrgen create \"Using ADR to record and maintain decisions records\""
 	return command
 }
