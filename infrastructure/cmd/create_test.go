@@ -8,12 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/asiermarques/adrgen/adr"
+	"github.com/asiermarques/adrgen/infrastructure"
+	"github.com/asiermarques/adrgen/domain"
 	"github.com/spf13/cobra"
 )
 
-var getFileContent = adr.GetFileContent
-var getDefaultTemplateFileContent = adr.DefaultTemplateContent
+var getFileContent = infrastructure.GetFileContent
+var templateService = domain.CreateTemplateService(nil)
 
 func assertCreateFile(
 	key int,
@@ -48,9 +49,6 @@ func Test_ExecuteCreateCommand(t *testing.T) {
 	cleanTestFiles(testFilesAndDirs)
 	defer cleanTestFiles(testFilesAndDirs)
 
-	cleanTestFiles(testFiles)
-	defer cleanTestFiles(testFiles)
-
 	for key, file := range testFiles {
 		assertCreateFile(key, file, NewCreateCmd(), t, nil)
 	}
@@ -61,14 +59,14 @@ func Test_ExecuteCreateCommand(t *testing.T) {
 	date := currentTime.Format("02-01-2006")
 
 	content, _ := getFileContent(fileWithMeta)
-	expectdContent := `---
+	expectedContent := `---
 param1: ""  
 param2: ""  
 param3: ""  
 ---
-` + getDefaultTemplateFileContent(date, "ADR title 3", "proposed")
-	if content != expectdContent {
-		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
+` + templateService.ParseDefaultTemplateContent(domain.TemplateData{Date: date, Title: "ADR title 3", Status: "proposed"})
+	if content != expectedContent {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedContent, content))
 	}
 }
 
@@ -77,11 +75,11 @@ func Test_ExecuteCreateCommandWithConfig(t *testing.T) {
 	configuredDirectory := "tests/adr"
 	configuredDirectoryAbs := filepath.Join(directory, configuredDirectory)
 	testFiles := []string{
-		filepath.Join(configuredDirectoryAbs, "1-adr-title-0.md"),
-		filepath.Join(configuredDirectoryAbs, "2-adr-title-1.md"),
-		filepath.Join(configuredDirectoryAbs, "3-adr-title-2.md"),
+		filepath.Join(configuredDirectoryAbs, "0001-adr-title-0.md"),
+		filepath.Join(configuredDirectoryAbs, "0002-adr-title-1.md"),
+		filepath.Join(configuredDirectoryAbs, "0003-adr-title-2.md"),
 	}
-	fileWithMeta := filepath.Join(configuredDirectoryAbs, "4-adr-title-3.md")
+	fileWithMeta := filepath.Join(configuredDirectoryAbs, "0004-adr-title-3.md")
 	testFilesAndDirs := append(testFiles, []string{
 		fileWithMeta,
 		filepath.Join(configuredDirectoryAbs, "adr_template.md"),
@@ -104,25 +102,25 @@ func Test_ExecuteCreateCommandWithConfig(t *testing.T) {
 	date := currentTime.Format("02-01-2006")
 
 	content, _ := getFileContent(fileWithMeta)
-	expectdContent := `---
+	expectedContent := `---
 param1: ""  
 param2: ""  
 param3: ""  
 ---
-` + getDefaultTemplateFileContent(date, "ADR title 3", "proposed")
-	if content != expectdContent {
-		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectdContent, content))
+` + templateService.ParseDefaultTemplateContent(domain.TemplateData{Date: date, Title: "ADR title 3", Status: "proposed"})
+	if content != expectedContent {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedContent, content))
 	}
 }
 
 func createConfigAndDirs(directoryToCreate string, directoryName string) {
 
 	os.MkdirAll(directoryToCreate, os.ModePerm)
-	adr.WriteFile(
+	infrastructure.WriteFile(
 		filepath.Join(directoryToCreate, "adr_template.md"),
-		adr.DefaultTemplateContent("{date}", "{title}", "{status}"),
+		domain.DEFAULT_TEMPLATE_CONTENT,
 	)
-	adr.WriteFile("adrgen.config.yml", fmt.Sprintf(`default_meta: []
+	infrastructure.WriteFile("adrgen.config.yml", fmt.Sprintf(`default_meta: []
 default_status: proposed
 directory: %s
 supported_statuses:
@@ -133,7 +131,7 @@ supported_statuses:
 - amended
 - deprecated
 template_file: %s/adr_template.md
-id_digit_number: 0
+id_digit_number: 4
 
 `, directoryName, directoryName))
 

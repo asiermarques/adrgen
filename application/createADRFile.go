@@ -1,58 +1,46 @@
 package application
 
 import (
-	"fmt"
-	"path/filepath"
-	"strings"
-
-	"github.com/asiermarques/adrgen/adr"
+	"github.com/asiermarques/adrgen/domain"
 )
 
 // CreateADRFile is the application service for creating a new ADR file
 //
-func CreateADRFile(date string, title string, config adr.Config) (string, error) {
-	files, filesSearchError := adr.FindADRFilesInDir(config.TargetDirectory)
-	if filesSearchError != nil {
-		return "", fmt.Errorf(
-			"create file: error listing directory files in %s %s ",
-			config.TargetDirectory,
-			filesSearchError,
-		)
+func CreateADRFile(
+	date string,
+	title string,
+	meta []string,
+	config domain.Config,
+	repository domain.ADRRepository,
+	writer domain.ADRWriter,
+	templateService domain.TemplateService,
+	) (string, error) {
+	lastId := repository.GetLastId()
+	ADRId := lastId + 1
+	templateContentData := domain.TemplateData{
+		Title: title,
+		Status: config.DefaultStatus,
+		Date: date,
+		Meta: meta,
 	}
-	ADRId := adr.GetLastIdFromFilenames(files)
-	NextId := ADRId + 1
-	fileName := adr.CreateFilename(NextId, title, config.IdDigitNumber)
 
 	var content string
 	if config.TemplateFilename == "" {
-		content = adr.DefaultTemplateContent(date, title, config.DefaultStatus)
+		content = templateService.ParseDefaultTemplateContent(templateContentData)
 	} else {
-		_content, err := createContentBodyFromTemplate(date, title, config.DefaultStatus, config.TemplateFilename)
+		_content, err := templateService.ParseCustomTemplateContent(templateContentData)
 		if err != nil {
-			return "", fmt.Errorf("error creating ADR from template %s file: %s ", config.TemplateFilename, err)
+			return "", err
 		}
 		content = _content
 	}
 
-	if config.MetaParams != nil && len(config.MetaParams) > 0 {
-		content = adr.CreateMetaContent(config.MetaParams) + "\n" + content
+	adr := domain.ADR{
+		Filename: domain.CreateADRFilename(ADRId, title, config.IdDigitNumber),
+		Content:  content,
+		ID:       ADRId,
+		Status:   config.DefaultStatus,
 	}
-
-	return adr.WriteFile(filepath.Join(config.TargetDirectory, fileName), content)
-}
-
-func createContentBodyFromTemplate(
-	date string,
-	title string,
-	status string,
-	templateFile string,
-) (string, error) {
-	var content, err = adr.GetFileContent(templateFile)
-	if err != nil {
-		return "", err
-	}
-	content = strings.Replace(content, "{title}", title, -1)
-	content = strings.Replace(content, "{status}", status, -1)
-	content = strings.Replace(content, "{date}", date, -1)
-	return content, nil
+	err := writer.Persist(adr)
+	return adr.Filename.Value(), err
 }

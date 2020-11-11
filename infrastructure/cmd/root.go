@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
-	"github.com/asiermarques/adrgen/adr"
+	"github.com/asiermarques/adrgen/domain"
+	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"
 )
 
@@ -37,18 +37,18 @@ func Execute() {
 
 // GetConfig is used by the CLI Commands that need the project's configuration values
 //
-func GetConfig(directory string) (adr.Config, error) {
+func GetConfig(directory string) (domain.Config, error) {
 	rootDirectory, err := os.Getwd()
 	if err != nil {
-		return adr.Config{}, err
+		return domain.Config{}, err
 	}
-	directory = filepath.Join(rootDirectory, directory)
-	config, err := adr.GetConfig(directory)
+
+	configManager := infrastructure.CreateConfigFileManager(rootDirectory)
+	config, err := configManager.Read()
 	if err != nil {
+		config := configManager.GetDefault()
 		config.TargetDirectory = rootDirectory
-	} else {
-		config.TargetDirectory = filepath.Join(rootDirectory, config.TargetDirectory)
-		config.TemplateFilename = filepath.Join(rootDirectory, config.TemplateFilename)
+		return config, nil
 	}
-	return config, err
+	return config, nil
 }

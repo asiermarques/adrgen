@@ -2,11 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"strings"
-
 	"github.com/asiermarques/adrgen/application"
+	"github.com/asiermarques/adrgen/domain"
+	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 // NewInitCmd creates the 'init' CLI Command related to the project initialization
@@ -36,7 +38,18 @@ func NewInitCmd() *cobra.Command {
 				meta[i] = strings.TrimSpace(value)
 			}
 
-			if err := application.InitProject(targetDirectory, "adr_template.md", meta); err != nil {
+			configManager := infrastructure.CreateConfigFileManager(".")
+			config := configManager.GetDefault()
+			config.TargetDirectory = targetDirectory
+			config.TemplateFilename = filepath.Join(targetDirectory, "adr_template.md")
+			config.MetaParams = meta
+
+
+
+			if err := application.InitProject(
+				config,
+				configManager,
+				infrastructure.CreateTemplateFileWriter(config)); err != nil {
 				fmt.Printf(
 					"an error occurred initializing the project in the target directory %s, %s",
 					targetDirectory,

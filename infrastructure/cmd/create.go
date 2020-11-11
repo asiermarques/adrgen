@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/asiermarques/adrgen/application"
 	"strings"
 	"time"
 
-	"github.com/asiermarques/adrgen/application"
-
+	"github.com/asiermarques/adrgen/domain"
+	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"
 )
 
@@ -43,7 +44,15 @@ func NewCreateCmd() *cobra.Command {
 			currentTime := time.Now()
 			date := currentTime.Format("02-01-2006")
 
-			filename, creationError := application.CreateADRFile(date, args[0], config)
+			filename, creationError := application.CreateADRFile(
+				date,
+				args[0],
+				meta,
+				config,
+				infrastructure.CreateADRRepository(config.TargetDirectory),
+				infrastructure.CreateFileADRWriter(config.TargetDirectory),
+				domain.CreateTemplateService(infrastructure.CreateCustomTemplateContentFileReader(config)),
+			)
 			if creationError != nil {
 				fmt.Println(creationError)
 				return

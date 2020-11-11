@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/asiermarques/adrgen/application"
 	"strconv"
 
-	"github.com/asiermarques/adrgen/application"
-
+	"github.com/asiermarques/adrgen/domain"
+	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +35,13 @@ func NewStatusChangeCmd() *cobra.Command {
 				return
 			}
 
-			filename, updateError := application.ChangeADRStatus(id, args[1], config)
+			filename, updateError := application.ChangeADRStatus(
+				id,
+				args[1],
+				infrastructure.CreateADRRepository(config.TargetDirectory),
+				domain.CreateADRStatusManager(config),
+				infrastructure.CreateFileADRWriter(config.TargetDirectory),
+			)
 			if updateError != nil {
 				fmt.Println(updateError)
 				return

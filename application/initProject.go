@@ -1,42 +1,26 @@
 package application
 
 import (
+	"github.com/asiermarques/adrgen/domain"
 	"fmt"
-	"path/filepath"
-
-	"github.com/asiermarques/adrgen/adr"
 )
 
 // InitProject is the application service for initialize the workdir and configuration
 //
-func InitProject(targetDirectory string, templateFilename string, metaParams []string) error {
-	_, err := adr.WriteFile(
-		filepath.Join(targetDirectory, templateFilename),
-		adr.DefaultTemplateContent("{date}", "{title}", "{status}"),
-	)
+func InitProject(
+	config domain.Config,
+	configManager domain.ConfigManager,
+	templateWriter domain.TemplateWriter,
+	) error {
+	err := templateWriter.Persist()
 	if err != nil {
-		return fmt.Errorf(
-			"error creating template file %s ",
-			filepath.Join(targetDirectory, templateFilename),
-		)
+		return err
 	}
 
-	err = createConfigFile(targetDirectory, templateFilename, metaParams)
+	err = configManager.Persist(config)
 	if err != nil {
-		return fmt.Errorf(
-			"error creating config file %s %s",
-			filepath.Join(targetDirectory, adr.CONFIG_FILENAME),
-			err,
-		)
+		return fmt.Errorf("error creating config file %s %s", domain.CONFIG_FILENAME + ".yml", err)
 	}
 
 	return nil
-}
-
-func createConfigFile(directory string, templateFilename string, meta []string) error {
-	config := adr.DefaultConfig()
-	config.TargetDirectory = directory
-	config.TemplateFilename = templateFilename
-	config.MetaParams = meta
-	return adr.CreateConfigFile(config)
 }
