@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/asiermarques/adrgen/application"
-	"github.com/asiermarques/adrgen/domain"
 	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"
 	"os"
