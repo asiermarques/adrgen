@@ -28,6 +28,72 @@ Status:accepted
 
 }
 
+func TestSupersede(t *testing.T) {
+
+	contentStub := `
+# My ADR Title
+Date: 09-11-2020
+
+## Status
+
+Status:accepted
+
+## Context`
+	expectedContent := `
+# My ADR Title
+Date: 09-11-2020
+
+## Status
+
+Status:accepted
+
+Supersedes [My ADR Title](0002-my-adr-title.md)
+
+## Context`
+
+	targetContentStub := `
+# My ADR Title
+Date: 09-11-2020
+
+## Status
+
+Status:accepted
+
+## Context`
+	expectedTargetContent := `
+# My ADR Title
+Date: 09-11-2020
+
+## Status
+
+Status: superseded
+
+Superseded by [My ADR Title](0001-my-adr-title.md)
+
+## Context`
+
+	relationsManager := CreateRelationsManager(CreateTemplateService(nil), CreateADRStatusManager(Config{}))
+
+	adr := ADR{
+		ID:       1,
+		Filename: CreateADRFilename(1, "My ADR Title", 4),
+		Content:  contentStub,
+	}
+	targetAdr := ADR{
+		ID: 2,
+		Filename: CreateADRFilename(2, "My ADR Title", 4),
+		Content: targetContentStub,
+	}
+	adr, targetAdr, _ = relationsManager.Supersede(adr, targetAdr)
+	if adr.Content != expectedContent {
+		t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedContent, adr.Content))
+	}
+	if targetAdr.Content != expectedTargetContent {
+		t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedTargetContent, targetAdr.Content))
+	}
+
+}
+
 func TestCreateFilename(t *testing.T) {
 	testFilename := func(expectedString string, id int, digitNumber int) {
 		result := CreateADRFilename(id, "New ADR", digitNumber)

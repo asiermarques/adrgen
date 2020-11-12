@@ -82,16 +82,15 @@ type ADRWriter interface {
 }
 
 type RelationsManager interface {
-	PersistSupersedeOperation(adr ADR, targetADR ADR)  (ADR, ADR, error)
+	Supersede(adr ADR, targetADR ADR)  (ADR, ADR, error)
 }
 
 type privateRelationsManager struct {
-	privateADRWriter ADRWriter
 	templateService TemplateService
 	statusManager ADRStatusManager
 }
 
-func (m privateRelationsManager) PersistSupersedeOperation(adr ADR, targetADR ADR) (ADR, ADR, error) {
+func (m privateRelationsManager) Supersede(adr ADR, targetADR ADR) (ADR, ADR, error) {
 	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
 	if !re.MatchString(adr.Content) {
 		return adr, targetADR, fmt.Errorf("ADR content have not a status field")
@@ -111,8 +110,8 @@ func (m privateRelationsManager) PersistSupersedeOperation(adr ADR, targetADR AD
 	return adr, targetADR, nil
 }
 
-func CreateRelationsManager(writer ADRWriter, service TemplateService, manager ADRStatusManager) RelationsManager {
-	return privateRelationsManager{writer, service, manager}
+func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
+	return privateRelationsManager{service, manager}
 }
 
 type ADRStatusManager interface {

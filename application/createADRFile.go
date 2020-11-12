@@ -3,6 +3,7 @@ package application
 import (
 	"fmt"
 	"github.com/asiermarques/adrgen/domain"
+	"strconv"
 )
 
 // CreateADRFile is the application service for creating a new ADR file
@@ -21,7 +22,7 @@ func CreateADRFile(
 	lastId := repository.GetLastId()
 	ADRId := lastId + 1
 	templateContentData := domain.TemplateData{
-		Title:  title,
+		Title:  string(ADRId) + ". " + title,
 		Status: config.DefaultStatus,
 		Date:   date,
 		Meta:   meta,
@@ -72,7 +73,7 @@ func supersedesADR(
 		return adr, targetADR, fmt.Errorf("error finding the superseeded ADR, the ADR file was not created. %s", err)
 	}
 
-	adr, targetADR, err = relationsManager.PersistSupersedeOperation(adr, targetADR)
+	adr, targetADR, err = relationsManager.Supersede(adr, targetADR)
 	if err != nil {
 		return adr, targetADR, err
 	}
