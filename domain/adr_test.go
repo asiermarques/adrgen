@@ -5,6 +5,29 @@ import (
 	"testing"
 )
 
+func TestGetTitleFromContent(t *testing.T)  {
+	contentStub := `
+# My ADR Title
+Date: 09-11-2020
+
+## Status
+
+Status:accepted
+
+## Context`
+
+	adr := ADR{
+		Content: contentStub,
+	}
+
+	result, _ := adr.getTitleFromContent()
+	expectedString := "My ADR Title"
+	if result != expectedString {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))
+	}
+
+}
+
 func TestCreateFilename(t *testing.T) {
 	testFilename := func(expectedString string, id int, digitNumber int) {
 		result := CreateADRFilename(id, "New ADR", digitNumber)

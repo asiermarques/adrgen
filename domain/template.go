@@ -44,6 +44,8 @@ type TemplateService interface {
 	ParseCustomTemplateContent(data TemplateData) (string, error)
 	ParseDefaultTemplateContent(data TemplateData) string
 	CreateMetaContent(parameters []string) string
+	CreateSupersedesLink(adr ADR) string
+	CreateSupersededByLink(adr ADR) string
 }
 
 type privateTemplateService struct {
@@ -86,6 +88,22 @@ func (s privateTemplateService) CreateMetaContent(parameters []string) string {
 		return fmt.Sprintf("---\n%s---\n", strings.Join(parameters, valueSeparator)+valueSeparator)
 	}
 	return ""
+}
+
+func (s privateTemplateService) CreateSupersedesLink(adr ADR) string {
+	title, err := adr.getTitleFromContent()
+	if err != nil {
+		return ""
+	}
+	return fmt.Sprintf("Supersedes [%s](%s)", title, adr.Filename.Value())
+}
+
+func (s privateTemplateService) CreateSupersededByLink(adr ADR) string {
+	title, err := adr.getTitleFromContent()
+	if err != nil {
+		return ""
+	}
+	return fmt.Sprintf("Superseded by [%s](%s)", title, adr.Filename.Value())
 }
 
 func CreateTemplateService(customTemplateContentReader CustomTemplateContentReader) TemplateService {

@@ -48,7 +48,28 @@ type ADR struct {
 	Filename ADRFilename
 	Status   string
 	Content  string
+	SupersededByID int
+	SupersedesID int
 }
+
+func (adr ADR) getTitleFromContent() (string, error) {
+	if adr.Content == "" {
+		return "", fmt.Errorf("ADR content not present")
+	}
+
+	re := regexp.MustCompile(`(?mi)^# (.+)$`)
+	if !re.MatchString(adr.Content) {
+		return "", fmt.Errorf("title not present in ADR Content")
+	}
+
+	matches := re.FindStringSubmatch(adr.Content)
+	if len(matches) < 2 || matches[1] == "" {
+		return "", fmt.Errorf("could not possible extracting the title from ADR Content")
+	}
+
+	return matches[1], nil
+}
+
 
 type ADRRepository interface {
 	FindAll() ([]ADR, error)
@@ -58,6 +79,48 @@ type ADRRepository interface {
 
 type ADRWriter interface {
 	Persist(adr ADR) error
+}
+
+type RelationsManager interface {
+
+}
+
+type privateRelationsManager struct {
+	privateADRWriter ADRWriter
+	templateService TemplateService
+	statusManager ADRStatusManager
+}
+
+func (m privateRelationsManager) PersistSupersedeOperation(adr ADR, targetADR ADR) error {
+	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
+	if !re.MatchString(adr.Content) {
+		return fmt.Errorf("ADR content have not a status field")
+	}
+	if !re.MatchString(targetADR.Content) {
+		return fmt.Errorf("target ADR content have not a status field")
+	}
+
+	targetADR, _ = m.statusManager.ChangeStatus(targetADR, "superseded")
+
+	matches := re.FindStringSubmatch(targetADR.Content)
+	targetADR.Content = strings.Replace(targetADR.Content, matches[0], matches[0] + "\n\n" + m.templateService.CreateSupersededByLink(adr), 1)
+	err := m.privateADRWriter.Persist(targetADR)
+	if err != nil {
+		return err
+	}
+
+	matches = re.FindStringSubmatch(adr.Content)
+	adr.Content = strings.Replace(adr.Content, matches[0], matches[0] + "\n\n" + m.templateService.CreateSupersedesLink(targetADR), 1)
+	err = m.privateADRWriter.Persist(adr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateRelationsManager(writer ADRWriter, service TemplateService, manager ADRStatusManager) RelationsManager {
+	return privateRelationsManager{writer, service, manager}
 }
 
 type ADRStatusManager interface {
@@ -71,7 +134,7 @@ type privateADRStatusManager struct {
 
 func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (ADR, error) {
 	if !manager.ValidateStatus(newStatus) {
-		return ADR{}, fmt.Errorf(
+		return adr, fmt.Errorf(
 			"status %s not allowed, please use one of these %s",
 			newStatus,
 			strings.Join(manager.configuration.Statuses, ", "),
