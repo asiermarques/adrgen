@@ -43,7 +43,7 @@ func NewCreateCmd() *cobra.Command {
 			}
 			config.MetaParams = append(config.MetaParams, meta...)
 
-			supersedesADRId, supersedesError := cmd.LocalFlags().GetStringSlice("meta")
+			supersedesADRId, supersedesError := cmd.LocalFlags().GetInt("meta")
 			if supersedesError != nil {
 				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
 				return
@@ -64,7 +64,7 @@ func NewCreateCmd() *cobra.Command {
 				infrastructure.CreateADRRepository(config.TargetDirectory),
 				adrWriter,
 				templateService,
-				domain.CreateRelationsManager(adrWriter, templateService, domain.CreateADRStatusManager(config))
+				domain.CreateRelationsManager(adrWriter, templateService, domain.CreateADRStatusManager(config)),
 			)
 			if creationError != nil {
 				fmt.Println(creationError)

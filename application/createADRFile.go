@@ -54,17 +54,17 @@ func CreateADRFile(
 		targetADR = _targetADR
 	}
 
-	adr, targetADR, err = relationsManager.PersistSupersedeOperation(adr ADR, targetADR ADR)
+	adr, targetADR, err := relationsManager.PersistSupersedeOperation(adr, targetADR)
 	if err != nil {
 		return "", err
 	}
 
-	err := writer.Persist(targetADR)
+	err = writer.Persist(targetADR)
 	if err != nil {
 		return "", err
 	}
 
-	err := writer.Persist(adr)
+	err = writer.Persist(adr)
 	if err != nil {
 		return adr.Filename.Value(), err
 	}
