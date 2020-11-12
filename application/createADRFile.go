@@ -46,17 +46,7 @@ func CreateADRFile(
 	}
 
 	if supersedesTargetADRId > 0 {
-		targetADR, err := repository.FindById(supersedesTargetADRId)
-		if err != nil {
-			return "", fmt.Errorf("error finding the superseeded ADR, the ADR file was not created. %s", err)
-		}
-
-		_adr, targetADR, err := relationsManager.PersistSupersedeOperation(adr, targetADR)
-		if err != nil {
-			return "", err
-		}
-
-		err = writer.Persist(targetADR)
+		_adr, _, err := supersedesADR(adr, supersedesTargetADRId, writer, relationsManager, repository)
 		if err != nil {
 			return "", err
 		}
@@ -69,4 +59,28 @@ func CreateADRFile(
 	}
 
 	return adr.Filename.Value(), err
+}
+
+func supersedesADR(
+	adr domain.ADR,
+	targetADRId int,
+	writer domain.ADRWriter,
+	relationsManager domain.RelationsManager,
+	repository domain.ADRRepository) (domain.ADR, domain.ADR, error)  {
+	targetADR, err := repository.FindById(targetADRId)
+	if err != nil {
+		return adr, targetADR, fmt.Errorf("error finding the superseeded ADR, the ADR file was not created. %s", err)
+	}
+
+	adr, targetADR, err = relationsManager.PersistSupersedeOperation(adr, targetADR)
+	if err != nil {
+		return adr, targetADR, err
+	}
+
+	err = writer.Persist(targetADR)
+	if err != nil {
+		return adr, targetADR, err
+	}
+
+	return adr, targetADR, nil
 }
