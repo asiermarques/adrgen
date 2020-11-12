@@ -82,7 +82,7 @@ type ADRWriter interface {
 }
 
 type RelationsManager interface {
-
+	PersistSupersedeOperation(adr ADR, targetADR ADR)  (ADR, ADR, error)
 }
 
 type privateRelationsManager struct {
@@ -91,32 +91,24 @@ type privateRelationsManager struct {
 	statusManager ADRStatusManager
 }
 
-func (m privateRelationsManager) PersistSupersedeOperation(adr ADR, targetADR ADR) error {
+func (m privateRelationsManager) PersistSupersedeOperation(adr ADR, targetADR ADR) (ADR, ADR, error) {
 	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
 	if !re.MatchString(adr.Content) {
-		return fmt.Errorf("ADR content have not a status field")
+		return adr, targetADR, fmt.Errorf("ADR content have not a status field")
 	}
 	if !re.MatchString(targetADR.Content) {
-		return fmt.Errorf("target ADR content have not a status field")
+		return adr, targetADR, fmt.Errorf("target ADR content have not a status field")
 	}
 
 	targetADR, _ = m.statusManager.ChangeStatus(targetADR, "superseded")
 
 	matches := re.FindStringSubmatch(targetADR.Content)
 	targetADR.Content = strings.Replace(targetADR.Content, matches[0], matches[0] + "\n\n" + m.templateService.CreateSupersededByLink(adr), 1)
-	err := m.privateADRWriter.Persist(targetADR)
-	if err != nil {
-		return err
-	}
 
 	matches = re.FindStringSubmatch(adr.Content)
 	adr.Content = strings.Replace(adr.Content, matches[0], matches[0] + "\n\n" + m.templateService.CreateSupersedesLink(targetADR), 1)
-	err = m.privateADRWriter.Persist(adr)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return adr, targetADR, nil
 }
 
 func CreateRelationsManager(writer ADRWriter, service TemplateService, manager ADRStatusManager) RelationsManager {
