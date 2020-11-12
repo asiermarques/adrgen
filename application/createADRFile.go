@@ -3,7 +3,6 @@ package application
 import (
 	"fmt"
 	"github.com/asiermarques/adrgen/domain"
-	"strconv"
 )
 
 // CreateADRFile is the application service for creating a new ADR file
