@@ -64,7 +64,7 @@ func NewCreateCmd() *cobra.Command {
 				infrastructure.CreateADRRepository(config.TargetDirectory),
 				adrWriter,
 				templateService,
-				domain.CreateRelationsManager(adrWriter, templateService, domain.CreateADRStatusManager(config)),
+				domain.CreateRelationsManager(templateService, domain.CreateADRStatusManager(config)),
 			)
 			if creationError != nil {
 				fmt.Println(creationError)
