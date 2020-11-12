@@ -3,6 +3,7 @@ package application
 import (
 	"fmt"
 	"github.com/asiermarques/adrgen/domain"
+	"strconv"
 )
 
 // CreateADRFile is the application service for creating a new ADR file
@@ -21,7 +22,7 @@ func CreateADRFile(
 	lastId := repository.GetLastId()
 	ADRId := lastId + 1
 	templateContentData := domain.TemplateData{
-		Title:  string(ADRId) + ". " + title,
+		Title:  strconv.Itoa(ADRId) + ". " + title,
 		Status: config.DefaultStatus,
 		Date:   date,
 		Meta:   meta,

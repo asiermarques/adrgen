@@ -43,7 +43,7 @@ func NewCreateCmd() *cobra.Command {
 			}
 			config.MetaParams = append(config.MetaParams, meta...)
 
-			supersedesADRId, supersedesError := cmd.LocalFlags().GetInt("meta")
+			supersedesADRId, supersedesError := cmd.LocalFlags().GetInt("supersedes")
 			if supersedesError != nil {
 				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
 				return
