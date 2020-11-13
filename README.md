@@ -97,6 +97,43 @@ technologies: ""
 
 They could be useful for an automated process that uses the ADR files to generate a living documentation website.
 
+
+**Supersede an ADR with another new ADR**
+
+If you make a decision that supersedes another previous one, a good practice is specify the relation in both ADR files.
+
+You can do it automatically adding the *-s* flag to the *create* command
+
+```
+adrgen create "Another adr that supersedes the previous one" -s 1
+```
+
+This adds the relation in both files
+
+```
+# My new adr
+
+Date: 11-11-2020
+
+## Status
+
+Status: superseded
+
+Superseded by [Another adr that supersedes the previous one](0002-another-adr-that-supersedes-the-previous-one.md)
+```
+
+```
+# Another adr that supersedes the previous one
+
+Date: 13-11-2020
+
+## Status
+
+Status: proposed
+
+Supersedes [My new adr](0001-my-new-adr.md)
+```
+
 ### Update the status of an ADR File
 
 We can change the status for an ADR file specifying its ID and the new status with the **status** command
