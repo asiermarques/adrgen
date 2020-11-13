@@ -145,7 +145,6 @@ adrgen status 9 "accepted"
 
 ### To-Do
 
-- [ ] Supersede one ADR with another one  
 - [ ] Amend one ADR with another one  
 - [ ] Generating a trace with the ADR history  
 - [ ] Change statuses in bulk
