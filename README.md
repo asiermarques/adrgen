@@ -2,10 +2,9 @@
 
 > work in progress
 
-
 [![<ORG_NAME>](https://circleci.com/gh/asiermarques/adrgen.svg?style=svg)](https://circleci.com/gh/asiermarques/adrgen) [![Go Report Card](https://goreportcard.com/badge/github.com/asiermarques/adrgen)](https://goreportcard.com/report/github.com/asiermarques/adrgen)
 
-Another little tool for generating Architecture Decision Records
+A command-line tool for generating and managing Architecture Decision Records
 
 
 ## Getting started
@@ -180,6 +179,4 @@ adrgen status 9 "accepted"
 
 ### To-Do
 
-- [ ] Generating a trace with the ADR history  
-- [ ] Improvements related to ADR relations
-- [ ] Generating reports
+You can see the next planned features in the [ADRgen project's board](https://github.com/asiermarques/adrgen/projects/1)
