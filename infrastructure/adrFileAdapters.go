@@ -81,7 +81,9 @@ func (repo privateADRDirectoryRepository) GetLastId() int {
 	return number
 }
 
-func CreateADRRepository(directory string) domain.ADRRepository {
+// CreateADRDirectoryRepository creates an instance of domain.ADRRepository repository that finds ADRs in a directory
+//
+func CreateADRDirectoryRepository(directory string) domain.ADRRepository {
 	return privateADRDirectoryRepository{directory}
 }
 
@@ -89,6 +91,8 @@ type privateFileADRWriter struct {
 	directory string
 }
 
+// CreateFileADRWriter creates a domain.ADRWriter instance that persist ADR Files in a directory
+//
 func CreateFileADRWriter(directory string) domain.ADRWriter {
 	return privateFileADRWriter{directory: directory}
 }

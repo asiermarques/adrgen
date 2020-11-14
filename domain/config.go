@@ -19,6 +19,8 @@ type Config struct {
 	IdDigitNumber    int
 }
 
+// ConfigManager is the interface for the service responsible of read and persist the configuration
+//
 type ConfigManager interface {
 	Persist(config Config) error
 	Read() (Config, error)

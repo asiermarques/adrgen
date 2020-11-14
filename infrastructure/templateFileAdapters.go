@@ -10,6 +10,8 @@ type privateCustomTemplateContentFileReader struct {
 	configuration domain.Config
 }
 
+// CreateCustomTemplateContentFileReader creates an domain.CustomTemplateContentReader that reads a template content from a file
+//
 func CreateCustomTemplateContentFileReader(config domain.Config) domain.CustomTemplateContentReader {
 	return privateCustomTemplateContentFileReader{configuration: config}
 }
@@ -26,6 +28,8 @@ type privateTemplateFileWriter struct {
 	configuration domain.Config
 }
 
+// CreateTemplateFileWriter creates an domain.TemplateWriter that writes the template content in a file
+//
 func CreateTemplateFileWriter(config domain.Config) domain.TemplateWriter {
 	return privateTemplateFileWriter{configuration: config}
 }

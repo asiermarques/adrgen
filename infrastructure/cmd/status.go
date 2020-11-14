@@ -38,7 +38,7 @@ func NewStatusChangeCmd() *cobra.Command {
 			filename, updateError := application.ChangeADRStatus(
 				id,
 				args[1],
-				infrastructure.CreateADRRepository(config.TargetDirectory),
+				infrastructure.CreateADRDirectoryRepository(config.TargetDirectory),
 				domain.CreateADRStatusManager(config),
 				infrastructure.CreateFileADRWriter(config.TargetDirectory),
 			)

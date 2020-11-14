@@ -67,7 +67,7 @@ func NewCreateCmd() *cobra.Command {
 				supersedesADRId,
 				amendsADRId,
 				config,
-				infrastructure.CreateADRRepository(config.TargetDirectory),
+				infrastructure.CreateADRDirectoryRepository(config.TargetDirectory),
 				adrWriter,
 				templateService,
 				domain.CreateRelationsManager(templateService, domain.CreateADRStatusManager(config)),

@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+// ADRFilename is the domain value object for the ADR filename property
+//
 type ADRFilename interface {
 	Value() string
 }
@@ -21,6 +23,8 @@ func (f privateADRFilename) Value() string {
 	return f.value
 }
 
+// CreateADRFilename creates the ADRFilename value object
+//
 func CreateADRFilename(id int, title string, idDigits int) ADRFilename {
 	if idDigits < 1 {
 		return privateADRFilename{value: fmt.Sprintf("%d-%s.md", id, slug.Make(title))}
@@ -30,6 +34,8 @@ func CreateADRFilename(id int, title string, idDigits int) ADRFilename {
 	}
 }
 
+// CreateADRFilenameFromFilenameString creates the ADRFilename value object from a filename string
+//
 func CreateADRFilenameFromFilenameString(filename string) (ADRFilename, error) {
 	if !ValidateADRFilename(filename) {
 		return &privateADRFilename{}, fmt.Errorf("filename not valid %s", filename)
@@ -38,11 +44,15 @@ func CreateADRFilenameFromFilenameString(filename string) (ADRFilename, error) {
 	return &privateADRFilename{value: filename}, nil
 }
 
+// ValidateADRFilename validates if a string is a correct filename for an ADR File
+//
 func ValidateADRFilename(name string) bool {
 	pattern := regexp.MustCompile(`(?mi)^\d+-.+\.md`)
 	return pattern.MatchString(name)
 }
 
+// ADR is the domain entity representing the ADR file
+//
 type ADR interface {
 	ID() int
 	Filename() ADRFilename
@@ -115,6 +125,8 @@ func (a privateADR) getStatusFromContent() (string, error) {
 	return matches[1], nil
 }
 
+// CreateADR creates the ADR entity and validates its required properties
+//
 func CreateADR(id int, content string, filename ADRFilename) (ADR, error) {
 
 	if id < 1 {
@@ -132,6 +144,8 @@ func CreateADR(id int, content string, filename ADRFilename) (ADR, error) {
 	return privateADR{id, filename, content}, nil
 }
 
+// ADRRepository is the repository for the ADR domain entity
+//
 type ADRRepository interface {
 	FindAll() ([]ADR, error)
 	FindById(id int) (ADR, error)
@@ -142,6 +156,8 @@ type ADRWriter interface {
 	Persist(adr ADR) error
 }
 
+// RelationsManager service that manage the relation links between ADR files
+//
 type RelationsManager interface {
 	AddRelation(adr ADR, targetADR ADR, relation string)  (ADR, ADR, error)
 	RelationIsValid(relation string)  bool
@@ -191,6 +207,8 @@ func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation st
 	return newAdr, newTargetAdr, nil
 }
 
+// CreateRelationsManager creates the RelationsManager service with its dependencies
+//
 func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
 	relations := make(map[string] relation)
 	relations["supersede"] = relation{mainTitle: "Supersedes", targetTitle: "Superseded by", targetStatus: "superseded"}
@@ -203,6 +221,8 @@ func CreateRelationsManager(service TemplateService, manager ADRStatusManager) R
 	}
 }
 
+// ADRStatusManager is the service that manages the status change in a ADR entity
+//
 type ADRStatusManager interface {
 	ChangeStatus(adr ADR, newStatus string) (ADR, error)
 	ValidateStatus(targetStatus string) bool
@@ -242,6 +262,8 @@ func (manager privateADRStatusManager) ValidateStatus(targetStatus string) bool 
 	return false
 }
 
+// CreateADRStatusManager creates the ADRStatusManager service with its dependencies
+//
 func CreateADRStatusManager(configuration Config) ADRStatusManager {
 	return privateADRStatusManager{
 		configuration: configuration,

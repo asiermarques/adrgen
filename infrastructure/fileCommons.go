@@ -26,6 +26,8 @@ func GetFileContent(filepath string) (string, error) {
 	return string(buffer), nil
 }
 
+// WriteFile writes a file in disk, overwriting the previous content
+//
 func WriteFile(filename string, content string) error {
 	file, err := os.OpenFile(
 		filename,

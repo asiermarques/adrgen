@@ -10,6 +10,8 @@ type privateConfigFileManager struct {
 	directory string
 }
 
+// CreateConfigFileManager creates an instance of domain.ConfigManager that manages the configuration in a config file
+//
 func CreateConfigFileManager(directory string) domain.ConfigManager {
 	return privateConfigFileManager{directory}
 }
