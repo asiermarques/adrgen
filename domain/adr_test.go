@@ -63,7 +63,7 @@ Date: 09-11-2020
 
 Status:accepted
 
-%s [My ADR Title](0002-my-adr-title.md)
+%s [My ADR Title](0002-my-adr-title.md)  
 
 ## Context`, relation.mainTitle)
 
@@ -75,7 +75,7 @@ Date: 09-11-2020
 
 Status: %s
 
-%s [My ADR Title](0001-my-adr-title.md)
+%s [My ADR Title](0001-my-adr-title.md)  
 
 ## Context`, relation.targetStatus, relation.targetTitle)
 
