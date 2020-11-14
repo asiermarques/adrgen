@@ -15,7 +15,7 @@ import (
 //
 func NewStatusChangeCmd() *cobra.Command {
 	command := &cobra.Command{
-		Use:   "status [new status] [ADR ID]",
+		Use:   "status [ADR ID] [new status]",
 		Short: "Update the status in a ADR File",
 		Long:  `Update the status in a ADR File`,
 		Args:  cobra.ExactArgs(2),
