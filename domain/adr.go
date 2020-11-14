@@ -153,6 +153,8 @@ type ADRRepository interface {
 	GetLastId() int
 }
 
+// ADRWriter service that persist the ADR entity
+//
 type ADRWriter interface {
 	Persist(adr ADR) error
 }

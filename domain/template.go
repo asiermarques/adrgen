@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// TemplateData represents the data that will be render by the TemplateService
+//
 type TemplateData struct {
 	Title  string
 	Status string
@@ -12,6 +14,8 @@ type TemplateData struct {
 	Meta   []string
 }
 
+// DEFAULT_TEMPLATE_CONTENT the default content for the template
+//
 const DEFAULT_TEMPLATE_CONTENT = `# {title}
 
 Date: {date}
@@ -32,14 +36,20 @@ What is the change that we're proposing and/or doing?
 
 What becomes easier or more difficult to do because of this change?`
 
+// TemplateWriter persist the content of the template
+//
 type TemplateWriter interface {
 	Persist() error
 }
 
+// CustomTemplateContentReader get the content of a template from a custom configured location
+//
 type CustomTemplateContentReader interface {
 	Read() (string, error)
 }
 
+// TemplateService service that renders the template content
+//
 type TemplateService interface {
 	RenderCustomTemplateContent(data TemplateData) (string, error)
 	RenderDefaultTemplateContent(data TemplateData) string
@@ -93,6 +103,8 @@ func (s privateTemplateService) RenderRelationLink(adr ADR, relationTitle string
 	return fmt.Sprintf("%s [%s](%s)  ", relationTitle, adr.Title(), adr.Filename().Value())
 }
 
+// CreateTemplateService creates a TemplateService instance
+//
 func CreateTemplateService(
 	customTemplateContentReader CustomTemplateContentReader,
 ) TemplateService {

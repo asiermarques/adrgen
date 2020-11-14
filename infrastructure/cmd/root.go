@@ -53,4 +53,6 @@ func GetConfig(directory string) (domain.Config, error) {
 	return config, nil
 }
 
+// MetaFlag slice for the meta param that could be used by the cli commands
+//
 var MetaFlag []string

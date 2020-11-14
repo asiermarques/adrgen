@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ADRId represents the ID for a related ADR File
+//
 var ADRId int
 
 // NewCreateCmd creates the 'create' CLI Command related to the ADR file creation
