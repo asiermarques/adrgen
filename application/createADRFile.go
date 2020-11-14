@@ -40,7 +40,7 @@ func CreateADRFile(
 		content = _content
 	}
 
-	adr := domain.CreateADR(ADRId, content, domain.CreateADRFilename(ADRId, title, config.IdDigitNumber))
+	adr, _ := domain.CreateADR(ADRId, content, domain.CreateADRFilename(ADRId, title, config.IdDigitNumber))
 
 	var relationError error
 	if supersedesTargetADRId > 0 {

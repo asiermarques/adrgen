@@ -115,8 +115,21 @@ func (a privateADR) getStatusFromContent() (string, error) {
 	return matches[1], nil
 }
 
-func CreateADR(id int, content string, filename ADRFilename) ADR {
-	return privateADR{id, filename, content}
+func CreateADR(id int, content string, filename ADRFilename) (ADR, error) {
+
+	if id < 1 {
+		return nil, fmt.Errorf("id parameter is required")
+	}
+
+	if content == "" {
+		return nil, fmt.Errorf("content is required")
+	}
+
+	if filename == nil {
+		return nil, fmt.Errorf("filename is required")
+	}
+
+	return privateADR{id, filename, content}, nil
 }
 
 type ADRRepository interface {
@@ -172,7 +185,10 @@ func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation st
 	matches = re.FindStringSubmatch(adr.Content())
 	adrContent := strings.Replace(adr.Content(), matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(targetADR, m.relations[relation].mainTitle), 1)
 
-	return CreateADR(adr.ID(), adrContent, adr.Filename()), CreateADR(targetADR.ID(), targetADRContent, targetADR.Filename()), nil
+	newAdr, _ := CreateADR(adr.ID(), adrContent, adr.Filename())
+	newTargetAdr, _ := CreateADR(targetADR.ID(), targetADRContent, targetADR.Filename())
+
+	return newAdr, newTargetAdr, nil
 }
 
 func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
@@ -210,7 +226,7 @@ func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (
 		return nil, fmt.Errorf("ADR content have not a status field")
 	}
 
-	return CreateADR(adr.ID(), re.ReplaceAllString(adr.Content(), "Status: " + newStatus), adr.Filename()), nil
+	return CreateADR(adr.ID(), re.ReplaceAllString(adr.Content(), "Status: " + newStatus), adr.Filename())
 }
 
 func (manager privateADRStatusManager) ValidateStatus(targetStatus string) bool {

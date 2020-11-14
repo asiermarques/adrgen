@@ -16,7 +16,7 @@ Status:accepted
 
 ## Context`
 
-	adr := CreateADR(1, contentStub, nil)
+	adr, _ := CreateADR(1, contentStub, CreateADRFilename(1, "My ADR Title", 4))
 
 	result := adr.Title()
 	expectedString := "My ADR Title"
@@ -79,8 +79,8 @@ Status: %s
 
 ## Context`, relation.targetStatus, relation.targetTitle)
 
-		adr := CreateADR(1, contentStub, CreateADRFilename(1, "My ADR Title", 4))
-		targetAdr := CreateADR(1,  targetContentStub, CreateADRFilename(2, "My ADR Title", 4))
+		adr, _ := CreateADR(1, contentStub, CreateADRFilename(1, "My ADR Title", 4))
+		targetAdr, _ := CreateADR(1,  targetContentStub, CreateADRFilename(2, "My ADR Title", 4))
 		adr, targetAdr, err := relationsManager.AddRelation(adr, targetAdr, relationKey)
 		if err != nil {
 			t.Fatal(fmt.Sprintf("an unexpected error was returned %s", err))
@@ -160,8 +160,8 @@ What is the issue that we're seeing that is motivating this decision or change?
 `
 
 	statusManager := CreateADRStatusManager(Config{})
-
-	adr, err := statusManager.ChangeStatus(CreateADR(1, contentStub, nil), "accepted")
+	_adr, _ := CreateADR(1, contentStub, CreateADRFilename(1, "Title", 4))
+	adr, err := statusManager.ChangeStatus(_adr, "accepted")
 	if err != nil || expected != adr.Content() {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content(), err))
 	}
@@ -188,8 +188,8 @@ Status: rejected
 ## Context
 
 `
-
-	adr, err = statusManager.ChangeStatus(CreateADR(1, contentStub, nil), "rejected")
+	_adr, _ = CreateADR(1, contentStub, CreateADRFilename(1, "Title", 4))
+	adr, err = statusManager.ChangeStatus(_adr, "rejected")
 	if err != nil || expected != adr.Content() {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content(), err))
 	}

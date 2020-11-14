@@ -39,8 +39,12 @@ func (repo privateADRDirectoryRepository) FindAll() ([]domain.ADR, error) {
 			id, _ := extractIdFromADRFilename(file.Name())
 			content, _ := GetFileContent(filepath.Join(repo.directory, file.Name()))
 			filename, _ := domain.CreateADRFilenameFromFilenameString(file.Name())
+			adr, err := domain.CreateADR(id, content, filename)
+			if err != nil {
+				return nil, fmt.Errorf("file %s has not content", file.Name())
+			}
 
-			result = append(result, domain.CreateADR(id, content, filename))
+			result = append(result, adr)
 		}
 	}
 	return result, nil
