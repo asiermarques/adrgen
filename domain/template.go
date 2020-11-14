@@ -41,11 +41,10 @@ type CustomTemplateContentReader interface {
 }
 
 type TemplateService interface {
-	ParseCustomTemplateContent(data TemplateData) (string, error)
-	ParseDefaultTemplateContent(data TemplateData) string
-	CreateMetaContent(parameters []string) string
-	CreateSupersedesLink(adr ADR) string
-	CreateSupersededByLink(adr ADR) string
+	RenderCustomTemplateContent(data TemplateData) (string, error)
+	RenderDefaultTemplateContent(data TemplateData) string
+	RenderMetaContent(parameters []string) string
+	RenderRelationLink(adr ADR, relationTitle string) string
 }
 
 type privateTemplateService struct {
@@ -59,30 +58,30 @@ func parseTemplateContent(data TemplateData, content string) string {
 	return content
 }
 
-func (s privateTemplateService) ParseCustomTemplateContent(data TemplateData) (string, error) {
+func (s privateTemplateService) RenderCustomTemplateContent(data TemplateData) (string, error) {
 	content, err := s.customTemplateContentReader.Read()
 	if err != nil {
 		return "", err
 	}
 
 	if len(data.Meta) > 0 {
-		content = s.CreateMetaContent(data.Meta) + "\n" + content
+		content = s.RenderMetaContent(data.Meta) + "\n" + content
 	}
 
 	return parseTemplateContent(data, content), nil
 }
 
-func (s privateTemplateService) ParseDefaultTemplateContent(data TemplateData) string {
+func (s privateTemplateService) RenderDefaultTemplateContent(data TemplateData) string {
 	content := ""
 	if len(data.Meta) > 0 {
-		content = s.CreateMetaContent(data.Meta)
+		content = s.RenderMetaContent(data.Meta)
 	}
 	content = content + "\n" + DEFAULT_TEMPLATE_CONTENT
 
 	return parseTemplateContent(data, content)
 }
 
-func (s privateTemplateService) CreateMetaContent(parameters []string) string {
+func (s privateTemplateService) RenderMetaContent(parameters []string) string {
 	if len(parameters) > 0 {
 		valueSeparator := ": \"\"  \n"
 		return fmt.Sprintf("---\n%s---\n", strings.Join(parameters, valueSeparator)+valueSeparator)
@@ -90,21 +89,15 @@ func (s privateTemplateService) CreateMetaContent(parameters []string) string {
 	return ""
 }
 
-func (s privateTemplateService) CreateSupersedesLink(adr ADR) string {
-	title, err := adr.getTitleFromContent()
+func (s privateTemplateService) RenderRelationLink(adr ADR, relationTitle string) string {
+	adrTitle, err := adr.getTitleFromContent()
 	if err != nil {
 		return ""
 	}
-	return fmt.Sprintf("Supersedes [%s](%s)", title, adr.Filename.Value())
+	return fmt.Sprintf("%s [%s](%s)", relationTitle, adrTitle, adr.Filename.Value())
 }
 
-func (s privateTemplateService) CreateSupersededByLink(adr ADR) string {
-	title, err := adr.getTitleFromContent()
-	if err != nil {
-		return ""
-	}
-	return fmt.Sprintf("Superseded by [%s](%s)", title, adr.Filename.Value())
-}
+
 
 func CreateTemplateService(customTemplateContentReader CustomTemplateContentReader) TemplateService {
 	return privateTemplateService{customTemplateContentReader}

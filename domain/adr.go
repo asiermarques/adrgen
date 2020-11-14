@@ -82,15 +82,32 @@ type ADRWriter interface {
 }
 
 type RelationsManager interface {
-	Supersede(adr ADR, targetADR ADR)  (ADR, ADR, error)
+	AddRelation(adr ADR, targetADR ADR, relation string)  (ADR, ADR, error)
+	RelationIsValid(relation string)  bool
+}
+
+type relation struct {
+	mainTitle string
+	targetTitle string
+	targetStatus string
 }
 
 type privateRelationsManager struct {
+	relations map[string] relation
 	templateService TemplateService
 	statusManager ADRStatusManager
 }
 
-func (m privateRelationsManager) Supersede(adr ADR, targetADR ADR) (ADR, ADR, error) {
+func (m privateRelationsManager) RelationIsValid(relation string) bool {
+	_, result := m.relations[relation]
+	return result
+}
+
+func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation string) (ADR, ADR, error) {
+	if !m.RelationIsValid(relation) {
+		return adr, targetADR, fmt.Errorf("relation %s is not valid", relation)
+	}
+
 	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
 	if !re.MatchString(adr.Content) {
 		return adr, targetADR, fmt.Errorf("ADR content have not a status field")
@@ -99,19 +116,27 @@ func (m privateRelationsManager) Supersede(adr ADR, targetADR ADR) (ADR, ADR, er
 		return adr, targetADR, fmt.Errorf("target ADR content have not a status field")
 	}
 
-	targetADR, _ = m.statusManager.ChangeStatus(targetADR, "superseded")
+	targetADR, _ = m.statusManager.ChangeStatus(targetADR, m.relations[relation].targetStatus)
 
 	matches := re.FindStringSubmatch(targetADR.Content)
-	targetADR.Content = strings.Replace(targetADR.Content, matches[0], matches[0] + "\n\n" + m.templateService.CreateSupersededByLink(adr), 1)
+	targetADR.Content = strings.Replace(targetADR.Content, matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(adr, m.relations[relation].targetTitle), 1)
 
 	matches = re.FindStringSubmatch(adr.Content)
-	adr.Content = strings.Replace(adr.Content, matches[0], matches[0] + "\n\n" + m.templateService.CreateSupersedesLink(targetADR), 1)
+	adr.Content = strings.Replace(adr.Content, matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(targetADR, m.relations[relation].mainTitle), 1)
 
 	return adr, targetADR, nil
 }
 
 func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
-	return privateRelationsManager{service, manager}
+	relations := make(map[string] relation)
+	relations["supersede"] = relation{mainTitle: "Supersedes", targetTitle: "Superseded by", targetStatus: "superseded"}
+	relations["amend"] = relation{mainTitle: "Amends", targetTitle: "Amended by", targetStatus: "amended"}
+
+	return privateRelationsManager{
+		relations,
+		service,
+		manager,
+	}
 }
 
 type ADRStatusManager interface {

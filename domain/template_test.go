@@ -13,13 +13,13 @@ param2: ""
 `
 
 	templateService := CreateTemplateService(nil)
-	result := templateService.CreateMetaContent([]string{"param1", "param2"})
+	result := templateService.RenderMetaContent([]string{"param1", "param2"})
 	if expectedString != result {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))
 	}
 
 	expectedString = ``
-	result = templateService.CreateMetaContent([]string{})
+	result = templateService.RenderMetaContent([]string{})
 	if expectedString != result {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))
 	}

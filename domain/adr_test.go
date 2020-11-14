@@ -28,8 +28,7 @@ Status:accepted
 
 }
 
-func TestSupersede(t *testing.T) {
-
+func TestRelation(t *testing.T) {
 	contentStub := `
 # My ADR Title
 Date: 09-11-2020
@@ -37,17 +36,6 @@ Date: 09-11-2020
 ## Status
 
 Status:accepted
-
-## Context`
-	expectedContent := `
-# My ADR Title
-Date: 09-11-2020
-
-## Status
-
-Status:accepted
-
-Supersedes [My ADR Title](0002-my-adr-title.md)
 
 ## Context`
 
@@ -60,38 +48,60 @@ Date: 09-11-2020
 Status:accepted
 
 ## Context`
-	expectedTargetContent := `
+
+	relations := make(map[string] relation)
+	relations["supersede"] = relation{mainTitle: "Supersedes", targetTitle: "Superseded by", targetStatus: "superseded"}
+	relations["amend"] = relation{mainTitle: "Amends", targetTitle: "Amended by", targetStatus: "amended"}
+
+	relationsManager := CreateRelationsManager(CreateTemplateService(nil), CreateADRStatusManager(Config{}))
+
+	for relationKey, relation := range relations {
+
+		expectedContent := fmt.Sprintf(`
 # My ADR Title
 Date: 09-11-2020
 
 ## Status
 
-Status: superseded
+Status:accepted
 
-Superseded by [My ADR Title](0001-my-adr-title.md)
+%s [My ADR Title](0002-my-adr-title.md)
 
-## Context`
+## Context`, relation.mainTitle)
 
-	relationsManager := CreateRelationsManager(CreateTemplateService(nil), CreateADRStatusManager(Config{}))
+		expectedTargetContent := fmt.Sprintf(`
+# My ADR Title
+Date: 09-11-2020
 
-	adr := ADR{
-		ID:       1,
-		Filename: CreateADRFilename(1, "My ADR Title", 4),
-		Content:  contentStub,
+## Status
+
+Status: %s
+
+%s [My ADR Title](0001-my-adr-title.md)
+
+## Context`, relation.targetStatus, relation.targetTitle)
+
+		adr := ADR{
+			ID:       1,
+			Filename: CreateADRFilename(1, "My ADR Title", 4),
+			Content:  contentStub,
+		}
+		targetAdr := ADR{
+			ID: 2,
+			Filename: CreateADRFilename(2, "My ADR Title", 4),
+			Content: targetContentStub,
+		}
+		adr, targetAdr, err := relationsManager.AddRelation(adr, targetAdr, relationKey)
+		if err != nil {
+			t.Fatal(fmt.Sprintf("an unexpected error was returned %s", err))
+		}
+		if adr.Content != expectedContent {
+			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedContent, adr.Content))
+		}
+		if targetAdr.Content != expectedTargetContent {
+			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedTargetContent, targetAdr.Content))
+		}
 	}
-	targetAdr := ADR{
-		ID: 2,
-		Filename: CreateADRFilename(2, "My ADR Title", 4),
-		Content: targetContentStub,
-	}
-	adr, targetAdr, _ = relationsManager.Supersede(adr, targetAdr)
-	if adr.Content != expectedContent {
-		t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedContent, adr.Content))
-	}
-	if targetAdr.Content != expectedTargetContent {
-		t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedTargetContent, targetAdr.Content))
-	}
-
 }
 
 func TestCreateFilename(t *testing.T) {
