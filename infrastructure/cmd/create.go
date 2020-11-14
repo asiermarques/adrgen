@@ -12,9 +12,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ADRId represents the ID for a related ADR File
+// SupersededADRId represents the ID for a superseded ADR File
 //
-var ADRId int
+var SupersededADRId int
+
+// AmendedADRId represents the ID for a amended ADR File
+//
+var AmendedADRId int
 
 // NewCreateCmd creates the 'create' CLI Command related to the ADR file creation
 //
@@ -91,8 +95,8 @@ func NewCreateCmd() *cobra.Command {
 		},
 	}
 
-	command.Flags().IntVarP(&ADRId, "supersedes", "s", 0, "")
-	command.Flags().IntVarP(&ADRId, "amends", "a", 0, "")
+	command.Flags().IntVarP(&SupersededADRId, "supersedes", "s", 0, "")
+	command.Flags().IntVarP(&AmendedADRId, "amends", "a", 0, "")
 	command.Flags().StringSliceVarP(&MetaFlag, "meta", "m", []string{}, "")
 
 	command.Example = "adrgen create \"Using ADR to record and maintain decisions records\""
