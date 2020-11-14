@@ -64,7 +64,7 @@ param1: ""
 param2: ""  
 param3: ""  
 ---
-` + templateService.ParseDefaultTemplateContent(domain.TemplateData{Date: date, Title: "4. ADR title 3", Status: "proposed"})
+` + templateService.RenderDefaultTemplateContent(domain.TemplateData{Date: date, Title: "4. ADR title 3", Status: "proposed"})
 	if content != expectedContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedContent, content))
 	}
@@ -107,7 +107,7 @@ param1: ""
 param2: ""  
 param3: ""  
 ---
-` + templateService.ParseDefaultTemplateContent(domain.TemplateData{Date: date, Title: "4. ADR title 3", Status: "proposed"})
+` + templateService.RenderDefaultTemplateContent(domain.TemplateData{Date: date, Title: "4. ADR title 3", Status: "proposed"})
 	if content != expectedContent {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedContent, content))
 	}

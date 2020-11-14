@@ -48,6 +48,11 @@ func NewCreateCmd() *cobra.Command {
 				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
 				return
 			}
+			amendsADRId, supersedesError := cmd.LocalFlags().GetInt("amends")
+			if supersedesError != nil {
+				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
+				return
+			}
 
 			currentTime := time.Now()
 			date := currentTime.Format("02-01-2006")
@@ -60,6 +65,7 @@ func NewCreateCmd() *cobra.Command {
 				args[0],
 				meta,
 				supersedesADRId,
+				amendsADRId,
 				config,
 				infrastructure.CreateADRRepository(config.TargetDirectory),
 				adrWriter,
@@ -73,9 +79,13 @@ func NewCreateCmd() *cobra.Command {
 			fmt.Println(fmt.Sprintf("%s created\n", filename))
 		},
 	}
+
 	command.Flags().IntVarP(&ADRId, "supersedes", "s", 0, "")
+	command.Flags().IntVarP(&ADRId, "amends", "a", 0, "")
 	command.Flags().StringSliceVarP(&MetaFlag, "meta", "m", []string{}, "")
+
 	command.Example = "adrgen create \"Using ADR to record and maintain decisions records\""
+
 	return command
 }
 
