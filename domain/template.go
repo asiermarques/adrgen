@@ -90,11 +90,7 @@ func (s privateTemplateService) RenderMetaContent(parameters []string) string {
 }
 
 func (s privateTemplateService) RenderRelationLink(adr ADR, relationTitle string) string {
-	adrTitle, err := adr.getTitleFromContent()
-	if err != nil {
-		return ""
-	}
-	return fmt.Sprintf("%s [%s](%s)  ", relationTitle, adrTitle, adr.Filename().Value())
+	return fmt.Sprintf("%s [%s](%s)  ", relationTitle, adr.Title(), adr.Filename().Value())
 }
 
 

@@ -18,7 +18,7 @@ Status:accepted
 
 	adr := CreateADR(1, contentStub, nil)
 
-	result, _ := adr.getTitleFromContent()
+	result := adr.Title()
 	expectedString := "My ADR Title"
 	if result != expectedString {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result))

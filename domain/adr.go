@@ -49,7 +49,6 @@ type ADR interface {
 	Status() string
 	Title() string
 	Content() string
-	getTitleFromContent() (string, error)
 }
 
 type privateADR struct {
