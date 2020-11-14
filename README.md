@@ -81,6 +81,9 @@ adrgen create "My new a"
 
 **Specify meta parameters**
 
+Sometimes, adding meta variables are useful in order to make it simpler to integrate the ADR Files with other proceses.  
+For example, we can add the meta parameters to generate a static generated documention website based on the Gatsby CMS system.
+
 ```
 adrgen create "My new a" -m "components, technologies"
 ```
@@ -95,14 +98,11 @@ technologies: ""
 # My new a
 ```
 
-They could be useful for an automated process that uses the ADR files to generate a living documentation website.
-
-
 **Supersede an ADR with another new ADR**
 
 If you make a decision that supersedes another previous one, a good practice is specify the relation in both ADR files.
 
-You can do it automatically adding the *-s* flag to the *create* command
+You can do it automatically adding the **-s** flag to the **create** command
 
 ```
 adrgen create "Another a that supersedes the previous one" -s 1
@@ -134,6 +134,42 @@ Status: proposed
 Supersedes [My new a](0001-my-new-a.md)
 ```
 
+**Amend an ADR with another new ADR**
+
+If you make a decision that improves another previous one, a good practice is specify the relation in both ADR files.
+
+You can do it automatically adding the **-a** flag to the **create** command
+
+```
+adrgen create "Another a that improves the previous one" -a 1
+```
+
+This adds the relation in both files
+
+```
+# My new a
+
+Date: 11-11-2020
+
+## Status
+
+Status: amended
+
+Amended by [Another a that improves the previous one](0002-another-a-that-improves-the-previous-one.md)
+```
+
+```
+# Another a that improves the previous one
+
+Date: 13-11-2020
+
+## Status
+
+Status: proposed
+
+Amends [My new a](0001-my-new-a.md)
+```
+
 ### Update the status of an ADR File
 
 We can change the status for an ADR file specifying its ID and the new status with the **status** command
@@ -142,10 +178,8 @@ We can change the status for an ADR file specifying its ID and the new status wi
 adrgen status 9 "accepted"
 ```
 
-
 ### To-Do
 
-- [ ] Amend one ADR with another one  
 - [ ] Generating a trace with the ADR history  
-- [ ] Change statuses in bulk
+- [ ] Improvements related to ADR relations
 - [ ] Generating reports

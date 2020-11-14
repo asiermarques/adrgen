@@ -94,7 +94,7 @@ func (s privateTemplateService) RenderRelationLink(adr ADR, relationTitle string
 	if err != nil {
 		return ""
 	}
-	return fmt.Sprintf("%s [%s](%s)", relationTitle, adrTitle, adr.Filename().Value())
+	return fmt.Sprintf("%s [%s](%s)  ", relationTitle, adrTitle, adr.Filename().Value())
 }
 
 
