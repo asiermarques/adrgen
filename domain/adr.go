@@ -47,6 +47,7 @@ type ADR interface {
 	ID() int
 	Filename() ADRFilename
 	Status() string
+	Title() string
 	Content() string
 	getTitleFromContent() (string, error)
 }
@@ -54,7 +55,6 @@ type ADR interface {
 type privateADR struct {
 	id       int
 	filename ADRFilename
-	status   string
 	content  string
 }
 
@@ -67,7 +67,13 @@ func (a privateADR) Filename() ADRFilename {
 }
 
 func (a privateADR) Status() string {
-	return a.status
+	status, _ := a.getStatusFromContent()
+	return status
+}
+
+func (a privateADR) Title() string {
+	title, _ := a.getTitleFromContent()
+	return title
 }
 
 func (a privateADR) Content() string {
@@ -92,8 +98,26 @@ func (a privateADR) getTitleFromContent() (string, error) {
 	return matches[1], nil
 }
 
-func CreateADR(id int, status string, content string, filename ADRFilename) ADR {
-	return privateADR{id, filename, status, content}
+func (a privateADR) getStatusFromContent() (string, error) {
+	if a.content == "" {
+		return "", fmt.Errorf("ADR content not present")
+	}
+
+	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
+	if !re.MatchString(a.content) {
+		return "", fmt.Errorf("status not present in ADR Content")
+	}
+
+	matches := re.FindStringSubmatch(a.content)
+	if len(matches) < 2 || matches[1] == "" {
+		return "", fmt.Errorf("could not possible extracting the status from ADR Content")
+	}
+
+	return matches[1], nil
+}
+
+func CreateADR(id int, content string, filename ADRFilename) ADR {
+	return privateADR{id, filename, content}
 }
 
 type ADRRepository interface {
@@ -149,7 +173,7 @@ func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation st
 	matches = re.FindStringSubmatch(adr.Content())
 	adrContent := strings.Replace(adr.Content(), matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(targetADR, m.relations[relation].mainTitle), 1)
 
-	return CreateADR(adr.ID(), adr.Status(), adrContent, adr.Filename()), CreateADR(targetADR.ID(), targetADR.Status(), targetADRContent, targetADR.Filename()), nil
+	return CreateADR(adr.ID(), adrContent, adr.Filename()), CreateADR(targetADR.ID(), targetADRContent, targetADR.Filename()), nil
 }
 
 func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
@@ -187,7 +211,7 @@ func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (
 		return nil, fmt.Errorf("ADR content have not a status field")
 	}
 
-	return CreateADR(adr.ID(), newStatus, re.ReplaceAllString(adr.Content(), "Status: " + newStatus), adr.Filename()), nil
+	return CreateADR(adr.ID(), re.ReplaceAllString(adr.Content(), "Status: " + newStatus), adr.Filename()), nil
 }
 
 func (manager privateADRStatusManager) ValidateStatus(targetStatus string) bool {

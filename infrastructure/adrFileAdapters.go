@@ -40,11 +40,7 @@ func (repo privateADRDirectoryRepository) FindAll() ([]domain.ADR, error) {
 			content, _ := GetFileContent(filepath.Join(repo.directory, file.Name()))
 			filename, _ := domain.CreateADRFilenameFromFilenameString(file.Name())
 
-			result = append(result, domain.ADR{
-				ID:       id,
-				Filename: filename,
-				Content:  content,
-			})
+			result = append(result, domain.CreateADR(id, content, filename))
 		}
 	}
 	return result, nil
@@ -55,14 +51,14 @@ func (repo privateADRDirectoryRepository) FindAll() ([]domain.ADR, error) {
 func (repo privateADRDirectoryRepository) FindById(id int) (domain.ADR, error) {
 	ADRs, err := repo.FindAll()
 	if err != nil {
-		return domain.ADR{}, err
+		return nil, err
 	}
 	for _, adr := range ADRs {
-		if adr.ID == id {
+		if adr.ID() == id {
 			return adr, nil
 		}
 	}
-	return domain.ADR{}, fmt.Errorf("file not found for ADR Id %d", id)
+	return nil, fmt.Errorf("file not found for ADR Id %d", id)
 }
 
 // GetLastIdFromFilenames find the last ID from a file list
@@ -73,8 +69,8 @@ func (repo privateADRDirectoryRepository) GetLastId() int {
 	ADRs, _ := repo.FindAll()
 	if len(ADRs) > 0 {
 		for _, ADR := range ADRs {
-			if ADR.ID > number {
-				number = ADR.ID
+			if ADR.ID() > number {
+				number = ADR.ID()
 			}
 		}
 	}
@@ -94,5 +90,5 @@ func CreateFileADRWriter(directory string) domain.ADRWriter {
 }
 
 func (w privateFileADRWriter) Persist(adr domain.ADR) error {
-	return WriteFile(filepath.Join(w.directory, adr.Filename.Value()), adr.Content)
+	return WriteFile(filepath.Join(w.directory, adr.Filename().Value()), adr.Content())
 }
