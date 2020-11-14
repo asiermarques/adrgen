@@ -61,7 +61,7 @@ func CreateADRFile(
 	if amendsTargetADRId > 0 {
 		adr, _, relationError = addRelation(
 			adr,
-			supersedesTargetADRId,
+			amendsTargetADRId,
 			"amend",
 			writer,
 			relationsManager,
