@@ -76,13 +76,13 @@ id_digit_number: 4
 **Simple Usage**
 
 ```
-adrgen create "My new adr"
+adrgen create "My new a"
 ```
 
 **Specify meta parameters**
 
 ```
-adrgen create "My new adr" -m "components, technologies"
+adrgen create "My new a" -m "components, technologies"
 ```
 
 The meta parameters will add a meta section on the top of the generated file.  
@@ -92,7 +92,7 @@ components: ""
 technologies: ""
 ---
 
-# My new adr
+# My new a
 ```
 
 They could be useful for an automated process that uses the ADR files to generate a living documentation website.
@@ -105,13 +105,13 @@ If you make a decision that supersedes another previous one, a good practice is 
 You can do it automatically adding the *-s* flag to the *create* command
 
 ```
-adrgen create "Another adr that supersedes the previous one" -s 1
+adrgen create "Another a that supersedes the previous one" -s 1
 ```
 
 This adds the relation in both files
 
 ```
-# My new adr
+# My new a
 
 Date: 11-11-2020
 
@@ -119,11 +119,11 @@ Date: 11-11-2020
 
 Status: superseded
 
-Superseded by [Another adr that supersedes the previous one](0002-another-adr-that-supersedes-the-previous-one.md)
+Superseded by [Another a that supersedes the previous one](0002-another-a-that-supersedes-the-previous-one.md)
 ```
 
 ```
-# Another adr that supersedes the previous one
+# Another a that supersedes the previous one
 
 Date: 13-11-2020
 
@@ -131,7 +131,7 @@ Date: 13-11-2020
 
 Status: proposed
 
-Supersedes [My new adr](0001-my-new-adr.md)
+Supersedes [My new a](0001-my-new-a.md)
 ```
 
 ### Update the status of an ADR File

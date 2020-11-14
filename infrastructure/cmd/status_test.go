@@ -21,7 +21,7 @@ func Test_ExecuteStatusCommand(t *testing.T) {
 
 	templateService := domain.CreateTemplateService(nil)
 
-	infrastructure.WriteFile(targetFile, templateService.ParseDefaultTemplateContent(domain.TemplateData{
+	infrastructure.WriteFile(targetFile, templateService.RenderDefaultTemplateContent(domain.TemplateData{
 		Status: "proposed",
 		Date:   "20-10-2020",
 		Title:  "Test",

@@ -43,26 +43,48 @@ func ValidateADRFilename(name string) bool {
 	return pattern.MatchString(name)
 }
 
-type ADR struct {
-	ID       int
-	Filename ADRFilename
-	Status   string
-	Content  string
-	SupersededByID int
-	SupersedesID int
+type ADR interface {
+	ID() int
+	Filename() ADRFilename
+	Status() string
+	Content() string
+	getTitleFromContent() (string, error)
 }
 
-func (adr ADR) getTitleFromContent() (string, error) {
-	if adr.Content == "" {
+type privateADR struct {
+	id       int
+	filename ADRFilename
+	status   string
+	content  string
+}
+
+func (a privateADR) ID() int {
+	return a.id
+}
+
+func (a privateADR) Filename() ADRFilename {
+	return a.filename
+}
+
+func (a privateADR) Status() string {
+	return a.status
+}
+
+func (a privateADR) Content() string {
+	return a.content
+}
+
+func (a privateADR) getTitleFromContent() (string, error) {
+	if a.content == "" {
 		return "", fmt.Errorf("ADR content not present")
 	}
 
 	re := regexp.MustCompile(`(?mi)^# (.+)$`)
-	if !re.MatchString(adr.Content) {
+	if !re.MatchString(a.content) {
 		return "", fmt.Errorf("title not present in ADR Content")
 	}
 
-	matches := re.FindStringSubmatch(adr.Content)
+	matches := re.FindStringSubmatch(a.content)
 	if len(matches) < 2 || matches[1] == "" {
 		return "", fmt.Errorf("could not possible extracting the title from ADR Content")
 	}
@@ -70,6 +92,9 @@ func (adr ADR) getTitleFromContent() (string, error) {
 	return matches[1], nil
 }
 
+func CreateADR(id int, status string, content string, filename ADRFilename) ADR {
+	return privateADR{id, filename, status, content}
+}
 
 type ADRRepository interface {
 	FindAll() ([]ADR, error)
@@ -109,22 +134,22 @@ func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation st
 	}
 
 	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
-	if !re.MatchString(adr.Content) {
+	if !re.MatchString(adr.Content()) {
 		return adr, targetADR, fmt.Errorf("ADR content have not a status field")
 	}
-	if !re.MatchString(targetADR.Content) {
+	if !re.MatchString(targetADR.Content()) {
 		return adr, targetADR, fmt.Errorf("target ADR content have not a status field")
 	}
 
 	targetADR, _ = m.statusManager.ChangeStatus(targetADR, m.relations[relation].targetStatus)
 
-	matches := re.FindStringSubmatch(targetADR.Content)
-	targetADR.Content = strings.Replace(targetADR.Content, matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(adr, m.relations[relation].targetTitle), 1)
+	matches := re.FindStringSubmatch(targetADR.Content())
+	targetADRContent := strings.Replace(targetADR.Content(), matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(adr, m.relations[relation].targetTitle), 1)
 
-	matches = re.FindStringSubmatch(adr.Content)
-	adr.Content = strings.Replace(adr.Content, matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(targetADR, m.relations[relation].mainTitle), 1)
+	matches = re.FindStringSubmatch(adr.Content())
+	adrContent := strings.Replace(adr.Content(), matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(targetADR, m.relations[relation].mainTitle), 1)
 
-	return adr, targetADR, nil
+	return CreateADR(adr.ID(), adr.Status(), adrContent, adr.Filename()), CreateADR(targetADR.ID(), targetADR.Status(), targetADRContent, targetADR.Filename()), nil
 }
 
 func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
@@ -158,16 +183,11 @@ func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (
 	}
 
 	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
-	if !re.MatchString(adr.Content) {
-		return ADR{}, fmt.Errorf("ADR content have not a status field")
+	if !re.MatchString(adr.Content()) {
+		return nil, fmt.Errorf("ADR content have not a status field")
 	}
 
-	return ADR{
-		ID:       adr.ID,
-		Filename: adr.Filename,
-		Status:   newStatus,
-		Content:  re.ReplaceAllString(adr.Content, "Status: "+newStatus),
-	}, nil
+	return CreateADR(adr.ID(), newStatus, re.ReplaceAllString(adr.Content(), "Status: " + newStatus), adr.Filename()), nil
 }
 
 func (manager privateADRStatusManager) ValidateStatus(targetStatus string) bool {

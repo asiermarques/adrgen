@@ -40,34 +40,25 @@ func CreateADRFile(
 		content = _content
 	}
 
-	adr := domain.ADR{
-		Filename: domain.CreateADRFilename(ADRId, title, config.IdDigitNumber),
-		Content:  content,
-		ID:       ADRId,
-		Status:   config.DefaultStatus,
-	}
+	adr := domain.CreateADR(ADRId, config.DefaultStatus, content, domain.CreateADRFilename(ADRId, title, config.IdDigitNumber))
 
 	var relationError error
-	var adrWithRelation domain.ADR
 	if supersedesTargetADRId > 0 {
-		adrWithRelation, _, relationError = addRelation(adr, supersedesTargetADRId, "supersede", writer, relationsManager, repository)
+		adr, _, relationError = addRelation(adr, supersedesTargetADRId, "supersede", writer, relationsManager, repository)
 	}
 	if amendsTargetADRId > 0 {
-		adrWithRelation, _, relationError = addRelation(adr, supersedesTargetADRId, "amend", writer, relationsManager, repository)
+		adr, _, relationError = addRelation(adr, supersedesTargetADRId, "amend", writer, relationsManager, repository)
 	}
 	if relationError != nil {
 		return "", relationError
-	} else {
-		adr = adrWithRelation
 	}
-
 
 	err := writer.Persist(adr)
 	if err != nil {
-		return adr.Filename.Value(), err
+		return adr.Filename().Value(), err
 	}
 
-	return adr.Filename.Value(), err
+	return adr.Filename().Value(), err
 }
 
 func addRelation(

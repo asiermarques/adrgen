@@ -1,8 +1,7 @@
 package application
 
-import (
-	"github.com/asiermarques/adrgen/domain"
-)
+import "github.com/asiermarques/adrgen/domain"
+
 
 // ChangeADRStatus is the application service for changing the status in an ADR File
 // It validates the status if there is a list of allowed statuses configured by user
@@ -25,5 +24,5 @@ func ChangeADRStatus(
 	}
 
 	err = writer.Persist(ADR)
-	return ADR.Filename.Value(), err
+	return ADR.Filename().Value(), err
 }

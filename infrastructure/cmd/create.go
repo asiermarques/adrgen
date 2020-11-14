@@ -48,9 +48,9 @@ func NewCreateCmd() *cobra.Command {
 				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
 				return
 			}
-			amendsADRId, supersedesError := cmd.LocalFlags().GetInt("amends")
-			if supersedesError != nil {
-				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
+			amendsADRId, amendsErr := cmd.LocalFlags().GetInt("amends")
+			if amendsErr != nil {
+				fmt.Printf("an error occurred processing the amends parameter %s\n", amendsErr)
 				return
 			}
 

@@ -16,9 +16,7 @@ Status:accepted
 
 ## Context`
 
-	adr := ADR{
-		Content: contentStub,
-	}
+	adr := CreateADR(1, "proposed", contentStub, nil)
 
 	result, _ := adr.getTitleFromContent()
 	expectedString := "My ADR Title"
@@ -81,25 +79,17 @@ Status: %s
 
 ## Context`, relation.targetStatus, relation.targetTitle)
 
-		adr := ADR{
-			ID:       1,
-			Filename: CreateADRFilename(1, "My ADR Title", 4),
-			Content:  contentStub,
-		}
-		targetAdr := ADR{
-			ID: 2,
-			Filename: CreateADRFilename(2, "My ADR Title", 4),
-			Content: targetContentStub,
-		}
+		adr := CreateADR(1, "proposed", contentStub, CreateADRFilename(1, "My ADR Title", 4))
+		targetAdr := CreateADR(1, "proposed", targetContentStub, CreateADRFilename(2, "My ADR Title", 4))
 		adr, targetAdr, err := relationsManager.AddRelation(adr, targetAdr, relationKey)
 		if err != nil {
 			t.Fatal(fmt.Sprintf("an unexpected error was returned %s", err))
 		}
-		if adr.Content != expectedContent {
-			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedContent, adr.Content))
+		if adr.Content() != expectedContent {
+			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedContent, adr.Content()))
 		}
-		if targetAdr.Content != expectedTargetContent {
-			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedTargetContent, targetAdr.Content))
+		if targetAdr.Content() != expectedTargetContent {
+			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedTargetContent, targetAdr.Content()))
 		}
 	}
 }
@@ -171,9 +161,9 @@ What is the issue that we're seeing that is motivating this decision or change?
 
 	statusManager := CreateADRStatusManager(Config{})
 
-	adr, err := statusManager.ChangeStatus(ADR{Content: contentStub}, "accepted")
-	if err != nil || expected != adr.Content {
-		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content, err))
+	adr, err := statusManager.ChangeStatus(CreateADR(1, "proposed", contentStub, nil), "accepted")
+	if err != nil || expected != adr.Content() {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content(), err))
 	}
 
 	contentStub = `
@@ -199,9 +189,9 @@ Status: rejected
 
 `
 
-	adr, err = statusManager.ChangeStatus(ADR{Content: contentStub}, "rejected")
-	if err != nil || expected != adr.Content {
-		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content, err))
+	adr, err = statusManager.ChangeStatus(CreateADR(1, "proposed", contentStub, nil), "rejected")
+	if err != nil || expected != adr.Content() {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content(), err))
 	}
 }
 
