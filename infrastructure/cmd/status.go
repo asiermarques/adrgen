@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/application"
 	"strconv"
+
+	"github.com/asiermarques/adrgen/application"
 
 	"github.com/asiermarques/adrgen/domain"
 	"github.com/asiermarques/adrgen/infrastructure"

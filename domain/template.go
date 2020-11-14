@@ -93,8 +93,8 @@ func (s privateTemplateService) RenderRelationLink(adr ADR, relationTitle string
 	return fmt.Sprintf("%s [%s](%s)  ", relationTitle, adr.Title(), adr.Filename().Value())
 }
 
-
-
-func CreateTemplateService(customTemplateContentReader CustomTemplateContentReader) TemplateService {
+func CreateTemplateService(
+	customTemplateContentReader CustomTemplateContentReader,
+) TemplateService {
 	return privateTemplateService{customTemplateContentReader}
 }

@@ -2,8 +2,9 @@ package application
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/domain"
 	"strconv"
+
+	"github.com/asiermarques/adrgen/domain"
 )
 
 // CreateADRFile is the application service for creating a new ADR file
@@ -40,14 +41,32 @@ func CreateADRFile(
 		content = _content
 	}
 
-	adr, _ := domain.CreateADR(ADRId, content, domain.CreateADRFilename(ADRId, title, config.IdDigitNumber))
+	adr, _ := domain.CreateADR(
+		ADRId,
+		content,
+		domain.CreateADRFilename(ADRId, title, config.IdDigitNumber),
+	)
 
 	var relationError error
 	if supersedesTargetADRId > 0 {
-		adr, _, relationError = addRelation(adr, supersedesTargetADRId, "supersede", writer, relationsManager, repository)
+		adr, _, relationError = addRelation(
+			adr,
+			supersedesTargetADRId,
+			"supersede",
+			writer,
+			relationsManager,
+			repository,
+		)
 	}
 	if amendsTargetADRId > 0 {
-		adr, _, relationError = addRelation(adr, supersedesTargetADRId, "amend", writer, relationsManager, repository)
+		adr, _, relationError = addRelation(
+			adr,
+			supersedesTargetADRId,
+			"amend",
+			writer,
+			relationsManager,
+			repository,
+		)
 	}
 	if relationError != nil {
 		return "", relationError
@@ -67,10 +86,13 @@ func addRelation(
 	relation string,
 	writer domain.ADRWriter,
 	relationsManager domain.RelationsManager,
-	repository domain.ADRRepository) (domain.ADR, domain.ADR, error)  {
+	repository domain.ADRRepository) (domain.ADR, domain.ADR, error) {
 	targetADR, err := repository.FindById(targetADRId)
 	if err != nil {
-		return adr, targetADR, fmt.Errorf("error finding the target ADR, the ADR file was not created. %s", err)
+		return adr, targetADR, fmt.Errorf(
+			"error finding the target ADR, the ADR file was not created. %s",
+			err,
+		)
 	}
 
 	adr, targetADR, err = relationsManager.AddRelation(adr, targetADR, relation)

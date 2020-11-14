@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/application"
 	"strings"
 	"time"
+
+	"github.com/asiermarques/adrgen/application"
 
 	"github.com/asiermarques/adrgen/domain"
 	"github.com/asiermarques/adrgen/infrastructure"
@@ -45,7 +46,10 @@ func NewCreateCmd() *cobra.Command {
 
 			supersedesADRId, supersedesError := cmd.LocalFlags().GetInt("supersedes")
 			if supersedesError != nil {
-				fmt.Printf("an error occurred processing the supersedes parameter %s\n", supersedesError)
+				fmt.Printf(
+					"an error occurred processing the supersedes parameter %s\n",
+					supersedesError,
+				)
 				return
 			}
 			amendsADRId, amendsErr := cmd.LocalFlags().GetInt("amends")
@@ -58,7 +62,9 @@ func NewCreateCmd() *cobra.Command {
 			date := currentTime.Format("02-01-2006")
 
 			adrWriter := infrastructure.CreateFileADRWriter(config.TargetDirectory)
-			templateService := domain.CreateTemplateService(infrastructure.CreateCustomTemplateContentFileReader(config))
+			templateService := domain.CreateTemplateService(
+				infrastructure.CreateCustomTemplateContentFileReader(config),
+			)
 
 			filename, creationError := application.CreateADRFile(
 				date,
@@ -70,7 +76,10 @@ func NewCreateCmd() *cobra.Command {
 				infrastructure.CreateADRDirectoryRepository(config.TargetDirectory),
 				adrWriter,
 				templateService,
-				domain.CreateRelationsManager(templateService, domain.CreateADRStatusManager(config)),
+				domain.CreateRelationsManager(
+					templateService,
+					domain.CreateADRStatusManager(config),
+				),
 			)
 			if creationError != nil {
 				fmt.Println(creationError)

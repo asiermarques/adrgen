@@ -21,11 +21,14 @@ func Test_ExecuteStatusCommand(t *testing.T) {
 
 	templateService := domain.CreateTemplateService(nil)
 
-	infrastructure.WriteFile(targetFile, templateService.RenderDefaultTemplateContent(domain.TemplateData{
-		Status: "proposed",
-		Date:   "20-10-2020",
-		Title:  "Test",
-	}))
+	infrastructure.WriteFile(
+		targetFile,
+		templateService.RenderDefaultTemplateContent(domain.TemplateData{
+			Status: "proposed",
+			Date:   "20-10-2020",
+			Title:  "Test",
+		}),
+	)
 
 	cmd := NewStatusChangeCmd()
 	cmd.SetArgs([]string{"1", "accepted"})

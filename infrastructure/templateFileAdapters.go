@@ -1,9 +1,10 @@
 package infrastructure
 
 import (
-	"github.com/asiermarques/adrgen/domain"
 	"os"
 	"path/filepath"
+
+	"github.com/asiermarques/adrgen/domain"
 )
 
 type privateCustomTemplateContentFileReader struct {
@@ -12,7 +13,9 @@ type privateCustomTemplateContentFileReader struct {
 
 // CreateCustomTemplateContentFileReader creates an domain.CustomTemplateContentReader that reads a template content from a file
 //
-func CreateCustomTemplateContentFileReader(config domain.Config) domain.CustomTemplateContentReader {
+func CreateCustomTemplateContentFileReader(
+	config domain.Config,
+) domain.CustomTemplateContentReader {
 	return privateCustomTemplateContentFileReader{configuration: config}
 }
 

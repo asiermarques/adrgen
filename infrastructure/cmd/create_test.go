@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/domain"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/asiermarques/adrgen/domain"
 
 	"github.com/asiermarques/adrgen/infrastructure"
 	"github.com/spf13/cobra"

@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"fmt"
+
 	"github.com/asiermarques/adrgen/domain"
 	"github.com/spf13/viper"
 )

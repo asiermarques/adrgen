@@ -2,6 +2,7 @@ package application
 
 import (
 	"fmt"
+
 	"github.com/asiermarques/adrgen/domain"
 )
 

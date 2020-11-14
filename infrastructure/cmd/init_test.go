@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	"github.com/asiermarques/adrgen/domain"
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/asiermarques/adrgen/domain"
 )
 
 func Test_ExecuteInitCommand(t *testing.T) {

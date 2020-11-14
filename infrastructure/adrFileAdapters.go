@@ -2,11 +2,12 @@ package infrastructure
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/domain"
 	"io/ioutil"
 	"path/filepath"
 	"regexp"
 	"strconv"
+
+	"github.com/asiermarques/adrgen/domain"
 )
 
 func extractIdFromADRFilename(filename string) (int, error) {

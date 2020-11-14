@@ -2,10 +2,11 @@ package domain
 
 import (
 	"fmt"
-	"github.com/gosimple/slug"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/gosimple/slug"
 )
 
 // ADRFilename is the domain value object for the ADR filename property
@@ -159,20 +160,20 @@ type ADRWriter interface {
 // RelationsManager service that manage the relation links between ADR files
 //
 type RelationsManager interface {
-	AddRelation(adr ADR, targetADR ADR, relation string)  (ADR, ADR, error)
-	RelationIsValid(relation string)  bool
+	AddRelation(adr ADR, targetADR ADR, relation string) (ADR, ADR, error)
+	RelationIsValid(relation string) bool
 }
 
 type relation struct {
-	mainTitle string
-	targetTitle string
+	mainTitle    string
+	targetTitle  string
 	targetStatus string
 }
 
 type privateRelationsManager struct {
-	relations map[string] relation
+	relations       map[string]relation
 	templateService TemplateService
-	statusManager ADRStatusManager
+	statusManager   ADRStatusManager
 }
 
 func (m privateRelationsManager) RelationIsValid(relation string) bool {
@@ -180,7 +181,11 @@ func (m privateRelationsManager) RelationIsValid(relation string) bool {
 	return result
 }
 
-func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation string) (ADR, ADR, error) {
+func (m privateRelationsManager) AddRelation(
+	adr ADR,
+	targetADR ADR,
+	relation string,
+) (ADR, ADR, error) {
 	if !m.RelationIsValid(relation) {
 		return adr, targetADR, fmt.Errorf("relation %s is not valid", relation)
 	}
@@ -196,10 +201,26 @@ func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation st
 	targetADR, _ = m.statusManager.ChangeStatus(targetADR, m.relations[relation].targetStatus)
 
 	matches := re.FindStringSubmatch(targetADR.Content())
-	targetADRContent := strings.Replace(targetADR.Content(), matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(adr, m.relations[relation].targetTitle), 1)
+	targetADRContent := strings.Replace(
+		targetADR.Content(),
+		matches[0],
+		matches[0]+"\n\n"+m.templateService.RenderRelationLink(
+			adr,
+			m.relations[relation].targetTitle,
+		),
+		1,
+	)
 
 	matches = re.FindStringSubmatch(adr.Content())
-	adrContent := strings.Replace(adr.Content(), matches[0], matches[0] + "\n\n" + m.templateService.RenderRelationLink(targetADR, m.relations[relation].mainTitle), 1)
+	adrContent := strings.Replace(
+		adr.Content(),
+		matches[0],
+		matches[0]+"\n\n"+m.templateService.RenderRelationLink(
+			targetADR,
+			m.relations[relation].mainTitle,
+		),
+		1,
+	)
 
 	newAdr, _ := CreateADR(adr.ID(), adrContent, adr.Filename())
 	newTargetAdr, _ := CreateADR(targetADR.ID(), targetADRContent, targetADR.Filename())
@@ -210,9 +231,17 @@ func (m privateRelationsManager) AddRelation(adr ADR, targetADR ADR, relation st
 // CreateRelationsManager creates the RelationsManager service with its dependencies
 //
 func CreateRelationsManager(service TemplateService, manager ADRStatusManager) RelationsManager {
-	relations := make(map[string] relation)
-	relations["supersede"] = relation{mainTitle: "Supersedes", targetTitle: "Superseded by", targetStatus: "superseded"}
-	relations["amend"] = relation{mainTitle: "Amends", targetTitle: "Amended by", targetStatus: "amended"}
+	relations := make(map[string]relation)
+	relations["supersede"] = relation{
+		mainTitle:    "Supersedes",
+		targetTitle:  "Superseded by",
+		targetStatus: "superseded",
+	}
+	relations["amend"] = relation{
+		mainTitle:    "Amends",
+		targetTitle:  "Amended by",
+		targetStatus: "amended",
+	}
 
 	return privateRelationsManager{
 		relations,
@@ -246,7 +275,11 @@ func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (
 		return nil, fmt.Errorf("ADR content have not a status field")
 	}
 
-	return CreateADR(adr.ID(), re.ReplaceAllString(adr.Content(), "Status: " + newStatus), adr.Filename())
+	return CreateADR(
+		adr.ID(),
+		re.ReplaceAllString(adr.Content(), "Status: "+newStatus),
+		adr.Filename(),
+	)
 }
 
 func (manager privateADRStatusManager) ValidateStatus(targetStatus string) bool {

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetTitleFromContent(t *testing.T)  {
+func TestGetTitleFromContent(t *testing.T) {
 	contentStub := `
 # My ADR Title
 Date: 09-11-2020
@@ -47,11 +47,22 @@ Status:accepted
 
 ## Context`
 
-	relations := make(map[string] relation)
-	relations["supersede"] = relation{mainTitle: "Supersedes", targetTitle: "Superseded by", targetStatus: "superseded"}
-	relations["amend"] = relation{mainTitle: "Amends", targetTitle: "Amended by", targetStatus: "amended"}
+	relations := make(map[string]relation)
+	relations["supersede"] = relation{
+		mainTitle:    "Supersedes",
+		targetTitle:  "Superseded by",
+		targetStatus: "superseded",
+	}
+	relations["amend"] = relation{
+		mainTitle:    "Amends",
+		targetTitle:  "Amended by",
+		targetStatus: "amended",
+	}
 
-	relationsManager := CreateRelationsManager(CreateTemplateService(nil), CreateADRStatusManager(Config{}))
+	relationsManager := CreateRelationsManager(
+		CreateTemplateService(nil),
+		CreateADRStatusManager(Config{}),
+	)
 
 	for relationKey, relation := range relations {
 
@@ -80,7 +91,7 @@ Status: %s
 ## Context`, relation.targetStatus, relation.targetTitle)
 
 		adr, _ := CreateADR(1, contentStub, CreateADRFilename(1, "My ADR Title", 4))
-		targetAdr, _ := CreateADR(1,  targetContentStub, CreateADRFilename(2, "My ADR Title", 4))
+		targetAdr, _ := CreateADR(1, targetContentStub, CreateADRFilename(2, "My ADR Title", 4))
 		adr, targetAdr, err := relationsManager.AddRelation(adr, targetAdr, relationKey)
 		if err != nil {
 			t.Fatal(fmt.Sprintf("an unexpected error was returned %s", err))
@@ -89,7 +100,13 @@ Status: %s
 			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedContent, adr.Content()))
 		}
 		if targetAdr.Content() != expectedTargetContent {
-			t.Fatal(fmt.Sprintf("expected: %s, returned %s", expectedTargetContent, targetAdr.Content()))
+			t.Fatal(
+				fmt.Sprintf(
+					"expected: %s, returned %s",
+					expectedTargetContent,
+					targetAdr.Content(),
+				),
+			)
 		}
 	}
 }

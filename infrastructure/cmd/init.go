@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/asiermarques/adrgen/application"
-	"github.com/asiermarques/adrgen/infrastructure"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/asiermarques/adrgen/application"
+	"github.com/asiermarques/adrgen/infrastructure"
+	"github.com/spf13/cobra"
 )
 
 // NewInitCmd creates the 'init' CLI Command related to the project initialization
