@@ -7,8 +7,8 @@ import (
 
 func TestCreateMetaContent(t *testing.T) {
 	expectedString := `---
-param1: ""  
-param2: ""  
+param1: ""
+param2: ""
 ---
 `
 

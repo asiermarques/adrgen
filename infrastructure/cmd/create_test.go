@@ -61,9 +61,9 @@ func Test_ExecuteCreateCommand(t *testing.T) {
 
 	content, _ := getFileContent(fileWithMeta)
 	expectedContent := `---
-param1: ""  
-param2: ""  
-param3: ""  
+param1: ""
+param2: ""
+param3: ""
 ---
 ` + templateService.RenderDefaultTemplateContent(domain.TemplateData{Date: date, Title: "4. ADR title 3", Status: "proposed"})
 	if content != expectedContent {
@@ -104,9 +104,9 @@ func Test_ExecuteCreateCommandWithConfig(t *testing.T) {
 
 	content, _ := getFileContent(fileWithMeta)
 	expectedContent := `---
-param1: ""  
-param2: ""  
-param3: ""  
+param1: ""
+param2: ""
+param3: ""
 ---
 ` + templateService.RenderDefaultTemplateContent(domain.TemplateData{Date: date, Title: "4. ADR title 3", Status: "proposed"})
 	if content != expectedContent {
