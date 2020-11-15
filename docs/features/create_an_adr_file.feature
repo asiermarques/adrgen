@@ -19,7 +19,7 @@ Feature: create an ADR File
 
     Given there is a config file created with this configuration
       | default_status | directory       | template_file              | id_digit_number |
-      | proposed       | adrs            | adrs/template.md           | 2               |
+      | custom         | ./adrs          | ./adrs/template.md         | 2               |
 
     When the user specify the <title> title
       And the command is executed
@@ -30,10 +30,10 @@ Feature: create an ADR File
 
     Examples:
     | title             | filename       | id  | status    | title_in_file |
-    | New adr           | 01-new-adr.md  | 1   | proposed  | 1. New adr    |
-    | New adr           | 02-new-adr.md  | 2   | proposed  | 2. New adr    |
-    | New adr           | 03-new-adr.md  | 3   | proposed  | 3. New adr    |
-    | New adr           | 04-new-adr.md  | 4   | proposed  | 4. New adr    |
+    | New adr           | 01-new-adr.md  | 1   | custom    | 1. New adr    |
+    | New adr           | 02-new-adr.md  | 2   | custom    | 2. New adr    |
+    | New adr           | 03-new-adr.md  | 3   | custom    | 3. New adr    |
+    | New adr           | 04-new-adr.md  | 4   | custom    | 4. New adr    |
 
 
   Scenario Outline: create adr files without configuration

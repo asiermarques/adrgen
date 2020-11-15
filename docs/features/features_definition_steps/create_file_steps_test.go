@@ -3,6 +3,7 @@ package features_definition_steps
 import (
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,24 +14,26 @@ import (
 
 var userTitle string
 var createdFilename string
+var createdFilenameWithPath string
+var directory string
 
 func aNewFileIsCreated(filename string) error {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; ls \"%s\"", filename),
+		fmt.Sprintf("cd ../e2e/tests; ls \"%s\"", filepath.Join(directory, filename)),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("file was not created: %s %s", err, output)
 	}
-
 	createdFilename = filename
+	createdFilenameWithPath = filepath.Join(directory, filename)
 	return nil
 }
 
 func theAdrFileContentHasTheTitle(titleInContent string) error {
 	titleInContent = "# " + titleInContent
-	searchCommand := fmt.Sprintf(`grep -E "^# (.+)$" %s`, createdFilename)
+	searchCommand := fmt.Sprintf(`grep -E "^# (.+)$" %s`, createdFilenameWithPath)
 
 	output, err := exec.Command(
 		"/bin/sh",
@@ -50,7 +53,7 @@ func theAdrFileContentHasTheTitle(titleInContent string) error {
 }
 
 func theAdrHasTheStatus(status string) error {
-	searchCommand := fmt.Sprintf(`grep -E "^Status: (.+)$" %s`, createdFilename)
+	searchCommand := fmt.Sprintf(`grep -E "^Status: (.+)$" %s`, createdFilenameWithPath)
 
 	output, err := exec.Command(
 		"/bin/sh",
@@ -94,7 +97,6 @@ func theCommandIsExecuted() error {
 	if err != nil {
 		return fmt.Errorf("error executing the create command: %s %s", err, output)
 	}
-	fmt.Println(string(output))
 
 	return nil
 }
@@ -108,23 +110,26 @@ func thereIsAConfigFileCreatedWithThisConfiguration(
 	table *messages.PickleStepArgument_PickleTable,
 ) error {
 	row := table.GetRows()[1]
-	content := fmt.Sprintf(`default_meta: []
+	content := fmt.Sprintf(`
+default_meta: []
 default_status: %s
 directory: %s
-supported_statuses:
-	- proposed
-	- accepted
-	- rejected
-	- superseded
-	- amended
-	- deprecated
-template_file: %s
 id_digit_number: %s
+supported_statuses:
+- proposed
+- accepted
+- rejected
+- superseded
+- amended
+- deprecated
+- custom
+template_file: %s
+
 `,
-							row.GetCells()[0].Value,
-							row.GetCells()[1].Value,
-							row.GetCells()[2].Value,
-							row.GetCells()[3].Value,
+		row.GetCells()[0].Value,
+		row.GetCells()[1].Value,
+		row.GetCells()[3].Value,
+		row.GetCells()[2].Value,
 	)
 
 	configFile := "adrgen.config.yml"
@@ -139,10 +144,47 @@ id_digit_number: %s
 		return fmt.Errorf("error generating the config file: %s %s", err, output)
 	}
 
+templateContent := `# {title}
+
+Date: {date}
+
+## Status
+
+Status: {status}
+
+## Context
+
+What is the issue that we're seeing that is motivating this decision or change?
+
+## Decision
+
+What is the change that we're proposing and/or doing?
+
+## Consequences
+
+What becomes easier or more difficult to do because of this change?
+`
+
+
+	output, err = exec.Command("/bin/sh", "-c", fmt.Sprintf(
+		"cd ../e2e/tests; mkdir %s; touch %s;echo \"%s\" > %s",
+		row.GetCells()[1].Value,
+		row.GetCells()[2].Value,
+		templateContent,
+		row.GetCells()[2].Value,
+	)).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error generating the config file: %s %s", err, output)
+	}
+
+	directory = row.GetCells()[1].Value
+
 	return nil
 }
 
 func thereIsNotAnyConfigFile() error {
+	exec.Command("/bin/sh", "-c", "rm ../e2e/tests/adrgen.config.yml" ).CombinedOutput()
+	directory = ""
 	return nil
 }
 
