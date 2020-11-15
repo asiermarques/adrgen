@@ -1,9 +1,9 @@
-module adrgen
+module github.com/asiermarques/adrgen
 
 go 1.15
 
 require (
-	github.com/asiermarques/adrgen v0.1.0-beta
+	github.com/asiermarques/adrgen develop
 	github.com/cucumber/godog v0.10.0
 	github.com/cucumber/messages-go/v10 v10.0.3
 	github.com/gosimple/slug v1.9.0
