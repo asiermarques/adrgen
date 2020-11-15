@@ -19,7 +19,7 @@ Feature: create an ADR File
 
     Given there is a config file created with this configuration
       | default_status | directory       | template_file              | id_digit_number |
-      | proposed       | docs/tests/adr  | docs/tests/adr/template.md | 4               |
+      | proposed       | adrs            | adrs/template.md           | 2               |
 
     When the user specify the <title> title
       And the command is executed
@@ -29,8 +29,25 @@ Feature: create an ADR File
       And the adr file content has the <title_in_file> title
 
     Examples:
-    | title             | filename         | id  | status    | title_in_file |
-    | New adr           | 0001-new-adr.md  | 1   | proposed  | 1. New adr    |
-    | New adr           | 0002-new-adr.md  | 2   | proposed  | 2. New adr    |
-    | New adr           | 0003-new-adr.md  | 3   | proposed  | 3. New adr    |
-    | New adr           | 0004-new-adr.md  | 4   | proposed  | 4. New adr    |
+    | title             | filename       | id  | status    | title_in_file |
+    | New adr           | 01-new-adr.md  | 1   | proposed  | 1. New adr    |
+    | New adr           | 02-new-adr.md  | 2   | proposed  | 2. New adr    |
+    | New adr           | 03-new-adr.md  | 3   | proposed  | 3. New adr    |
+    | New adr           | 04-new-adr.md  | 4   | proposed  | 4. New adr    |
+
+
+  Scenario Outline: create adr files without configuration
+
+    Given there is not any config file
+
+    When the user specify the <title> title
+    And the command is executed
+    Then a <filename> is created
+    And the adr has an id <id>
+    And the adr has a <status> status
+    And the adr file content has the <title_in_file> title
+
+    Examples:
+      | title             | filename         | id  | status    | title_in_file |
+      | New adr           | 0001-new-adr.md  | 1   | proposed  | 1. New adr    |
+      | New adr           | 0002-new-adr.md  | 2   | proposed  | 2. New adr    |

@@ -30,8 +30,12 @@ func NewCreateCmd() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 
-			config, err := GetConfig("")
+			config, err := GetConfig()
 			if err != nil {
+				if config.TargetDirectory != "" {
+					fmt.Printf("error creating file: %s", err)
+				}
+
 				fmt.Printf(
 					"config file not found, working in the %s directory\n",
 					config.TargetDirectory,

@@ -2,19 +2,24 @@ package features_definition_steps
 
 import (
 	"fmt"
-	"github.com/cucumber/godog"
-	"github.com/cucumber/messages-go/v10"
 	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/cucumber/godog"
+	"github.com/cucumber/messages-go/v10"
 )
 
 var userTitle string
 var createdFilename string
 
 func aNewFileIsCreated(filename string) error {
-	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf("cd ../e2e/tests; ls \"%s\"",filename)).CombinedOutput()
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; ls \"%s\"", filename),
+	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("file was not created: %s %s", err, output)
 	}
@@ -27,7 +32,11 @@ func theAdrFileContentHasTheTitle(titleInContent string) error {
 	titleInContent = "# " + titleInContent
 	searchCommand := fmt.Sprintf(`grep -E "^# (.+)$" %s`, createdFilename)
 
-	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf("cd ../e2e/tests; %s", searchCommand)).CombinedOutput()
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
+	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error searching string in file: %s %s", err, output)
 	}
@@ -43,7 +52,11 @@ func theAdrFileContentHasTheTitle(titleInContent string) error {
 func theAdrHasTheStatus(status string) error {
 	searchCommand := fmt.Sprintf(`grep -E "^Status: (.+)$" %s`, createdFilename)
 
-	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf("cd ../e2e/tests; %s", searchCommand)).CombinedOutput()
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
+	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error searching string in file: %s %s", err, output)
 	}
@@ -73,10 +86,15 @@ func theAdrHasAnId(adrId int) error {
 }
 
 func theCommandIsExecuted() error {
-	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen create \"%s\"",userTitle)).CombinedOutput()
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen create \"%s\"", userTitle),
+	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error executing the create command: %s %s", err, output)
 	}
+	fmt.Println(string(output))
 
 	return nil
 }
@@ -86,11 +104,13 @@ func theUserSpecifyTheTitle(title string) error {
 	return nil
 }
 
-func thereIsAConfigFileCreatedWithThisConfiguration(table *messages.PickleStepArgument_PickleTable) error {
-	content := `default_meta: []
-default_status: proposed
-directory: docs
-id_digit_number: 4
+func thereIsAConfigFileCreatedWithThisConfiguration(
+	table *messages.PickleStepArgument_PickleTable,
+) error {
+	row := table.GetRows()[1]
+	content := fmt.Sprintf(`default_meta: []
+default_status: %s
+directory: %s
 supported_statuses:
 	- proposed
 	- accepted
@@ -98,20 +118,31 @@ supported_statuses:
 	- superseded
 	- amended
 	- deprecated
-template_file: docs/adr_template.md
-`
+template_file: %s
+id_digit_number: %s
+`,
+							row.GetCells()[0].Value,
+							row.GetCells()[1].Value,
+							row.GetCells()[2].Value,
+							row.GetCells()[3].Value,
+	)
+
 	configFile := "adrgen.config.yml"
 
 	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf(
 		"cd ../e2e/tests; touch %s; echo \"%s\" > %s",
-				configFile,
-				content,
-				configFile,
-		)).CombinedOutput()
+		configFile,
+		content,
+		configFile,
+	)).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error generating the config file: %s %s", err, output)
 	}
 
+	return nil
+}
+
+func thereIsNotAnyConfigFile() error {
 	return nil
 }
 
@@ -122,5 +153,9 @@ func FeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^the adr has an id (\d+)$`, theAdrHasAnId)
 	s.Step(`^the command is executed$`, theCommandIsExecuted)
 	s.Step(`^the user specify the (.+) title$`, theUserSpecifyTheTitle)
-	s.Step(`^there is a config file created with this configuration$`, thereIsAConfigFileCreatedWithThisConfiguration)
+	s.Step(
+		`^there is a config file created with this configuration$`,
+		thereIsAConfigFileCreatedWithThisConfiguration,
+	)
+	s.Step(`^there is not any config file$`, thereIsNotAnyConfigFile)
 }

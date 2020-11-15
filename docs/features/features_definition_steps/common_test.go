@@ -6,9 +6,13 @@ import (
 	"os/exec"
 )
 
-func SuiteContext(t *godog.TestSuiteContext)  {
+func SuiteContext(t *godog.TestSuiteContext) {
 	t.BeforeSuite(func() {
-		output, err := exec.Command("/bin/sh", "-c", "cd ../../../; go build -o docs/features/e2e/bin/adrgen").CombinedOutput()
+		output, err := exec.Command(
+			"/bin/sh",
+			"-c",
+			"cd ../../../; go build -o docs/features/e2e/bin/adrgen",
+		).CombinedOutput()
 		if err != nil {
 			fmt.Printf("error generating the adrgen binary: %s %s", err, output)
 		}
@@ -17,6 +21,7 @@ func SuiteContext(t *godog.TestSuiteContext)  {
 			fmt.Printf("error creating the tests directory: %s %s", err, output)
 		}
 	})
+
 
 	t.AfterSuite(func() {
 		output, err := exec.Command("/bin/sh", "-c", "rm -rf ../e2e").CombinedOutput()
