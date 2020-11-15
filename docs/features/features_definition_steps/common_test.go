@@ -6,6 +6,8 @@ import (
 	"os/exec"
 )
 
+var directory string
+
 func SuiteContext(t *godog.TestSuiteContext) {
 	t.BeforeSuite(func() {
 		output, err := exec.Command(

@@ -22,7 +22,7 @@ Feature: create an ADR File
       | custom         | ./adrs          | ./adrs/template.md         | 2               |
 
     When the user specify the <title> title
-      And the command is executed
+      And the create command is executed
     Then a <filename> is created
       And the adr has an id <id>
       And the adr has a <status> status
@@ -41,7 +41,7 @@ Feature: create an ADR File
     Given there is not any config file
 
     When the user specify the <title> title
-    And the command is executed
+    And the create command is executed
     Then a <filename> is created
     And the adr has an id <id>
     And the adr has a <status> status

@@ -15,7 +15,6 @@ import (
 var userTitle string
 var createdFilename string
 var createdFilenameWithPath string
-var directory string
 
 func aNewFileIsCreated(filename string) error {
 	output, err := exec.Command(
@@ -88,7 +87,7 @@ func theAdrHasAnId(adrId int) error {
 	return nil
 }
 
-func theCommandIsExecuted() error {
+func theCreateCommandIsExecuted() error {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
@@ -188,12 +187,12 @@ func thereIsNotAnyConfigFile() error {
 	return nil
 }
 
-func FeatureContext(s *godog.ScenarioContext) {
+func CreateFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^a (.+) is created$`, aNewFileIsCreated)
 	s.Step(`^the adr file content has the (.+) title$`, theAdrFileContentHasTheTitle)
 	s.Step(`^the adr has a (.+) status$`, theAdrHasTheStatus)
 	s.Step(`^the adr has an id (\d+)$`, theAdrHasAnId)
-	s.Step(`^the command is executed$`, theCommandIsExecuted)
+	s.Step(`^the create command is executed$`, theCreateCommandIsExecuted)
 	s.Step(`^the user specify the (.+) title$`, theUserSpecifyTheTitle)
 	s.Step(
 		`^there is a config file created with this configuration$`,
