@@ -7,12 +7,14 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/cucumber/godog"
 	"github.com/cucumber/messages-go/v10"
 )
 
 var userTitle string
+var userMetaParams string
 var createdFilename string
 var createdFilenameWithPath string
 
@@ -88,10 +90,15 @@ func theAdrHasAnId(adrId int) error {
 }
 
 func theCreateCommandIsExecuted() error {
+	metaCommandFlag := ""
+	if userMetaParams != "" {
+		metaCommandFlag = fmt.Sprintf("-m \"%s\"", userMetaParams)
+	}
+
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen create \"%s\"", userTitle),
+		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen create \"%s\" %s", userTitle, metaCommandFlag),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error executing the create command: %s %s", err, output)
@@ -187,16 +194,56 @@ func thereIsNotAnyConfigFile() error {
 	return nil
 }
 
+func hasTheFollowingContent(content *messages.PickleStepArgument_PickleDocString) error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; cat \"%s\"", createdFilenameWithPath),
+	).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s file not found: %s %s", createdFilenameWithPath, err, output)
+	}
+
+	currentTime := time.Now()
+	date := currentTime.Format("02-01-2006")
+
+	expected := strings.TrimSpace(content.Content)
+	expected = strings.Replace(expected, "{date}", date, 1)
+
+	returned := strings.TrimSpace(string(output))
+
+	if returned != expected {
+		return fmt.Errorf("expected:\n%s\n\nreturned:\n%s", expected, returned)
+	}
+
+	return nil
+}
+
+func thereIsNoADRFiles() error {
+	exec.Command("/bin/sh", "-c", "rm ../e2e/tests/*.md" ).CombinedOutput()
+	return nil
+}
+
+func theMetaParametersAreSpecified(params string) error {
+	userMetaParams = params
+	return nil
+}
+
+
+
 func CreateFeatureContext(s *godog.ScenarioContext) {
-	s.Step(`^a (.+) is created$`, aNewFileIsCreated)
+	s.Step(`^the (.+) ADR file is created$`, aNewFileIsCreated)
 	s.Step(`^the adr file content has the (.+) title$`, theAdrFileContentHasTheTitle)
+	s.Step(`^the meta parameters (.+) are specified$`, theMetaParametersAreSpecified)
 	s.Step(`^the adr has a (.+) status$`, theAdrHasTheStatus)
 	s.Step(`^the adr has an id (\d+)$`, theAdrHasAnId)
 	s.Step(`^the create command is executed$`, theCreateCommandIsExecuted)
 	s.Step(`^the user specify the (.+) title$`, theUserSpecifyTheTitle)
+	s.Step(`^has the following content:$`, hasTheFollowingContent)
 	s.Step(
 		`^there is a config file created with this configuration$`,
 		thereIsAConfigFileCreatedWithThisConfiguration,
 	)
 	s.Step(`^there is not any config file$`, thereIsNotAnyConfigFile)
+	s.Step(`^there is no ADR files$`, thereIsNoADRFiles)
 }

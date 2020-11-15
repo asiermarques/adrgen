@@ -1,4 +1,4 @@
-Feature: create an ADR File
+Feature: create ADR files
 
   In order to have registered context about architecture decisions
   As an ADR writer
@@ -23,7 +23,7 @@ Feature: create an ADR File
 
     When the user specify the <title> title
       And the create command is executed
-    Then a <filename> is created
+    Then the <filename> ADR file is created
       And the adr has an id <id>
       And the adr has a <status> status
       And the adr file content has the <title_in_file> title
@@ -41,13 +41,12 @@ Feature: create an ADR File
     Given there is not any config file
 
     When the user specify the <title> title
-    And the create command is executed
-    Then a <filename> is created
-    And the adr has an id <id>
-    And the adr has a <status> status
-    And the adr file content has the <title_in_file> title
+      And the create command is executed
+    Then the <filename> ADR file is created
+      And the adr has a <status> status
+      And the adr file content has the <title_in_file> title
 
     Examples:
-      | title             | filename         | id  | status    | title_in_file |
-      | New adr           | 0001-new-adr.md  | 1   | proposed  | 1. New adr    |
-      | New adr           | 0002-new-adr.md  | 2   | proposed  | 2. New adr    |
+      | title             | filename         | status    | title_in_file |
+      | New adr           | 0001-new-adr.md  | proposed  | 1. New adr    |
+      | New adr           | 0002-new-adr.md  | proposed  | 2. New adr    |

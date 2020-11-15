@@ -93,7 +93,7 @@ func (s privateTemplateService) RenderDefaultTemplateContent(data TemplateData) 
 
 func (s privateTemplateService) RenderMetaContent(parameters []string) string {
 	if len(parameters) > 0 {
-		valueSeparator := ": \"\"  \n"
+		valueSeparator := ": \"\"\n"
 		return fmt.Sprintf("---\n%s---\n", strings.Join(parameters, valueSeparator)+valueSeparator)
 	}
 	return ""
