@@ -76,11 +76,11 @@ func Test_ExecuteCreateCommandWithConfig(t *testing.T) {
 	configuredDirectory := "tests/adr"
 	configuredDirectoryAbs := filepath.Join(directory, configuredDirectory)
 	testFiles := []string{
-		filepath.Join(configuredDirectoryAbs, "0001-adr-title-0.md"),
-		filepath.Join(configuredDirectoryAbs, "0002-adr-title-1.md"),
-		filepath.Join(configuredDirectoryAbs, "0003-adr-title-2.md"),
+		filepath.Join(configuredDirectoryAbs, "01-adr-title-0.md"),
+		filepath.Join(configuredDirectoryAbs, "02-adr-title-1.md"),
+		filepath.Join(configuredDirectoryAbs, "03-adr-title-2.md"),
 	}
-	fileWithMeta := filepath.Join(configuredDirectoryAbs, "0004-adr-title-3.md")
+	fileWithMeta := filepath.Join(configuredDirectoryAbs, "04-adr-title-3.md")
 	testFilesAndDirs := append(testFiles, []string{
 		fileWithMeta,
 		filepath.Join(configuredDirectoryAbs, "adr_template.md"),
@@ -132,7 +132,7 @@ supported_statuses:
 - amended
 - deprecated
 template_file: %s/adr_template.md
-id_digit_number: 4
+id_digit_number: 2
 
 `, directoryName, directoryName))
 

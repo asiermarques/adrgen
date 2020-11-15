@@ -37,7 +37,7 @@ func Execute() {
 
 // GetConfig is used by the CLI Commands that need the project's configuration values
 //
-func GetConfig(directory string) (domain.Config, error) {
+func GetConfig() (domain.Config, error) {
 	rootDirectory, err := os.Getwd()
 	if err != nil {
 		return domain.Config{}, err
@@ -48,7 +48,7 @@ func GetConfig(directory string) (domain.Config, error) {
 	if err != nil {
 		config := configManager.GetDefault()
 		config.TargetDirectory = rootDirectory
-		return config, nil
+		return config, fmt.Errorf("config file not found")
 	}
 	return config, nil
 }
