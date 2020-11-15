@@ -6,7 +6,7 @@ Feature: create an ADR File
 
   Background:
 
-    ADRGen allows to create an initial configuration with the comand
+    ADRGen allows to create an initial configuration with the command
 
         adrgen init "./target_dir"
 
