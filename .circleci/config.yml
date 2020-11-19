@@ -2,6 +2,12 @@
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
+commands:
+  e2e:
+    description: "Run godog"
+    steps:
+      - run: go install ./cmd/godog
+      - run: ./e2e_tests.sh
 jobs:
   build:
     docker:
@@ -14,6 +20,5 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: go test -v ./...
-      - run: go install godog
-      - run: ./e2e_tests.sh
+      - run: e2e
 
