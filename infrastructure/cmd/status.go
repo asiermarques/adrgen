@@ -20,7 +20,7 @@ func NewStatusChangeCmd() *cobra.Command {
 		Long:  `Update the status in a ADR File`,
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			config, err := GetConfig("")
+			config, err := GetConfig()
 			if err != nil {
 				fmt.Printf(
 					"config file not found, working in the %s directory\n",

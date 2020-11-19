@@ -94,7 +94,7 @@ components: ""
 technologies: ""
 ---
 
-# My new a
+# My new ADR
 ```
 
 **Supersede an ADR with another new ADR**
