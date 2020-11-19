@@ -14,6 +14,6 @@ jobs:
       - checkout
       - run: go get -v -t -d ./...
       - run: go test -v ./...
-      - run: go install ./cmd/godog
+      - run: go install godog
       - run: ./e2e_tests.sh
 
