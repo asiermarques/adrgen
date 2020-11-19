@@ -7,11 +7,13 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.15
-
+        environment:
+          GO111MODULE: "on"
     working_directory: /go/src/github.com/asiermarques/adrgen
     steps:
       - checkout
       - run: go get -v -t -d ./...
       - run: go test -v ./...
+      - run: go install ./cmd/godog
       - run: ./e2e_tests.sh
 
