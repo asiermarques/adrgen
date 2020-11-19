@@ -2,8 +2,9 @@ package features_definition_steps
 
 import (
 	"fmt"
-	"github.com/cucumber/godog"
 	"os/exec"
+
+	"github.com/cucumber/godog"
 )
 
 var directory string
@@ -23,7 +24,6 @@ func SuiteContext(t *godog.TestSuiteContext) {
 			fmt.Printf("error creating the tests directory: %s %s", err, output)
 		}
 	})
-
 
 	t.AfterSuite(func() {
 		output, err := exec.Command("/bin/sh", "-c", "rm -rf ../e2e").CombinedOutput()

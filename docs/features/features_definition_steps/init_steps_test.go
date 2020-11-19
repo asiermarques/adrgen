@@ -2,8 +2,9 @@ package features_definition_steps
 
 import (
 	"fmt"
-	"github.com/cucumber/godog"
 	"os/exec"
+
+	"github.com/cucumber/godog"
 )
 
 func theInitCommandIsExecuted() error {
@@ -74,7 +75,10 @@ func InitFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^the (.+) config file is created$`, aConfigFileIsCreated)
 	s.Step(`^the init command is executed$`, theInitCommandIsExecuted)
 	s.Step(`^the specified directory is created$`, theSpecifiedDirectoryIsCreated)
-	s.Step(`^the template file is created in the (.+) location$`, theTemplateFileIsCreatedInTheLocation)
+	s.Step(
+		`^the template file is created in the (.+) location$`,
+		theTemplateFileIsCreatedInTheLocation,
+	)
 	s.Step(`^the user is in an initial directory$`, theUserIsInAnInitialDirectory)
 	s.Step(`^the user specify the (.+) directory$`, theUserSpecifyTheDirectory)
 }

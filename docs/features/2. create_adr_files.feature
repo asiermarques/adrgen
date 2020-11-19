@@ -25,7 +25,7 @@ Feature: create ADR files
       And the create command is executed
     Then the <filename> ADR file is created
       And the adr has an id <id>
-      And the adr has a <status> status
+      And the adr has the <status> status
       And the adr file content has the <title_in_file> title
 
     Examples:
@@ -43,7 +43,7 @@ Feature: create ADR files
     When the user specify the <title> title
       And the create command is executed
     Then the <filename> ADR file is created
-      And the adr has a <status> status
+      And the adr has the <status> status
       And the adr file content has the <title_in_file> title
 
     Examples:
