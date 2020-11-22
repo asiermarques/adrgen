@@ -68,9 +68,24 @@ func parseTemplateContent(data TemplateData, content string) string {
 	return content
 }
 
+func validateTemplateFields(content string) error {
+	fields := []string{"{title}", "{status}", "{date}"}
+	for _, field := range fields {
+		if !strings.Contains(content, field) {
+			return fmt.Errorf("the configured template has not the required field %s", field)
+		}
+	}
+
+	return nil
+}
+
 func (s privateTemplateService) RenderCustomTemplateContent(data TemplateData) (string, error) {
 	content, err := s.customTemplateContentReader.Read()
 	if err != nil {
+		return "", err
+	}
+
+	if err := validateTemplateFields(content); err != nil {
 		return "", err
 	}
 
