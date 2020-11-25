@@ -27,11 +27,6 @@ Next features:
 
 ## Getting started
 
-### Build the binary
-```
-go build -o adrgen
-```
-
 ### Initializing the project and configuration
 
 We will use the **init** command specifying where the ADR files will be written. 

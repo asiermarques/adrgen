@@ -2,6 +2,16 @@
 #
 # Check https://circleci.com/docs/2.0/language-go/ for more details
 version: 2
+workflows:
+  main:
+    jobs:
+      - release:
+          # Only run this job on git tag pushes
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
 jobs:
   build:
     docker:
@@ -16,4 +26,10 @@ jobs:
       - run: go test -v ./...
       - run: go install github.com/cucumber/godog/cmd/godog
       - run: ./e2e_tests.sh
+  release:
+    docker:
+      - image: circleci/golang:1.15
+    steps:
+      - checkout
+      - run: curl -sL https://git.io/goreleaser | bash
 
