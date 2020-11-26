@@ -1,4 +1,4 @@
-package definitionSteps
+package definitionsteps
 
 import (
 	"fmt"
