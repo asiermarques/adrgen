@@ -2,6 +2,7 @@ package domain
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -22,7 +23,7 @@ Date: {date}
 
 ## Status
 
-Status: {status}
+{status}
 
 ## Context
 
@@ -74,6 +75,13 @@ func validateTemplateFields(content string) error {
 		if !strings.Contains(content, field) {
 			return fmt.Errorf("the configured template has not the required field %s", field)
 		}
+	}
+
+	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
+	if !re.MatchString(content) {
+		return fmt.Errorf(
+			"the configured template must have an status following the format \n\n## Status\n\n{status}\n\n",
+		)
 	}
 
 	return nil

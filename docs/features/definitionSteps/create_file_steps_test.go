@@ -1,7 +1,8 @@
-package features_definition_steps
+package definitionSteps
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os/exec"
 	"path/filepath"
 	"regexp"
@@ -28,7 +29,7 @@ Date: {date}
 
 ## Status
 
-Status: {status}
+{status}
 
 ## Context
 
@@ -86,25 +87,29 @@ func theAdrFileContentHasTheTitle(titleInContent string) error {
 	return nil
 }
 
-func theAdrHasTheStatus(status string) error {
-	searchCommand := fmt.Sprintf(`grep -E "^Status: (.+)$" %s`, createdFilenameWithPath)
-
-	output, err := exec.Command(
-		"/bin/sh",
-		"-c",
-		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
-	).CombinedOutput()
+func getStatusInFile(status string, file string) error {
+	content, err := ioutil.ReadFile(filepath.Join("../e2e/tests", file))
 	if err != nil {
-		return fmt.Errorf("error searching string in file: %s %s", err, output)
+		return err
 	}
 
-	returned := strings.TrimSpace(string(output))
-	expected := "Status: " + status
+	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
+	matches := re.FindStringSubmatch(string(content))
+	if len(matches) < 1 {
+		return fmt.Errorf("target ADR content have not a status field")
+	}
+
+	returned := strings.TrimSpace(matches[0])
+	expected := "## Status\n\n" + status
 	if returned != expected {
-		return fmt.Errorf("expected status: \"%s\"  found: \"%s\"", expected, returned)
+		return fmt.Errorf("expected: \"%s\"  found: \"%s\"", expected, returned)
 	}
 
 	return nil
+}
+
+func theAdrHasTheStatus(status string) error {
+	return getStatusInFile(status, createdFilenameWithPath)
 }
 
 func theAdrHasAnId(adrId int) error {
@@ -116,7 +121,7 @@ func theAdrHasAnId(adrId int) error {
 
 	matchId, _ := strconv.Atoi(matches[1])
 	if matchId != adrId {
-		return fmt.Errorf("expected status: \"%d\"  found: \"%d\"", adrId, matchId)
+		return fmt.Errorf("expected: \"%d\"  found: \"%d\"", adrId, matchId)
 	}
 
 	return nil
@@ -229,7 +234,7 @@ func hasTheFollowingContent(content *messages.PickleStepArgument_PickleDocString
 	}
 
 	currentTime := time.Now()
-	date := currentTime.Format("02-01-2006")
+	date := currentTime.Format("2006-01-02")
 
 	expected := strings.TrimSpace(content.Content)
 	expected = strings.Replace(expected, "{date}", date, 1)
@@ -319,16 +324,18 @@ func theAdrHasTheLinkOnIt(relation string) error {
 		expected = fmt.Sprintf("Amends [%s](%s)", targetADRTitle, ADRs[targetADRId])
 	}
 	if returned != expected {
-		return fmt.Errorf("expected status: \"%s\"  found: \"%s\"", expected, returned)
+		return fmt.Errorf("expected: \"%s\"  found: \"%s\"", expected, returned)
 	}
 
 	return nil
 }
 
 func theFollowingAdrsInTheSystem(table *messages.PickleStepArgument_PickleTable) error {
+	var content string
 	for _, row := range table.GetRows() {
-		content := strings.Replace(templateContent, "{status}", row.GetCells()[1].Value, 1)
-		content = strings.Replace(templateContent, "{title}", row.GetCells()[3].Value, 1)
+		content = templateContent
+		content = strings.Replace(content, "{status}", row.GetCells()[1].Value, 1)
+		content = strings.Replace(content, "{title}", row.GetCells()[3].Value, 1)
 		output, err := exec.Command(
 			"/bin/sh",
 			"-c",
@@ -359,7 +366,7 @@ func theTargetADRHasTheLinkOnItAndThStatus(relation string, status string) error
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
-			"error searching string in file %s: %s %s",
+			"error searching rel string in file %s: %s %s",
 			ADRs[targetADRId],
 			err,
 			output,
@@ -382,27 +389,10 @@ func theTargetADRHasTheLinkOnItAndThStatus(relation string, status string) error
 		expected = fmt.Sprintf("Amended by [%s](%s)", ADRTitle, createdFilenameWithPath)
 	}
 	if returned != expected {
-		return fmt.Errorf("expected status: \"%s\"  found: \"%s\"", expected, returned)
+		return fmt.Errorf("expected: \"%s\"  found: \"%s\"", expected, returned)
 	}
 
-	searchCommand = fmt.Sprintf(`grep -E "^Status: (.+)$" %s`, ADRs[targetADRId])
-
-	output, err = exec.Command(
-		"/bin/sh",
-		"-c",
-		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
-	).CombinedOutput()
-	if err != nil {
-		return fmt.Errorf("error searching string in file: %s %s", err, output)
-	}
-
-	returned = strings.TrimSpace(string(output))
-	expected = "Status: " + status
-	if returned != expected {
-		return fmt.Errorf("expected status: \"%s\"  found: \"%s\"", expected, returned)
-	}
-
-	return nil
+	return getStatusInFile(status, ADRs[targetADRId])
 }
 
 func theUserSpecifyTheRelationWithTheTargetADRWithTheId(_relation string, targetAdrId int) error {
