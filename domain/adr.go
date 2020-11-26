@@ -113,7 +113,7 @@ func (a privateADR) getStatusFromContent() (string, error) {
 		return "", fmt.Errorf("ADR content not present")
 	}
 
-	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
 	if !re.MatchString(a.content) {
 		return "", fmt.Errorf("status not present in ADR Content")
 	}
@@ -192,7 +192,7 @@ func (m privateRelationsManager) AddRelation(
 		return adr, targetADR, fmt.Errorf("relation %s is not valid", relation)
 	}
 
-	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
 	if !re.MatchString(adr.Content()) {
 		return adr, targetADR, fmt.Errorf("ADR content have not a status field")
 	}
@@ -203,6 +203,10 @@ func (m privateRelationsManager) AddRelation(
 	targetADR, _ = m.statusManager.ChangeStatus(targetADR, m.relations[relation].targetStatus)
 
 	matches := re.FindStringSubmatch(targetADR.Content())
+	if len(matches) < 1 {
+		return adr, targetADR, fmt.Errorf("target ADR content have not a status field match")
+	}
+
 	targetADRContent := strings.Replace(
 		targetADR.Content(),
 		matches[0],
@@ -272,14 +276,14 @@ func (manager privateADRStatusManager) ChangeStatus(adr ADR, newStatus string) (
 		)
 	}
 
-	re := regexp.MustCompile(`(?mi)^Status:\s?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
 	if !re.MatchString(adr.Content()) {
 		return nil, fmt.Errorf("ADR content have not a status field")
 	}
 
 	return CreateADR(
 		adr.ID(),
-		re.ReplaceAllString(adr.Content(), "Status: "+newStatus),
+		re.ReplaceAllString(adr.Content(), fmt.Sprintf("## Status\n\n%s", newStatus)),
 		adr.Filename(),
 	)
 }

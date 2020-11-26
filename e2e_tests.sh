@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-cd ./docs/features/features_definition_steps || exit
+cd ./docs/features/definitionSteps || exit
 godog ../
 cd ../../..

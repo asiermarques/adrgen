@@ -69,7 +69,7 @@ func NewCreateCmd() *cobra.Command {
 			}
 
 			currentTime := time.Now()
-			date := currentTime.Format("02-01-2006")
+			date := currentTime.Format("2006-01-02")
 
 			adrWriter := infrastructure.CreateFileADRWriter(config.TargetDirectory)
 			templateService := domain.CreateTemplateService(

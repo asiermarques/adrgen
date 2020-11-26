@@ -43,7 +43,7 @@ Feature: create an ADR File with meta
 
       ## Status
 
-      Status: proposed
+      proposed
 
       ## Context
 

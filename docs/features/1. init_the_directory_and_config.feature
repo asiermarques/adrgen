@@ -1,4 +1,4 @@
-Feature: create an ADR File
+Feature: init the directory and config
 
   In order to be able to customize the aspects of the ADR file creation
   As an ADR writer

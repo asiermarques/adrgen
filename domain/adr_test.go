@@ -12,7 +12,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status:accepted
+accepted
 
 ## Context`
 
@@ -33,7 +33,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status:accepted
+accepted
 
 ## Context`
 
@@ -43,7 +43,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status:accepted
+accepted
 
 ## Context`
 
@@ -72,7 +72,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status:accepted
+accepted
 
 %s [My ADR Title](0002-my-adr-title.md)  
 
@@ -84,7 +84,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status: %s
+%s
 
 %s [My ADR Title](0001-my-adr-title.md)  
 
@@ -156,7 +156,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status: proposed
+proposed
 
 ## Context
 
@@ -169,7 +169,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status: accepted
+accepted
 
 ## Context
 
@@ -179,8 +179,11 @@ What is the issue that we're seeing that is motivating this decision or change?
 	statusManager := CreateADRStatusManager(Config{})
 	_adr, _ := CreateADR(1, contentStub, CreateADRFilename(1, "Title", 4))
 	adr, err := statusManager.ChangeStatus(_adr, "accepted")
-	if err != nil || expected != adr.Content() {
-		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content(), err))
+	if err != nil {
+		t.Fatal(fmt.Sprintf("%s", err))
+	}
+	if expected != adr.Content() {
+		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expected, adr.Content()))
 	}
 
 	contentStub = `
@@ -189,7 +192,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status:accepted
+accepted
 
 ## Context
 
@@ -200,7 +203,7 @@ Date: 09-11-2020
 
 ## Status
 
-Status: rejected
+rejected
 
 ## Context
 

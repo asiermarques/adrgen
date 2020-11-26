@@ -27,7 +27,7 @@ Feature: update the ADR status
 
             ## Status
 
-            Status: proposed
+            proposed
 
             ## Context
 
