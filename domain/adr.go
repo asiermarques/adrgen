@@ -59,6 +59,7 @@ type ADR interface {
 	Filename() ADRFilename
 	Status() string
 	Title() string
+	Date() string
 	Content() string
 }
 
@@ -86,6 +87,11 @@ func (a privateADR) Title() string {
 	return title
 }
 
+func (a privateADR) Date() string {
+	date, _ := a.getDateFromContent()
+	return date
+}
+
 func (a privateADR) Content() string {
 	return a.content
 }
@@ -96,6 +102,24 @@ func (a privateADR) getTitleFromContent() (string, error) {
 	}
 
 	re := regexp.MustCompile(`(?mi)^# (.+)$`)
+	if !re.MatchString(a.content) {
+		return "", fmt.Errorf("title not present in ADR Content")
+	}
+
+	matches := re.FindStringSubmatch(a.content)
+	if len(matches) < 2 || matches[1] == "" {
+		return "", fmt.Errorf("could not possible extracting the title from ADR Content")
+	}
+
+	return matches[1], nil
+}
+
+func (a privateADR) getDateFromContent() (string, error) {
+	if a.content == "" {
+		return "", fmt.Errorf("ADR content not present")
+	}
+
+	re := regexp.MustCompile(`(?mi)^Date: (.+)$`)
 	if !re.MatchString(a.content) {
 		return "", fmt.Errorf("title not present in ADR Content")
 	}

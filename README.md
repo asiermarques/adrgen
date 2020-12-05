@@ -27,6 +27,14 @@ Next features:
 
 ## Getting started
 
+### Show the version of the ADRgen
+
+You can show the version of the ADRgen with the **version** command
+
+```
+adrgen version
+```
+
 ### Initializing the project and configuration
 
 We will use the **init** command specifying where the ADR files will be written. 
@@ -80,8 +88,6 @@ supported_statuses:
 template_file: docs/adrs/adr_template.md
 id_digit_number: 4
 ````
-
-  
 
 ### Create a new ADR
 
@@ -189,6 +195,14 @@ We can change the status for an ADR file specifying its ID and the new status wi
 ```
 adrgen status 9 "accepted"
 ```
+
+### List the ADR files
+
+You can list the ADR files with the **list** command
+
+```
+adrgen list
+``
 
 ### To-Do
 
