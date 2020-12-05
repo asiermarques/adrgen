@@ -121,12 +121,12 @@ func (a privateADR) getDateFromContent() (string, error) {
 
 	re := regexp.MustCompile(`(?mi)^Date: (.+)$`)
 	if !re.MatchString(a.content) {
-		return "", fmt.Errorf("title not present in ADR Content")
+		return "", fmt.Errorf("date not present in ADR Content")
 	}
 
 	matches := re.FindStringSubmatch(a.content)
 	if len(matches) < 2 || matches[1] == "" {
-		return "", fmt.Errorf("could not possible extracting the title from ADR Content")
+		return "", fmt.Errorf("could not possible extracting the date from ADR Content")
 	}
 
 	return matches[1], nil
