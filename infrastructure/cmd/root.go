@@ -9,22 +9,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const VERSION = "v0.2.1-beta"
+
 var rootCmd = &cobra.Command{
 	Use:   "adrgen",
 	Short: "A cli utility to create and manage Architecture Decision Records",
-	Long: `A cli utility to create and manage Architecture Decision Records
-     ___     ___     ___     ___                   
-    /   \   |   \   | _ \   / __|    ___    _ _    
-    | - |   | |) |  |   /  | (_ |   / -_)  | ' \   
-    |_|_|   |___/   |_|_\   \___|   \___|  |_||_|
+	Long: fmt.Sprintf(`
+   ___     ___     ___     ___                   
+  /   \   |   \   | _ \   / __|    ___    _ _    
+  | - |   | |) |  |   /  | (_ |   / -_)  | ' \   
+  |_|_|   |___/   |_|_\   \___|   \___|  |_||_|
 
-  O       o O       o O       o O       o O       o
-  | O   o | | O   o | | O   o | | O   o | | O   o |  
-  | | O | | | | O | | | | O | | | | O | | | | O | |
-  | o   O | | o   O | | o   O | | o   O | | o   O | 
-  o       O o       O o       O o       O o       O 
+O       o O       o O       o O       o O       o
+| O   o | | O   o | | O   o | | O   o | | O   o |  
+| | O | | | | O | | | | O | | | | O | | | | O | |
+| o   O | | o   O | | o   O | | o   O | | o   O | 
+o       O o       O o       O o       O o       O 
 
-`,
+A cli utility to create and manage Architecture Decision Records
+version: %s
+
+`, VERSION),
 }
 
 // Execute executes the root Command
