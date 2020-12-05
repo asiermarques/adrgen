@@ -202,7 +202,7 @@ You can list the ADR files with the **list** command
 
 ```
 adrgen list
-``
+```
 
 ### To-Do
 
