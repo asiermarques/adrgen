@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// VERSION is the ADRGen version
 const VERSION = "v0.2.1-beta"
 
 var rootCmd = &cobra.Command{
