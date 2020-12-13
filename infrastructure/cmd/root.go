@@ -10,7 +10,7 @@ import (
 )
 
 // VERSION is the ADRGen version
-const VERSION = "v0.3.0-beta"
+const VERSION = "v0.4.0-beta"
 
 var rootCmd = &cobra.Command{
 	Use:   "adrgen",
