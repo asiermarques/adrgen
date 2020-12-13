@@ -173,6 +173,7 @@ func CreateADR(id int, content string, filename ADRFilename) (ADR, error) {
 //
 type ADRRepository interface {
 	FindAll() ([]ADR, error)
+	Query(filterParams map[string][]string) ([]ADR, error)
 	FindById(id int) (ADR, error)
 	GetLastId() int
 }

@@ -51,8 +51,20 @@ func (repo privateADRDirectoryRepository) FindAll() ([]domain.ADR, error) {
 	return result, nil
 }
 
-// FindADRFileById looks for a ADR file by its id in a file list
-//
+func (repo privateADRDirectoryRepository) Query(filterParams map[string][]string) ([]domain.ADR, error)  {
+	allItems, err := repo.FindAll()
+	if err != nil {
+		return allItems, err
+	}
+	filteredItems := []domain.ADR{}
+	for _, adr := range allItems {
+		if FilterADR(adr, filterParams) == true {
+			filteredItems = append(filteredItems, adr)
+		}
+	}
+	return filteredItems, nil
+}
+
 func (repo privateADRDirectoryRepository) FindById(id int) (domain.ADR, error) {
 	ADRs, err := repo.FindAll()
 	if err != nil {
@@ -66,8 +78,6 @@ func (repo privateADRDirectoryRepository) FindById(id int) (domain.ADR, error) {
 	return nil, fmt.Errorf("file not found for ADR Id %d", id)
 }
 
-// GetLastIdFromFilenames find the last ID from a file list
-//
 func (repo privateADRDirectoryRepository) GetLastId() int {
 	number := 0
 

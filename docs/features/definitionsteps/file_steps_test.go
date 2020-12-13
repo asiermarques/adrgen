@@ -22,6 +22,7 @@ var userStatus string
 var relation string
 var targetADRId int
 var ADRs map[int]string = map[int]string{}
+var commandOutput string
 
 var templateContent = `# {title}
 
@@ -330,6 +331,18 @@ func theAdrHasTheLinkOnIt(relation string) error {
 	return nil
 }
 
+func weHaveACleanedSystem() error {
+	_, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; rm -f *.md")).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error cleaning the test directory: %s", err)
+	}
+	return nil
+}
+
+
 func theFollowingAdrsInTheSystem(table *messages.PickleStepArgument_PickleTable) error {
 	var content string
 	for _, row := range table.GetRows() {
@@ -401,6 +414,43 @@ func theUserSpecifyTheRelationWithTheTargetADRWithTheId(_relation string, target
 	return nil
 }
 
+func theUserExecutesTheListCommand() error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen list")).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error executing the list command: %s %s", err, output)
+	}
+	commandOutput = strings.TrimSpace(string(output))
+	return nil
+}
+
+func theUserExecutesTheListCommandWithTheFilter(filter string) error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen list -f %s", filter)).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error executing the list command: %s %s", err, output)
+	}
+	commandOutput = strings.TrimSpace(string(output))
+	return nil
+}
+
+
+func theUserSeeTheResultOnTheScreen(contentRaw *messages.PickleStepArgument_PickleDocString) error {
+	content := strings.TrimSpace(contentRaw.Content)
+	content = strings.Replace(content,"Filename", "Filename         ", 1)
+	content = strings.Replace(content,".md", ".md  ", 4)
+	content = strings.TrimSpace(content)
+	if strings.Contains(commandOutput, content) == false {
+		return fmt.Errorf("expected: \n%s\n\nreturned: \n%s", content, commandOutput)
+	}
+	return nil
+}
+
+
 func CreateFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^the (.+) ADR file is created$`, aNewFileIsCreated)
 	s.Step(`^the adr file content has the (.+) title$`, theAdrFileContentHasTheTitle)
@@ -432,4 +482,11 @@ func CreateFeatureContext(s *godog.ScenarioContext) {
 		`^the user specify the (.+) relation with the target ADR with the (\d+) id$`,
 		theUserSpecifyTheRelationWithTheTargetADRWithTheId,
 	)
+	s.Step(`^the user executes the list command$`, theUserExecutesTheListCommand)
+	s.Step(`^the user see the result on the screen:$`, theUserSeeTheResultOnTheScreen)
+	s.Step(`^the user executes the list command with the filter "([^"]*)"$`, theUserExecutesTheListCommandWithTheFilter)
+	s.Step(`^we have a cleaned system$`, weHaveACleanedSystem)
+
+
+
 }

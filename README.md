@@ -204,6 +204,22 @@ You can list the ADR files with the **list** command
 adrgen list
 ```
 
+**Filter the results by status**
+
+The results from the **list** command can be filtered by status
+
+```
+adrgen list -f status=accepted
+```
+
+You can also filter results that match one of a list of specified statuses
+
+```
+adrgen list -f status=accepted&status=proposed
+```
+
+
+
 ### To-Do
 
 You can see the next planned features in the [ADRgen project's board](https://github.com/asiermarques/adrgen/projects/1)
