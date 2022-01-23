@@ -27,6 +27,20 @@ Next features:
 
 ## Getting started
 
+### Installation
+
+If you are using Go >= 1.16
+
+```
+go install github.com/asiermarques/adrgen@latest
+```
+
+Or (when Go < 1.16)
+
+```
+go get github.com/asiermarques/adrgen
+```
+
 ### Show the version of the ADRgen
 
 You can show the version of the ADRgen with the **version** command
