@@ -7,14 +7,14 @@ A command-line tool for generating and managing Architecture Decision Records
 ## Why to use this tool for managing your ADRs?
 
 At a difference with other ADR file creation tools, this one has been designed for allowing the customization to 
-create mew ADR files while providing the best user experience for maintaining the created ADR files.
+create new ADR files while providing the best user experience for maintaining the created ADR files.
 
 Features that this tool currently offers:
 
 * Create ADR files 
 * Configure custom statuses: this allows you to design your ADR workflow
 * Configure a custom Markdown template file
-* Change the status of an ADR file, validating its status is we have configured custom statuses
+* Change the status of an ADR file, validating its status if we have configured custom statuses
 * Amend and Supersede relationships between ADR files
 * Adding meta attributes in the ADR files
 
