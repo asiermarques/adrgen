@@ -27,6 +27,10 @@ Next features:
 
 ## Getting started
 
+### Download the binary
+You can download the last release binary from the [releases section](https://github.com/asiermarques/adrgen/releases/latest)
+  
+
 ### Show the version of the ADRgen
 
 You can show the version of the ADRgen with the **version** command
