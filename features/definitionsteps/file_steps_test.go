@@ -342,7 +342,6 @@ func weHaveACleanedSystem() error {
 	return nil
 }
 
-
 func theFollowingAdrsInTheSystem(table *messages.PickleStepArgument_PickleTable) error {
 	var content string
 	for _, row := range table.GetRows() {
@@ -438,18 +437,16 @@ func theUserExecutesTheListCommandWithTheFilter(filter string) error {
 	return nil
 }
 
-
 func theUserSeeTheResultOnTheScreen(contentRaw *messages.PickleStepArgument_PickleDocString) error {
 	content := strings.TrimSpace(contentRaw.Content)
-	content = strings.Replace(content,"Filename", "Filename         ", 1)
-	content = strings.Replace(content,".md", ".md  ", 4)
+	content = strings.Replace(content, "Filename", "Filename         ", 1)
+	content = strings.Replace(content, ".md", ".md  ", 4)
 	content = strings.TrimSpace(content)
 	if strings.Contains(commandOutput, content) == false {
 		return fmt.Errorf("expected: \n%s\n\nreturned: \n%s", content, commandOutput)
 	}
 	return nil
 }
-
 
 func CreateFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^the (.+) ADR file is created$`, aNewFileIsCreated)
@@ -486,7 +483,5 @@ func CreateFeatureContext(s *godog.ScenarioContext) {
 	s.Step(`^the user see the result on the screen:$`, theUserSeeTheResultOnTheScreen)
 	s.Step(`^the user executes the list command with the filter "([^"]*)"$`, theUserExecutesTheListCommandWithTheFilter)
 	s.Step(`^we have a cleaned system$`, weHaveACleanedSystem)
-
-
 
 }
