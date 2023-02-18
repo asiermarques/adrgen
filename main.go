@@ -1,7 +1,9 @@
 package main
 
-import "github.com/asiermarques/adrgen/infrastructure/cmd"
+import (
+	"github.com/asiermarques/adrgen/cmd/cli"
+)
 
 func main() {
-	cmd.Execute()
+	cli.Run()
 }

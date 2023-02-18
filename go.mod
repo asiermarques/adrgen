@@ -1,6 +1,6 @@
 module github.com/asiermarques/adrgen
 
-go 1.18
+go 1.17
 
 require (
 	github.com/cucumber/godog v0.10.0
