@@ -1,7 +1,8 @@
-package definitionsteps
+package e2e
 
 import (
 	"fmt"
+	"github.com/cucumber/messages-go/v10"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
@@ -9,10 +10,73 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/cucumber/godog"
-	"github.com/cucumber/messages-go/v10"
 )
+
+var directory string
+
+func theInitCommandIsExecuted() error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd features/e2e/tests; ../bin/adrgen init \"%s\"", directory),
+	).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error executing the init command: %s %s", err, output)
+	}
+
+	return nil
+}
+
+func theSpecifiedDirectoryIsCreated() error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd features/e2e/tests; ls \"%s\"", directory),
+	).CombinedOutput()
+
+	if err != nil {
+		return fmt.Errorf("directory was not created: %s %s", err, output)
+	}
+
+	return nil
+}
+
+func theTemplateFileIsCreatedInTheLocation(location string) error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd features/e2e/tests; ls \"%s\"", location),
+	).CombinedOutput()
+
+	if err != nil {
+		return fmt.Errorf("file was not created: %s %s", err, output)
+	}
+
+	return nil
+}
+
+func aConfigFileIsCreated(file string) error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd features/e2e/tests; ls \"%s\"", file),
+	).CombinedOutput()
+
+	if err != nil {
+		return fmt.Errorf("file was not created: %s %s", err, output)
+	}
+
+	return nil
+}
+
+func theUserIsInAnInitialDirectory() error {
+	return nil
+}
+
+func theUserSpecifyTheDirectory(_directory string) error {
+	directory = _directory
+	return nil
+}
 
 var userTitle string
 var userMetaParams string
@@ -51,7 +115,7 @@ func getTitleInFile(filename string) (string, error) {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
+		fmt.Sprintf("cd features/e2e/tests; %s", searchCommand),
 	).CombinedOutput()
 	if err != nil {
 		return "", fmt.Errorf("error searching string in file: %s %s", err, output)
@@ -64,7 +128,7 @@ func aNewFileIsCreated(filename string) error {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; ls \"%s\"", filepath.Join(directory, filename)),
+		fmt.Sprintf("cd features/e2e/tests; ls \"%s\"", filepath.Join(directory, filename)),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("file was not created: %s %s", err, output)
@@ -89,7 +153,7 @@ func theAdrFileContentHasTheTitle(titleInContent string) error {
 }
 
 func getStatusInFile(status string, file string) error {
-	content, err := ioutil.ReadFile(filepath.Join("../e2e/tests", file))
+	content, err := ioutil.ReadFile(filepath.Join("features/e2e/tests", file))
 	if err != nil {
 		return err
 	}
@@ -146,7 +210,7 @@ func theCreateCommandIsExecuted() error {
 		"/bin/sh",
 		"-c",
 		fmt.Sprintf(
-			"cd ../e2e/tests; ../bin/adrgen create \"%s\" %s %s",
+			"cd features/e2e/tests; ../bin/adrgen create \"%s\" %s %s",
 			userTitle,
 			metaCommandFlag,
 			relationCommand,
@@ -193,7 +257,7 @@ template_file: %s
 	configFile := "adrgen.config.yml"
 
 	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf(
-		"cd ../e2e/tests; touch %s; echo \"%s\" > %s",
+		"cd features/e2e/tests; touch %s; echo \"%s\" > %s",
 		configFile,
 		content,
 		configFile,
@@ -203,7 +267,7 @@ template_file: %s
 	}
 
 	output, err = exec.Command("/bin/sh", "-c", fmt.Sprintf(
-		"cd ../e2e/tests; mkdir %s; touch %s;echo \"%s\" > %s",
+		"cd features/e2e/tests; mkdir %s; touch %s;echo \"%s\" > %s",
 		row.GetCells()[1].Value,
 		row.GetCells()[2].Value,
 		templateContent,
@@ -219,7 +283,7 @@ template_file: %s
 }
 
 func thereIsNotAnyConfigFile() error {
-	exec.Command("/bin/sh", "-c", "rm ../e2e/tests/adrgen.config.yml").CombinedOutput()
+	exec.Command("/bin/sh", "-c", "rm features/e2e/tests/adrgen.config.yml").CombinedOutput()
 	directory = ""
 	return nil
 }
@@ -228,7 +292,7 @@ func hasTheFollowingContent(content *messages.PickleStepArgument_PickleDocString
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; cat \"%s\"", createdFilenameWithPath),
+		fmt.Sprintf("cd features/e2e/tests; cat \"%s\"", createdFilenameWithPath),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("%s file not found: %s %s", createdFilenameWithPath, err, output)
@@ -250,7 +314,7 @@ func hasTheFollowingContent(content *messages.PickleStepArgument_PickleDocString
 }
 
 func thereIsNoADRFiles() error {
-	exec.Command("/bin/sh", "-c", "rm ../e2e/tests/*.md").CombinedOutput()
+	exec.Command("/bin/sh", "-c", "rm features/e2e/tests/*.md").CombinedOutput()
 	return nil
 }
 
@@ -263,7 +327,7 @@ func theUserSpecifyTheStatusForTheADRIdentifiedByTheId(status string, adrId int)
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen status %d \"%s\"", adrId, status),
+		fmt.Sprintf("cd features/e2e/tests; ../bin/adrgen status %d \"%s\"", adrId, status),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error executing the status command: %s %s", err, output)
@@ -277,7 +341,7 @@ func thereIsAnADRFileWithContent(
 	content *messages.PickleStepArgument_PickleDocString,
 ) error {
 	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf(
-		"cd ../e2e/tests; touch %s; echo \"%s\" > %s",
+		"cd features/e2e/tests; touch %s; echo \"%s\" > %s",
 		filename,
 		content.Content,
 		filename,
@@ -298,7 +362,7 @@ func theAdrHasTheLinkOnIt(relation string) error {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
+		fmt.Sprintf("cd features/e2e/tests; %s", searchCommand),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
@@ -335,7 +399,7 @@ func weHaveACleanedSystem() error {
 	_, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; rm -f *.md")).CombinedOutput()
+		fmt.Sprintf("cd features/e2e/tests; rm -f *.md")).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error cleaning the test directory: %s", err)
 	}
@@ -352,7 +416,7 @@ func theFollowingAdrsInTheSystem(table *messages.PickleStepArgument_PickleTable)
 			"/bin/sh",
 			"-c",
 			fmt.Sprintf(
-				"cd ../e2e/tests; touch \"%s\"; echo \"%s\"> %s",
+				"cd features/e2e/tests; touch \"%s\"; echo \"%s\"> %s",
 				row.GetCells()[0].Value,
 				content,
 				row.GetCells()[0].Value,
@@ -374,7 +438,7 @@ func theTargetADRHasTheLinkOnItAndThStatus(relation string, status string) error
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; %s", searchCommand),
+		fmt.Sprintf("cd features/e2e/tests; %s", searchCommand),
 	).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
@@ -417,7 +481,7 @@ func theUserExecutesTheListCommand() error {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen list")).CombinedOutput()
+		fmt.Sprintf("cd features/e2e/tests; ../bin/adrgen list")).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error executing the list command: %s %s", err, output)
 	}
@@ -429,7 +493,7 @@ func theUserExecutesTheListCommandWithTheFilter(filter string) error {
 	output, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd ../e2e/tests; ../bin/adrgen list -f %s", filter)).CombinedOutput()
+		fmt.Sprintf("cd features/e2e/tests; ../bin/adrgen list -f %s", filter)).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error executing the list command: %s %s", err, output)
 	}
@@ -446,42 +510,4 @@ func theUserSeeTheResultOnTheScreen(contentRaw *messages.PickleStepArgument_Pick
 		return fmt.Errorf("expected: \n%s\n\nreturned: \n%s", content, commandOutput)
 	}
 	return nil
-}
-
-func CreateFeatureContext(s *godog.ScenarioContext) {
-	s.Step(`^the (.+) ADR file is created$`, aNewFileIsCreated)
-	s.Step(`^the adr file content has the (.+) title$`, theAdrFileContentHasTheTitle)
-	s.Step(`^the meta parameters (.+) are specified$`, theMetaParametersAreSpecified)
-	s.Step(`^the adr has the (.+) status$`, theAdrHasTheStatus)
-	s.Step(`^the adr has an id (\d+)$`, theAdrHasAnId)
-	s.Step(`^the create command is executed$`, theCreateCommandIsExecuted)
-	s.Step(`^the user specify the (.+) title$`, theUserSpecifyTheTitle)
-	s.Step(`^has the following content:$`, hasTheFollowingContent)
-	s.Step(
-		`^there is a config file created with this configuration$`,
-		thereIsAConfigFileCreatedWithThisConfiguration,
-	)
-	s.Step(`^there is not any config file$`, thereIsNotAnyConfigFile)
-	s.Step(`^there is no ADR files$`, thereIsNoADRFiles)
-	s.Step(
-		`^the user executes the status command specifying (.+) for the ADR identified by the (\d+) id$`,
-		theUserSpecifyTheStatusForTheADRIdentifiedByTheId,
-	)
-	s.Step(`^there is a (.+) ADR file with the following content:$`, thereIsAnADRFileWithContent)
-
-	s.Step(`^the adr has the (.+) link on it$`, theAdrHasTheLinkOnIt)
-	s.Step(`^there are the following adrs in the system$`, theFollowingAdrsInTheSystem)
-	s.Step(
-		`^the target ADR has the (.+) relation link on it and the (.+) status$`,
-		theTargetADRHasTheLinkOnItAndThStatus,
-	)
-	s.Step(
-		`^the user specify the (.+) relation with the target ADR with the (\d+) id$`,
-		theUserSpecifyTheRelationWithTheTargetADRWithTheId,
-	)
-	s.Step(`^the user executes the list command$`, theUserExecutesTheListCommand)
-	s.Step(`^the user see the result on the screen:$`, theUserSeeTheResultOnTheScreen)
-	s.Step(`^the user executes the list command with the filter "([^"]*)"$`, theUserExecutesTheListCommandWithTheFilter)
-	s.Step(`^we have a cleaned system$`, weHaveACleanedSystem)
-
 }

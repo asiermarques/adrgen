@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/asiermarques/adrgen/cmd/cli"
+	"github.com/asiermarques/adrgen/internal/_infrastructure/cli"
 )
 
 func main() {
-	cli.Run()
+	cli.Execute()
 }

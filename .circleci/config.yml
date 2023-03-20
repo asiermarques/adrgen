@@ -11,7 +11,6 @@ jobs:
       - run: go get -v -t -d ./...
       - run: go test -v ./...
       - run: go install github.com/cucumber/godog/cmd/godog@latest
-      - run: ./e2e_tests.sh
   release:
     docker:
       - image: cimg/go:1.17
