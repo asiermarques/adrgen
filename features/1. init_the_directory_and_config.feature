@@ -26,7 +26,7 @@ Feature: init the directory and config
     | ./target               | ./target/adr_template.md        | ./adrgen.config.yml |
     | ./target/level         | ./target/level/adr_template.md  | ./adrgen.config.yml |
 
-  Scenario Outline: initialize the configuration and directories
+  Scenario Outline: initialize the configuration and directories with asciidoc template
 
     Given the user is in an initial directory
     When the user specify the <target_directory> directory
