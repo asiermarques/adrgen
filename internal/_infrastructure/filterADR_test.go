@@ -10,9 +10,9 @@ func TestFilterADR(t *testing.T) {
 	filterParams := map[string][]string{
 		"status": {"accepted", "proposed"},
 	}
-	adr1, _ := adr.CreateADR(1, "## Status\naccepted", adr.CreateFilename(1, "test", 2))
-	adr2, _ := adr.CreateADR(2, "## Status\nproposed", adr.CreateFilename(2, "test", 2))
-	adr3, _ := adr.CreateADR(3, "## Status\ndeprecated", adr.CreateFilename(3, "test", 2))
+	adr1, _ := adr.CreateADR(1, "## Status\naccepted", adr.CreateFilename(1, "test", 2, ".md"))
+	adr2, _ := adr.CreateADR(2, "## Status\nproposed", adr.CreateFilename(2, "test", 2, ".md"))
+	adr3, _ := adr.CreateADR(3, "## Status\ndeprecated", adr.CreateFilename(3, "test", 2, ".md"))
 
 	if FilterADR(adr1, filterParams) != true {
 		t.Fatal(fmt.Sprintf("adr1 should be not filtered"))

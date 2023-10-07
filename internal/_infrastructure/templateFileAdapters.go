@@ -38,7 +38,7 @@ func CreateTemplateFileWriter(config config.Config) template.Writer {
 
 func (w privateTemplateFileWriter) Persist() error {
 	templateContent := template.DEFAULT_CONTENT
-	if path.Ext(w.configuration.TemplateFilename) == "adoc" {
+	if path.Ext(w.configuration.TemplateFilename) == ".adoc" {
 		templateContent = template.DEFAULT_ASCIIDOC_CONTENT
 	}
 	return WriteFile(w.configuration.TemplateFilename, templateContent)

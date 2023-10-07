@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"github.com/asiermarques/adrgen/internal/config"
 	"github.com/asiermarques/adrgen/internal/template"
+	"path"
 	"strconv"
 )
 
 // CreateFile is the application service for creating a new ADR file
-//
 func CreateFile(
 	date string,
 	title string,
@@ -41,10 +41,15 @@ func CreateFile(
 		content = _content
 	}
 
+	extension := path.Ext(config.TemplateFilename)
+	if extension == "" {
+		extension = ".md"
+	}
+
 	adr, _ := CreateADR(
 		ADRId,
 		content,
-		CreateFilename(ADRId, title, config.IdDigitNumber),
+		CreateFilename(ADRId, title, config.IdDigitNumber, extension),
 	)
 
 	var relationError error

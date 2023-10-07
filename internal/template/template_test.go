@@ -74,3 +74,15 @@ Status: {status}
 		t.Fatal(fmt.Sprintf("failed, error expected '%s', returned '%s'", errorExpected, error))
 	}
 }
+
+func TestDefaultTemplatesPassValidation(t *testing.T) {
+	error := validateFields(DEFAULT_CONTENT)
+	if error != nil {
+		t.Fatal(fmt.Sprintf("failed validating default content template: %s", error))
+	}
+
+	error = validateFields(DEFAULT_ASCIIDOC_CONTENT)
+	if error != nil {
+		t.Fatal(fmt.Sprintf("failed validating default asciidoc content template: %s", error))
+	}
+}

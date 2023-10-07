@@ -123,7 +123,7 @@ What becomes easier or more difficult to do because of this change?
 `
 
 func getTitleInFile(filename string) (string, error) {
-	searchCommand := fmt.Sprintf(`grep -E "^# (.+)$" %s`, filename)
+	searchCommand := fmt.Sprintf(`grep -E "^[#=] (.+)$" %s`, filename)
 
 	output, err := exec.Command(
 		"/bin/sh",
@@ -152,14 +152,17 @@ func aNewFileIsCreated(filename string) error {
 }
 
 func theAdrFileContentHasTheTitle(titleInContent string) error {
-	titleInContent = "# " + titleInContent
+
 	returned, err := getTitleInFile(createdFilenameWithPath)
 	if err != nil {
 		return err
 	}
 
-	if returned != titleInContent {
-		return fmt.Errorf("expected title: \"%s\"  found: \"%s\"", titleInContent, returned)
+	markdownTitle := "# " + titleInContent
+	asciiDocTitle := "= " + titleInContent
+
+	if returned != markdownTitle && returned != asciiDocTitle {
+		return fmt.Errorf(`expected title: "%s" or "%s"  found: "%s"`, markdownTitle, asciiDocTitle, returned)
 	}
 
 	return nil
@@ -171,7 +174,7 @@ func getStatusInFile(status string, file string) error {
 		return err
 	}
 
-	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^(##|==) Status\n\n?(.+)$`)
 	matches := re.FindStringSubmatch(string(content))
 	if len(matches) < 1 {
 		return fmt.Errorf("target ADR content have not a status field")
@@ -179,8 +182,9 @@ func getStatusInFile(status string, file string) error {
 
 	returned := strings.TrimSpace(matches[0])
 	expected := "## Status\n\n" + status
-	if returned != expected {
-		return fmt.Errorf("expected: \"%s\"  found: \"%s\"", expected, returned)
+	asciiExpected := "== Status\n\n" + status
+	if returned != expected && returned != asciiExpected {
+		return fmt.Errorf(`expected: "%s" or "%s"  found: "%s"`, expected, asciiExpected, returned)
 	}
 
 	return nil
@@ -191,7 +195,7 @@ func theAdrHasTheStatus(status string) error {
 }
 
 func theAdrHasAnId(adrId int) error {
-	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.md`)
+	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.(md|adoc)`)
 	matches := re.FindStringSubmatch(createdFilename)
 	if len(matches) < 2 {
 		return fmt.Errorf("filename not valid %s", createdFilename)

@@ -18,7 +18,7 @@ accepted
 
 ## Context`
 
-	adr, _ := CreateADR(1, contentStub, CreateFilename(1, "My ADR Title", 4))
+	adr, _ := CreateADR(1, contentStub, CreateFilename(1, "My ADR Title", 4, ".md"))
 
 	result := adr.Title()
 	expectedString := "My ADR Title"
@@ -92,8 +92,8 @@ Date: 09-11-2020
 
 ## Context`, relation.targetStatus, relation.targetTitle)
 
-		adr, _ := CreateADR(1, contentStub, CreateFilename(1, "My ADR Title", 4))
-		targetAdr, _ := CreateADR(1, targetContentStub, CreateFilename(2, "My ADR Title", 4))
+		adr, _ := CreateADR(1, contentStub, CreateFilename(1, "My ADR Title", 4, ".md"))
+		targetAdr, _ := CreateADR(1, targetContentStub, CreateFilename(2, "My ADR Title", 4, ".md"))
 		adr, targetAdr, err := relationsManager.AddRelation(adr, targetAdr, relationKey)
 		if err != nil {
 			t.Fatal(fmt.Sprintf("an unexpected error was returned %s", err))
@@ -115,7 +115,7 @@ Date: 09-11-2020
 
 func TestCreateFilename(t *testing.T) {
 	testFilename := func(expectedString string, id int, digitNumber int) {
-		result := CreateFilename(id, "New ADR", digitNumber)
+		result := CreateFilename(id, "New ADR", digitNumber, ".md")
 		if result.Value() != expectedString {
 			t.Fatal(fmt.Sprintf("failed: expected %s, returned %s", expectedString, result.Value()))
 		}
@@ -179,7 +179,7 @@ What is the issue that we're seeing that is motivating this decision or change?
 `
 
 	statusManager := CreateStatusManager(config.Config{})
-	_adr, _ := CreateADR(1, contentStub, CreateFilename(1, "Title", 4))
+	_adr, _ := CreateADR(1, contentStub, CreateFilename(1, "Title", 4, ".md"))
 	adr, err := statusManager.ChangeStatus(_adr, "accepted")
 	if err != nil {
 		t.Fatal(fmt.Sprintf("%s", err))
@@ -210,7 +210,7 @@ rejected
 ## Context
 
 `
-	_adr, _ = CreateADR(1, contentStub, CreateFilename(1, "Title", 4))
+	_adr, _ = CreateADR(1, contentStub, CreateFilename(1, "Title", 4, ".md"))
 	adr, err = statusManager.ChangeStatus(_adr, "rejected")
 	if err != nil || expected != adr.Content() {
 		t.Fatal(fmt.Sprintf("failed: expected %s, returned %s :%s", expected, adr.Content(), err))

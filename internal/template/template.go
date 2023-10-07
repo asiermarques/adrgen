@@ -93,7 +93,7 @@ func validateFields(content string) error {
 		}
 	}
 
-	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^(##|==) Status\n\n?(.+)$`)
 	if !re.MatchString(content) {
 		return fmt.Errorf(
 			"the configured template must have an status following the format \n\n## Status\n\n{status}\n\n",

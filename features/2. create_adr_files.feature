@@ -50,3 +50,21 @@ Feature: create ADR files
       | title             | filename         | status    | title_in_file |
       | New adr           | 0001-new-adr.md  | proposed  | 1. New adr    |
       | New adr           | 0002-new-adr.md  | proposed  | 2. New adr    |
+
+  Scenario Outline: create adr files with asciidoc template
+
+    When the user specify the adr-asciidoc directory
+      And the init command is executed with option --asciidoc
+      And the user specify the <title> title
+      And the create command is executed
+    Then the <filename> ADR file is created
+      And the adr has an id <id>
+      And the adr has the <status> status
+      And the adr file content has the <title_in_file> title
+
+    Examples:
+    | title             | filename           | id  | status     | title_in_file |
+    | New adr           | 0001-new-adr.adoc  | 1   | proposed   | 1. New adr    |
+    | New adr           | 0002-new-adr.adoc  | 2   | proposed   | 2. New adr    |
+    | New adr           | 0003-new-adr.adoc  | 3   | proposed   | 3. New adr    |
+    | New adr           | 0004-new-adr.adoc  | 4   | proposed   | 4. New adr    |

@@ -10,7 +10,7 @@ import (
 )
 
 func extractIdFromADRFilename(filename string) (int, error) {
-	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.md`)
+	re := regexp.MustCompile(`(?mi)^(\d+)-.+\.(md|adoc)`)
 	matches := re.FindStringSubmatch(filename)
 	if len(matches) < 2 {
 		return -1, fmt.Errorf("filename not valid %s", filename)
@@ -92,7 +92,6 @@ func (repo privateADRDirectoryRepository) GetLastId() int {
 }
 
 // CreateADRDirectoryRepository creates an instance of domain.Repository repository that finds ADRs in a directory
-//
 func CreateADRDirectoryRepository(directory string) adr.Repository {
 	return privateADRDirectoryRepository{directory}
 }
@@ -102,7 +101,6 @@ type privateFileADRWriter struct {
 }
 
 // CreateFileADRWriter creates a domain.Writer instance that persist ADR Files in a directory
-//
 func CreateFileADRWriter(directory string) adr.Writer {
 	return privateFileADRWriter{directory: directory}
 }

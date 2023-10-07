@@ -30,14 +30,14 @@ Feature: init the directory and config
 
     Given the user is in an initial directory
     When the user specify the <target_directory> directory
-      And the init command is executed with option <option>
+      And the init command is executed with option --asciidoc
     Then the specified directory is created
       And the template file is created in the <template_created> location
       And the <config_file> config file is created
 
     Examples:
 
-    | target_directory       | option     | template_created                  | config_file         |
-    | ./target               | --asciidoc | ./target/adr_template.adoc        | ./adrgen.config.yml |
-    | ./target/level         | --asciidoc | ./target/level/adr_template.adoc  | ./adrgen.config.yml |
+    | target_directory       | template_created                  | config_file         |
+    | ./target               | ./target/adr_template.adoc        | ./adrgen.config.yml |
+    | ./target/level         | ./target/level/adr_template.adoc  | ./adrgen.config.yml |
 

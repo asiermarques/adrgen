@@ -12,7 +12,6 @@ import (
 )
 
 // Filename is the domain value object for the ADR filename property
-//
 type Filename interface {
 	Value() string
 }
@@ -27,18 +26,16 @@ func (f privateFilename) Value() string {
 }
 
 // CreateFilename creates the Filename value object
-//
-func CreateFilename(id int, title string, idDigits int) Filename {
+func CreateFilename(id int, title string, idDigits int, extension string) Filename {
 	if idDigits < 1 {
-		return privateFilename{value: fmt.Sprintf("%d-%s.md", id, slug.Make(title))}
+		return privateFilename{value: fmt.Sprintf("%d-%s%s", id, slug.Make(title), extension)}
 	}
 	return privateFilename{
-		value: fmt.Sprintf("%0"+strconv.Itoa(idDigits)+"d-%s.md", id, slug.Make(title)),
+		value: fmt.Sprintf("%0"+strconv.Itoa(idDigits)+"d-%s%s", id, slug.Make(title), extension),
 	}
 }
 
 // CreateFilenameFromFilenameString creates the Filename value object from a filename string
-//
 func CreateFilenameFromFilenameString(filename string) (Filename, error) {
 	if !ValidateFilename(filename) {
 		return &privateFilename{}, fmt.Errorf("filename not valid %s", filename)
@@ -48,14 +45,12 @@ func CreateFilenameFromFilenameString(filename string) (Filename, error) {
 }
 
 // ValidateFilename validates if a string is a correct filename for an ADR File
-//
 func ValidateFilename(name string) bool {
-	pattern := regexp.MustCompile(`(?mi)^\d+-.+\.md`)
+	pattern := regexp.MustCompile(`(?mi)^\d+-.+\.(md|adoc)`)
 	return pattern.MatchString(name)
 }
 
 // ADR is the domain entity representing the ADR file
-//
 type ADR interface {
 	ID() int
 	Filename() Filename
@@ -103,7 +98,7 @@ func (a privateADR) getTitleFromContent() (string, error) {
 		return "", fmt.Errorf("ADR content not present")
 	}
 
-	re := regexp.MustCompile(`(?mi)^# (.+)$`)
+	re := regexp.MustCompile(`(?mi)^[#=] (.+)$`)
 	if !re.MatchString(a.content) {
 		return "", fmt.Errorf("title not present in ADR Content")
 	}
@@ -139,21 +134,20 @@ func (a privateADR) getStatusFromContent() (string, error) {
 		return "", fmt.Errorf("ADR content not present")
 	}
 
-	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^(##|==) Status\n\n?(.+)$`)
 	if !re.MatchString(a.content) {
 		return "", fmt.Errorf("status not present in ADR Content")
 	}
 
 	matches := re.FindStringSubmatch(a.content)
-	if len(matches) < 2 || matches[1] == "" {
+	if len(matches) < 3 || matches[2] == "" {
 		return "", fmt.Errorf("could not possible extracting the status from ADR Content")
 	}
 
-	return matches[1], nil
+	return matches[2], nil
 }
 
 // CreateADR creates the ADR entity and validates its required properties
-//
 func CreateADR(id int, content string, filename Filename) (ADR, error) {
 
 	if id < 1 {
@@ -172,7 +166,6 @@ func CreateADR(id int, content string, filename Filename) (ADR, error) {
 }
 
 // Repository is the repository for the ADR domain entity
-//
 type Repository interface {
 	FindAll() ([]ADR, error)
 	Query(filterParams map[string][]string) ([]ADR, error)
@@ -181,13 +174,11 @@ type Repository interface {
 }
 
 // Writer service that persist the ADR entity
-//
 type Writer interface {
 	Persist(adr ADR) error
 }
 
 // RelationsManager service that manage the relation links between ADR files
-//
 type RelationsManager interface {
 	AddRelation(adr ADR, targetADR ADR, relation string) (ADR, ADR, error)
 	RelationIsValid(relation string) bool
@@ -264,7 +255,6 @@ func (m privateRelationsManager) AddRelation(
 }
 
 // CreateRelationsManager creates the RelationsManager service with its dependencies
-//
 func CreateRelationsManager(service template.Service, manager StatusManager) RelationsManager {
 	relations := make(map[string]relation)
 	relations["supersede"] = relation{
@@ -286,7 +276,6 @@ func CreateRelationsManager(service template.Service, manager StatusManager) Rel
 }
 
 // StatusManager is the service that manages the status change in a ADR entity
-//
 type StatusManager interface {
 	ChangeStatus(adr ADR, newStatus string) (ADR, error)
 	ValidateStatus(targetStatus string) bool
@@ -331,7 +320,6 @@ func (manager privateStatusManager) ValidateStatus(targetStatus string) bool {
 }
 
 // CreateStatusManager creates the StatusManager service with its dependencies
-//
 func CreateStatusManager(configuration config.Config) StatusManager {
 	return privateStatusManager{
 		configuration: configuration,
