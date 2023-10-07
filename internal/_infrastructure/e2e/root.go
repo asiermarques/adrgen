@@ -5,6 +5,7 @@ import "github.com/cucumber/godog"
 func DefinitionSteps(s *godog.ScenarioContext) {
 	s.Step(`^the (.+) config file is created$`, aConfigFileIsCreated)
 	s.Step(`^the init command is executed$`, theInitCommandIsExecuted)
+	s.Step(`^the init command is executed with option (.+)$`, theInitCommandIsExecutedWithOption)
 	s.Step(`^the specified directory is created$`, theSpecifiedDirectoryIsCreated)
 	s.Step(
 		`^the template file is created in the (.+) location$`,

@@ -12,8 +12,8 @@ import (
 )
 
 // CreateInitCommand creates the 'init' CLI Command related to the project initialization
-//
 func CreateInitCommand() *cobra.Command {
+	isAsciidoc := false
 	command := &cobra.Command{
 		Use:   "init [directory]",
 		Short: "Initialize the ADRs working directory",
@@ -38,10 +38,15 @@ func CreateInitCommand() *cobra.Command {
 				meta[i] = strings.TrimSpace(value)
 			}
 
+			templateFileName := "adr_template.md"
+			if isAsciidoc {
+				templateFileName = "adr_template.adoc"
+			}
+
 			configManager := infrastructure2.CreateConfigFileManager(".")
 			config := configManager.GetDefault()
 			config.TargetDirectory = targetDirectory
-			config.TemplateFilename = filepath.Join(targetDirectory, "adr_template.md")
+			config.TemplateFilename = filepath.Join(targetDirectory, templateFileName)
 			config.MetaParams = meta
 
 			if err := project.InitProject(
@@ -58,6 +63,7 @@ func CreateInitCommand() *cobra.Command {
 		},
 	}
 	command.Flags().StringSliceVarP(&MetaFlag, "meta", "m", []string{}, "")
+	command.Flags().BoolVar(&isAsciidoc, "asciidoc", false, "use asciidoc format instead of markdown")
 	command.Example = "adrgen init \"docs/adrs\""
 	return command
 }

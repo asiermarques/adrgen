@@ -7,7 +7,6 @@ import (
 )
 
 // TemplateData represents the data that will be render by the Service
-//
 type TemplateData struct {
 	Title  string
 	Status string
@@ -16,7 +15,6 @@ type TemplateData struct {
 }
 
 // DEFAULT_CONTENT the default content for the template
-//
 const DEFAULT_CONTENT = `# {title}
 
 Date: {date}
@@ -37,20 +35,38 @@ What is the change that we're proposing and/or doing?
 
 What becomes easier or more difficult to do because of this change?`
 
+// DEFAULT_ASCIIDOC_CONTENT the default content for the template in asciidoc format
+const DEFAULT_ASCIIDOC_CONTENT = `= {title}
+
+Date: {date}
+
+== Status
+
+{status}
+
+== Context
+
+What is the issue that we're seeing that is motivating this decision or change?
+
+== Decision
+
+What is the change that we're proposing and/or doing?
+
+== Consequences
+
+What becomes easier or more difficult to do because of this change?`
+
 // Writer persist the content of the template
-//
 type Writer interface {
 	Persist() error
 }
 
 // CustomContentReader get the content of a template from a custom configured location
-//
 type CustomContentReader interface {
 	Read() (string, error)
 }
 
 // Service service that renders the template content
-//
 type Service interface {
 	RenderCustomContent(data TemplateData) (string, error)
 	RenderDefaultContent(data TemplateData) string
@@ -127,7 +143,6 @@ func (s privateService) RenderRelationLink(adrTitle string, adrFilename string, 
 }
 
 // CreateService creates a Service instance
-//
 func CreateService(
 	customTemplateContentReader CustomContentReader,
 ) Service {

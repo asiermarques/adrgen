@@ -27,6 +27,19 @@ func theInitCommandIsExecuted() error {
 	return nil
 }
 
+func theInitCommandIsExecutedWithOption(option string) error {
+	output, err := exec.Command(
+		"/bin/sh",
+		"-c",
+		fmt.Sprintf("cd features/e2e/tests; ../bin/adrgen init \"%s\" %s", directory, option),
+	).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error executing the init command: %s %s", err, output)
+	}
+
+	return nil
+}
+
 func theSpecifiedDirectoryIsCreated() error {
 	output, err := exec.Command(
 		"/bin/sh",
