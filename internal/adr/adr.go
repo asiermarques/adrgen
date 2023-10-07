@@ -295,13 +295,22 @@ func (manager privateStatusManager) ChangeStatus(adr ADR, newStatus string) (ADR
 	}
 
 	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
-	if !re.MatchString(adr.Content()) {
+	asciidocRegex := regexp.MustCompile(`(?mi)^== Status\n\n?(.+)$`)
+	if re.MatchString(adr.Content()) {
+		return CreateADR(
+			adr.ID(),
+			re.ReplaceAllString(adr.Content(), fmt.Sprintf("## Status\n\n%s", newStatus)),
+			adr.Filename(),
+		)
+	}
+
+	if !asciidocRegex.MatchString(adr.Content()) {
 		return nil, fmt.Errorf("ADR content have not a status field")
 	}
 
 	return CreateADR(
 		adr.ID(),
-		re.ReplaceAllString(adr.Content(), fmt.Sprintf("## Status\n\n%s", newStatus)),
+		asciidocRegex.ReplaceAllString(adr.Content(), fmt.Sprintf("== Status\n\n%s", newStatus)),
 		adr.Filename(),
 	)
 }

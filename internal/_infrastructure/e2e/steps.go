@@ -416,7 +416,7 @@ func weHaveACleanedSystem() error {
 	_, err := exec.Command(
 		"/bin/sh",
 		"-c",
-		fmt.Sprintf("cd features/e2e/tests; rm -f *.md")).CombinedOutput()
+		fmt.Sprintf("cd features/e2e/tests; rm -f *.md; rm -f *.adoc")).CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error cleaning the test directory: %s", err)
 	}
