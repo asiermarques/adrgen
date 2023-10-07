@@ -210,7 +210,7 @@ func (m privateRelationsManager) AddRelation(
 		return adr, targetADR, fmt.Errorf("relation %s is not valid", relation)
 	}
 
-	re := regexp.MustCompile(`(?mi)^## Status\n\n?(.+)$`)
+	re := regexp.MustCompile(`(?mi)^(##|==) Status\n\n?(.+)$`)
 	if !re.MatchString(adr.Content()) {
 		return adr, targetADR, fmt.Errorf("ADR content have not a status field")
 	}

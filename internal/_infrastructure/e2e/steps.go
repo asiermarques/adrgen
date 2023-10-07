@@ -236,7 +236,7 @@ func theCreateCommandIsExecuted() error {
 	if err != nil {
 		return fmt.Errorf("error executing the create command: %s %s", err, output)
 	}
-
+	fmt.Println(string(output))
 	return nil
 }
 
