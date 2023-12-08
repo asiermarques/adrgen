@@ -20,7 +20,7 @@ func InitProject(
 
 	err = configManager.Persist(configData)
 	if err != nil {
-		return fmt.Errorf("error creating config file %s %s", config.FILENAME+".yml", err)
+		return fmt.Errorf("error creating config file %s %s", config.FILENAME + "." + config.FORMAT, err)
 	}
 
 	return nil

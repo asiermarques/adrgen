@@ -26,7 +26,7 @@ func (manager privateConfigFileManager) Persist(configData config.Config) error 
 	viper.Set("supported_statuses", configData.Statuses)
 	viper.Set("default_status", configData.DefaultStatus)
 	viper.Set("id_digit_number", configData.IdDigitNumber)
-	return viper.WriteConfigAs(config.FILENAME + ".yml")
+	return viper.WriteConfigAs(config.FILENAME + "." + config.FORMAT)
 }
 
 func (manager privateConfigFileManager) Read() (config.Config, error) {

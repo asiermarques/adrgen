@@ -51,7 +51,7 @@ This command creates the following structure:
 
 ```
 your_dir
-├── adrgen.config.yml
+├── adrgen.config.yaml
 └── docs
     └── adrs
         └── adr_template.md
@@ -63,7 +63,7 @@ As the result, we can see
 * A markdown template is created in the desired directory
 
 
-The adrgen.config.yml config file will be used by other commands in order to know how to operate with the ADR files.
+The adrgen.config.yaml config file will be used by other commands in order to know how to operate with the ADR files.
 
 It will include the following configuration keys:
 

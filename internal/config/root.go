@@ -2,11 +2,11 @@ package config
 
 // FILENAME the name for the config file
 //
-const FILENAME = "adrgen.config"
+var FILENAME = "adrgen.config"
 
 // FORMAT the configuration format
 //
-const FORMAT = "yaml"
+var FORMAT = "yaml"
 
 // Config the Configuration type with all the supported values
 //
