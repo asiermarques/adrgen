@@ -254,7 +254,7 @@ template_file: %s
 		row.GetCells()[2].Value,
 	)
 
-	configFile := "adrgen.config.yml"
+	configFile := "adrgen.config.yaml"
 
 	output, err := exec.Command("/bin/sh", "-c", fmt.Sprintf(
 		"cd features/e2e/tests; touch %s; echo \"%s\" > %s",
@@ -283,7 +283,7 @@ template_file: %s
 }
 
 func thereIsNotAnyConfigFile() error {
-	exec.Command("/bin/sh", "-c", "rm features/e2e/tests/adrgen.config.yml").CombinedOutput()
+	exec.Command("/bin/sh", "-c", "rm features/e2e/tests/adrgen.config.yaml").CombinedOutput()
 	directory = ""
 	return nil
 }

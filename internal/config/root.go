@@ -6,7 +6,7 @@ var FILENAME = "adrgen.config"
 
 // FORMAT the configuration format
 //
-const FORMAT = "yaml"
+var FORMAT = "yaml"
 
 // Config the Configuration type with all the supported values
 //

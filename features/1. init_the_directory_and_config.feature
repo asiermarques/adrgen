@@ -22,7 +22,7 @@ Feature: init the directory and config
 
     Examples:
 
-    | target_directory       | template_created                | config_file         |
-    | ./target               | ./target/adr_template.md        | ./adrgen.config.yml |
-    | ./target/level         | ./target/level/adr_template.md  | ./adrgen.config.yml |
+    | target_directory       | template_created                | config_file          |
+    | ./target               | ./target/adr_template.md        | ./adrgen.config.yaml |
+    | ./target/level         | ./target/level/adr_template.md  | ./adrgen.config.yaml |
 
